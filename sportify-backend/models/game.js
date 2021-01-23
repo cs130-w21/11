@@ -2,11 +2,6 @@ const { DataTypes } = require('sequelize')
 
 module.exports = (sequelize) => {
     sequelize.define('game', {
-        id: {
-            allowNull: false,
-            type: DataTypes.STRING,
-            unique: true
-        },
         sport: {
             type: DataTypes.INTEGER
         },
