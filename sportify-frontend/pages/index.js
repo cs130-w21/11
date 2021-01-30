@@ -32,7 +32,7 @@ export default function Home() {
           </Link>
 
 
-          <Link href="/frontpage/Login">
+          <Link href="/frontpage/SignUp">
             <a className={styles.card}>
               <h3> Sign Up&rarr;</h3>
               <p>Create an account to find matches nearby!</p>
