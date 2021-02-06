@@ -1,12 +1,12 @@
 const express = require('express');
-const sequelize =  require('./utils/sequelize/index');
+const sequelize = require('./utils/sequelize/index');
 const authRoutes = require('./routes/main/auth/index');
 
 const app = express();
 app.use(express.json())
-const bodyParser = require ('body-parser');
+const bodyParser = require('body-parser');
 app.use(bodyParser.urlencoded())
-const port = process.env.PORT || "3000";
+const port = process.env.PORT || "8000";
 
 //Verify DB Connection
 async function assertDatabaseConnectionOk() {
