@@ -1,11 +1,11 @@
-const express = require('express')
-const jwt =  require('jsonwebtoken')
-const sequelize =  require('../../utils/sequelize/index')
-router = express.Router()
+const express = require('express');
+const jwt =  require('jsonwebtoken');
+const sequelize =  require('../../../utils/sequelize/index');
+MainAuthRouter = express.Router();
 
-const signingSecret = process.env.JWT_SECRET || 'superSecretString'
+const signingSecret = process.env.JWT_SECRET || 'superSecretString';
 
-router.post("/signup", async (req, res) => {
+MainAuthRouter.post("/signup", async (req, res) => {
     const {username, email, password} = req.body
 
     // use client side validation and send non-empty username/email/password to backend
@@ -43,17 +43,15 @@ router.post("/signup", async (req, res) => {
         password,
         token
     })
+});
 
-}) 
-
-router.post('/signin', (req, res) => {
+MainAuthRouter.post('/signin', (req, res) => {
 
     const {username, password} = req.body
 
     res.status(200).json({
         message: 'Signin successful',
     })
+});
 
-})
-
-module.exports = router
+module.exports = MainAuthRouter;
