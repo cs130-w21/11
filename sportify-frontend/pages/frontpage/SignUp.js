@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import Router from "next/router"
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import styes from "./Login.module.css";
@@ -26,7 +27,7 @@ export default function Login() {
 
         console.log(reactData)
 
-        fetch("https://cors-anywhere.herokuapp.com/" + 'http://localhost:8000/auth/signup', {
+        fetch('http://localhost:8000/auth/signup', {
             //mode: "no-cors",
             method: "POST",
             headers: {
@@ -37,6 +38,10 @@ export default function Login() {
         })
             .then((result) => {
                 console.log(result)
+                if (result.status === 200) {
+
+                    Router.push("../homePage/homePage.js")
+                }
             })
 
 
