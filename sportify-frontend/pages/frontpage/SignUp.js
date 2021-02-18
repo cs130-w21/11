@@ -40,7 +40,7 @@ export default function Login() {
                 console.log(result)
                 if (result.status === 200) {
 
-                    Router.push("../homePage/homePage.js")
+                    Router.push("../homePage/homePage")
                 }
             })
 
