@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import Router from "next/router"
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import styes from "./Login.module.css";
@@ -17,18 +18,49 @@ export default function Login() {
 
     function handleSubmit(event) {
         event.preventDefault();
+
+        console.log("hereeee")
+        const url = "localhost:8000/auth/signup/"
+
+        const reactData = [username, email, password]
+
+
+        console.log(reactData)
+
+        fetch('http://localhost:8000/auth/signup', {
+            //mode: "no-cors",
+            method: "POST",
+            headers: {
+                'Content-type': 'application/json',
+                "Access-Control-Allow-Origin": '*'
+            },
+            body: JSON.stringify(reactData)
+        })
+            .then((result) => {
+                console.log(result)
+                if (result.status === 200) {
+
+                    Router.push("../homePage/homePage.js")
+                }
+            })
+
+
+
+
+
+
     }
     return (
         <div style={{
             backgroundImage: `url("sports.jpg")`
         }}>
             <Form onSubmit={handleSubmit}>
-                <Form.Group size="lg" controlId="email">
+                <Form.Group size="lg" controlId="userName">
                     <Form.Label>Username</Form.Label>
                     <Form.Control
                         autoFocus
-                        type="email"
-                        value={email}
+                        type="Username"
+                        value={username}
                         onChange={(e) => setUsername(e.target.value)}
                     />
                 </Form.Group>
