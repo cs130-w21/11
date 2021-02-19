@@ -1,40 +1,53 @@
-import React, { component, useState } from 'react'
+import React, {component, useState} from 'react'
 import Head from 'next/head';
 import Link from 'next/link';
+import Container from 'react-bootstrap/Container';
+import Row from 'react-bootstrap/Row'
+import Col from 'react-bootstrap/Col'
+//import soccerPic from "soccer.jpg"
 //import './homePage.module.css';
 
 
+const sportToImage = {
+	'Baseball': '/baseball.jpg', 
+	'Soccer': '/soccer.jpg',
+	'Football': '/football.png',
+	'Sprinting': '/sprinting.jpg',
+	'Volleyball': '/volleyball.jpg',
+	'Tennis': '/tennis.jpg',
+	'Badminton': '/badminton.jpg'
+};
 
-const homePage = (props) => {
+const HomePage = (props) => {
 
-	const [sportsSelected, setSportsSelected] = useState({
-		'Tennis': false, 'Soccer': false,
-		'Badminton': false, 'Baseball': false, 'Sprinting': false, 'Volleyball': false, 'American Football': false
-	});
-	const [timeFromNow, setTimeFromNow] = useState('Within 1 day');
-	const [radius, setRadius] = useState('Within 1 mile');
-	const [gender, setGender] = useState("Both Men and Women");
-	const [skillsSelected, setSkillsSelected] = useState({ '1': false, '2': false, '3': false, '4': false, '5': false, '6': false, '7': false, '8': false, '9': false, '10': false });
-	const [typeSelected, setTypeSelected] = useState("Games");
+	const [sportsSelected, setSportsSelected]=useState({'Tennis': false, 'Soccer': false, 
+	'Badminton': false, 'Baseball': false, 'Sprinting': false, 'Volleyball': false, 'American Football': false});
+	const [timeFromNow, setTimeFromNow]=useState('Within 1 day');
+	const [radius, setRadius]=useState('Within 1 mile');
+	const [gender, setGender]=useState("Both Men and Women");
+	const [skillsSelected, setSkillsSelected]=useState({'1': false, '2':false, '3':false, '4':false, '5':false, '6': false, '7':false, '8':false, '9': false, '10':false});
+	const [typeSelected, setTypeSelected]=useState("Games");
 
 	const sportsFunction = (e) => {
-		if (e.target.getAttribute('type') == "option") {
-			let copySports = { ...sportsSelected };
-			let sportChosen = e.target.value;
-			copySports[sportChosen] = !(copySports[sportChosen]);
+		if (e.target.getAttribute('type')=="option")
+		{
+			let copySports={...sportsSelected};
+			let sportChosen=e.target.value;
+			copySports[sportChosen]=!(copySports[sportChosen]);
 			setSportsSelected(copySports);
 		}
-
+		
 	};
 
 	const skillsFunction = (e) => {
-		if (e.target.getAttribute('type') == "option") {
-			let copySkillLevels = { ...skillsSelected };
-			let skillLevelChosen = e.target.value;
-			copySkillLevels[skillLevelChosen] = !(copySkillLevels[skillLevelChosen]);
+		if (e.target.getAttribute('type')=="option")
+		{
+			let copySkillLevels={...skillsSelected};
+			let skillLevelChosen=e.target.value;
+			copySkillLevels[skillLevelChosen]=!(copySkillLevels[skillLevelChosen]);
 			setSkillsSelected(copySkillLevels);
 		}
-
+		
 	};
 
 	// const updateDicts = (e, dictInQuestion, changeDictFunction) => {
@@ -43,27 +56,28 @@ const homePage = (props) => {
 	// 	changeDictFunction(copyDict);
 	// };
 
+	
+	
 
+	let optionalDateSelection = typeSelected=="Games" ? (
+			<label>
+				Game time: {' '}
+				<select>
+					<option value="Within 1 day">Within 1 day</option>
+					<option value="Within 1 week">Within 1 week</option>
+					<option value="Within 2 weeks">Within 2 weeks</option>
+					<option value="Within 1 month">Within 1 month</option>
+					<option value="Within 3 months">Within 3 months</option>
+					<option value="Within 6 months">Within 6 months</option>
+					<option value="Within 1 year">Within 1 year</option>
+				</select>
+				<br/>
+			</label>) : '';
 
-	let optionalDateSelection = typeSelected == "Games" ? (
-		<label>
-			Game time: {' '}
-			<select>
-				<option value="Within 1 day">Within 1 day</option>
-				<option value="Within 1 week">Within 1 week</option>
-				<option value="Within 2 weeks">Within 2 weeks</option>
-				<option value="Within 1 month">Within 1 month</option>
-				<option value="Within 3 months">Within 3 months</option>
-				<option value="Within 6 months">Within 6 months</option>
-				<option value="Within 1 year">Within 1 year</option>
-			</select>
-			<br />
-		</label>) : '';
-
-
+	
 	return (
-		<div>
-			<style jsx global>{`
+			<div>
+				<style jsx global>{`
 								       ul {
 						  list-style-type: none;
 						  margin: 0;
@@ -100,154 +114,199 @@ const homePage = (props) => {
 							text-align: center;
 						}
 
+						.game {
+							background-color: grey;
+						}
+
 		      `}</style>
-			<div className="navBar">
-				<ul>
-					<li><a href="default.asp">My Chats</a></li>
-					<li><a href="news.asp">My Games</a></li>
-					<li><a href="contact.asp">View/Edit My Profile</a></li>
-				</ul>
-			</div>
+				<div className="navBar">
+					<ul>
+						<li><a href="default.asp">My Chats</a></li>
+						<li><a href="news.asp">My Games</a></li>
+						<li><a href="contact.asp">View/Edit My Profile</a></li>
+					</ul>
+				</div>
 
-			<br />
+				<br/>
 
 
-			<div className="informationDiv">
-				<p>
-					Welcome to our app! Note that when searching for people exclusive-or games,
-					you must choose this with respect to your skill level. A 10 refers to an expert
-					within the game, while a 1 refers to a complete beginner. A 5 is around the skill level
-					of a club or tournament player who has competed before.
+				<div className="informationDiv">
+					<p>
+						Welcome to our app! Note that when searching for people exclusive-or games,
+						you must choose this with respect to your skill level. A 10 refers to an expert
+						within the game, while a 1 refers to a complete beginner. A 5 is around the skill level
+						of a club or tournament player who has competed before.
 					</p>
-			</div>
+				</div>
 
-			<br />
-
-
-
-			<div className="searchDiv">
-
-				<h1> Search Filters </h1>
-
-
-				<form onSubmit>
-					<label>
-						Sports: {' '}
-						<select multiple={true} onChange={sportsFunction} value={Object.keys(sportsSelected).find(key => sportsSelected[key] == true)}>
-							<option value="Basketball">Basketball</option>
-							<option value="Tennis">Tennis</option>
-							<option value="Soccer">Soccer</option>
-							<option value="Badminton">Badminton</option>
-							<option value="Baseball">Baseball</option>
-							<option value="Sprinting">Sprinting</option>
-							<option value="Volleyball">Volleyball</option>
-							<option value="American Football">American Football</option>
-						</select>
-					</label>
-
-					<br />
-					<br />
-					<br />
-
-
-					<label>
-						Radius: {' '}
-						<select value={radius} onChange={(e) => setRadius(e.target.value)}>
-							<option value="Within 1 mile">Within 1 mile</option>
-							<option value="Within 3 miles">Within 3 miles</option>
-							<option value="Within 5 miles">Within 5 miles</option>
-							<option value="Within 10 miles">Within 10 miles</option>
-							<option value="Within 20 miles">Within 20 miles</option>
-							<option value="Within 50 miles">Within 50 miles</option>
-							<option value="Within 100 miles">Within 100 miles</option>
-						</select>
-					</label>
-
-					<br />
-					<br />
-					<br />
+				<br/>
 
 
 
+				<div className="searchDiv">
 
-					<label>
-						Gender: {' '}
-						<select value={gender} onChange={(e) => setGender(e.target.value)}>
-							<option value="Men only">Men only</option>
-							<option value="Women only">Women Only</option>
-							<option value="Both Men and Women">Both Men and Women</option>
-						</select>
-					</label>
-
-					<br />
-					<br />
-					<br />
-
-					<label>
-						Skill Level: {' '}
-						<select multiple onChange={skillsFunction} value={Object.keys(skillsSelected).find(key => sportsSelected[key] == true)}>
-							<option value="1"> 1 </option>
-							<option value="2"> 2 </option>
-							<option value="3"> 3 </option>
-							<option value="4"> 4 </option>
-							<option value="5"> 5 </option>
-							<option value="6"> 6 </option>
-							<option value="7"> 7 </option>
-							<option value="8"> 8 </option>
-							<option value="9"> 9 </option>
-							<option value="10"> 10 </option>
-						</select>
-					</label>
-
-					<br />
-					<br />
-					<br />
+					<h1> Search Filters </h1>
 
 
-					<label>
-						People or Games: {' '}
-						<select value={typeSelected} onChange={(e) => setTypeSelected(e.target.value)}>
-							<option value="People"> People </option>
-							<option value="Games"> Games </option>
-						</select>
-					</label>
+					<form onSubmit>
+						<label>
+							Sports: {' '}
+					          	<select multiple={true} onChange={sportsFunction} value={Object.keys(sportsSelected).find(key => sportsSelected[key]==true)}>
+										<option value="Basketball">Basketball</option>
+										<option value="Tennis">Tennis</option>
+										<option value="Soccer">Soccer</option>
+										<option value="Badminton">Badminton</option>
+										<option value="Baseball">Baseball</option>
+										<option value="Sprinting">Sprinting</option>
+										<option value="Volleyball">Volleyball</option>
+										<option value="American Football">American Football</option>
+								</select>
+						</label>
 
-					<br />
-					<br />
-					<br />
+						{'    '}
+
+						<label>
+							Radius: {' '}
+					        <select value={radius} onChange={(e)=>setRadius(e.target.value)}>
+								<option value="Within 1 mile">Within 1 mile</option>
+								<option value="Within 3 miles">Within 3 miles</option>
+								<option value="Within 5 miles">Within 5 miles</option>
+								<option value="Within 10 miles">Within 10 miles</option>
+								<option value="Within 20 miles">Within 20 miles</option>
+								<option value="Within 50 miles">Within 50 miles</option>
+								<option value="Within 100 miles">Within 100 miles</option>
+							</select>
+						</label>
+
+						{'    '}
+					
 
 
-					{optionalDateSelection}
+						<label>
+							Gender: {' '}
+			          		<select value={gender} onChange={(e)=>setGender(e.target.value)}>
+								<option value="Men only">Men only</option>
+								<option value="Women only">Women Only</option>
+								<option value="Both Men and Women">Both Men and Women</option>
+							</select>
+						</label>
 
-					<br />
-					<br />
-					<br />
+						{'    '}
 
-					<input type="submit" value="Submit" />
+						<label>
+							Skill Level: {' '}
+				          		<select multiple onChange={skillsFunction} value={Object.keys(skillsSelected).find(key => sportsSelected[key]==true)}>
+									<option value="1"> 1 </option>
+									<option value="2"> 2 </option>
+									<option value="3"> 3 </option>
+									<option value="4"> 4 </option>
+									<option value="5"> 5 </option>
+									<option value="6"> 6 </option>
+									<option value="7"> 7 </option>
+									<option value="8"> 8 </option>
+									<option value="9"> 9 </option>
+									<option value="10"> 10 </option>
+								</select>
+						</label>
 
-					<br />
-					<br />
-					<br />
-					<br />
-					<br />
-					<br />
-				</form>
+						{'    '}
 
 
-			</div>
+						<label>
+							People or Games: {' '}
+			          		<select value={typeSelected} onChange={(e)=>setTypeSelected(e.target.value)}>
+								<option value="People"> People </option>
+								<option value="Games"> Games </option>
+							</select>
+						</label>
 
-			<div className="createGame">
-				<button> Create game now! </button>
-			</div>
-			<br />
-			<br />
-			<br />
-		</div >
+						{'    '}
+
+						{optionalDateSelection}
+
+						<br/>
+						
+
+						<input type="submit" value="Submit" />
+
+						<br/>
+						<br/>
+						<br/>
+						<br/>
+						<br/>
+						<br/>
+					</form>
+
+
+				</div>
+
+				<div className="createGame">
+					<button> Create game now! </button>
+				</div>
+				<br/>
+				<br/>
+				<br/>
+
+				
+
+				
+
+
+				
+
+				<Container fluid>
+					<Row className="game">
+						<Col>
+						    <Box>
+								<img src="/soccer.jpg" />
+							</Box>
+						</Col>
+
+
+						<Col >
+							<Box>
+								<div> Event Name </div>
+								<br />
+								<div> Event Location </div>
+								<br />
+								<div> Event description </div>
+								<br />
+								<button> Join game </button>
+
+							</Box>
+
+						</Col>
+
+
+						<Col>
+							<Box>
+								<div> Times allowed </div>
+								<br />
+								<div> Skill Levels allowed </div>
+								<br />
+								<div> Number of spots left! </div>
+								<br />
+
+							</Box>
+
+						</Col>
+
+					</Row>
+
+
+				</Container>
+
+
+
+
+			</div >
 	);
 };
 
 
-export default homePage;
+export default HomePage;
+const Box = props => <div className="box">{props.children} </div>;
+
 
 // class homePage extends Component {
 // 	constructor(props) {
@@ -339,7 +398,7 @@ export default homePage;
 // 								<option value="Within 100 miles">Within 100 miles</option>
 // 							</select>
 // 						</label>
-
+					
 
 
 // 						<label>
