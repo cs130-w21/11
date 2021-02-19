@@ -1,9 +1,22 @@
 import React, {component, useState} from 'react'
 import Head from 'next/head';
 import Link from 'next/link';
+import Container from 'react-bootstrap/Container';
+import Row from 'react-bootstrap/Row'
+import Col from 'react-bootstrap/Col'
+//import soccerPic from "soccer.jpg"
 //import './homePage.module.css';
 
 
+const sportToImage = {
+	'Baseball': '/baseball.jpg', 
+	'Soccer': '/soccer.jpg',
+	'Football': '/football.png',
+	'Sprinting': '/sprinting.jpg',
+	'Volleyball': '/volleyball.jpg',
+	'Tennis': '/tennis.jpg',
+	'Badminton': '/badminton.jpg'
+};
 
 const HomePage = (props) => {
 
@@ -43,6 +56,7 @@ const HomePage = (props) => {
 	// 	changeDictFunction(copyDict);
 	// };
 
+	
 	
 
 	let optionalDateSelection = typeSelected=="Games" ? (
@@ -100,6 +114,10 @@ const HomePage = (props) => {
 							text-align: center;
 						}
 
+						.game {
+							background-color: grey;
+						}
+
 		      `}</style>
 				<div className="navBar">
 					<ul>
@@ -145,10 +163,7 @@ const HomePage = (props) => {
 								</select>
 						</label>
 
-						<br/>
-						<br/>
-						<br/>
-
+						{'    '}
 
 						<label>
 							Radius: {' '}
@@ -163,10 +178,7 @@ const HomePage = (props) => {
 							</select>
 						</label>
 
-						<br/>
-						<br/>
-						<br/>
-
+						{'    '}
 					
 
 
@@ -179,9 +191,7 @@ const HomePage = (props) => {
 							</select>
 						</label>
 
-						<br/>
-						<br/>
-						<br/>
+						{'    '}
 
 						<label>
 							Skill Level: {' '}
@@ -199,9 +209,7 @@ const HomePage = (props) => {
 								</select>
 						</label>
 
-						<br/>
-						<br/>
-						<br/>
+						{'    '}
 
 
 						<label>
@@ -212,16 +220,12 @@ const HomePage = (props) => {
 							</select>
 						</label>
 
-						<br/>
-						<br/>
-						<br/>
-
+						{'    '}
 
 						{optionalDateSelection}
 
 						<br/>
-						<br/>
-						<br/>
+						
 
 						<input type="submit" value="Submit" />
 
@@ -242,12 +246,67 @@ const HomePage = (props) => {
 				<br/>
 				<br/>
 				<br/>
+
+				
+
+				
+
+
+				
+
+				<Container fluid>
+					<Row className="game">
+						<Col>
+						    <Box>
+								<img src="/soccer.jpg" />
+							</Box>
+						</Col>
+
+
+						<Col >
+							<Box>
+								<div> Event Name </div>
+								<br />
+								<div> Event Location </div>
+								<br />
+								<div> Event description </div>
+								<br />
+								<button> Join game </button>
+
+							</Box>
+
+						</Col>
+
+
+						<Col>
+							<Box>
+								<div> Times allowed </div>
+								<br />
+								<div> Skill Levels allowed </div>
+								<br />
+								<div> Number of spots left! </div>
+								<br />
+
+							</Box>
+
+						</Col>
+
+					</Row>
+
+
+				</Container>
+
+
+
+
 			</div >
 	);
 };
 
 
 export default HomePage;
+const Box = props => <div className="box">{props.children} </div>;
+
 
 // class homePage extends Component {
 // 	constructor(props) {
