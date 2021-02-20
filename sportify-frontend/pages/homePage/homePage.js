@@ -18,7 +18,7 @@ const sportToImage = {
 	'Badminton': '/badminton.jpg'
 };
 
-const HomePage = (props) => {
+const homePage = (props) => {
 
 	const [sportsSelected, setSportsSelected]=useState({'Tennis': false, 'Soccer': false, 
 	'Badminton': false, 'Baseball': false, 'Sprinting': false, 'Volleyball': false, 'American Football': false});
@@ -304,7 +304,7 @@ const HomePage = (props) => {
 };
 
 
-export default HomePage;
+export default homePage;
 const Box = props => <div className="box">{props.children} </div>;
 
 

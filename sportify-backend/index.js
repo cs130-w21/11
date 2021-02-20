@@ -2,6 +2,9 @@ const express = require('express');
 const sequelize = require('./utils/sequelize/index');
 // const authRoutes = require('./routes/main/auth/index');
 
+
+
+
 const app = express();
 app.use(express.json())
 const bodyParser = require('body-parser');

@@ -20,14 +20,15 @@ export default function Login() {
         event.preventDefault();
 
         console.log("hereeee")
-        const url = "localhost:8000/auth/signup/"
+        //const url = "localhost:8000/user/signup/"
+        //const url="localhost:3000/frontpage/SignUp";
 
         const reactData = [username, email, password]
 
 
         console.log(reactData)
 
-        fetch('http://localhost:8000/auth/signup', {
+        fetch('http://localhost:8000/user/signup', {
             //mode: "no-cors",
             method: "POST",
             headers: {
@@ -52,7 +53,7 @@ export default function Login() {
     }
     return (
         <div style={{
-            backgroundImage: `url("sports.jpg")`
+            backgroundImage: `url('/sports.jpg')`
         }}>
             <Form onSubmit={handleSubmit}>
                 <Form.Group size="lg" controlId="userName">
