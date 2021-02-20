@@ -6,5 +6,6 @@ script:
   - cd sportify-backend
   - echo 'Installing Dependencies'
   - npm install 
+  - npm install bcrypt
   - echo 'Running test cases'
   - npm run test
