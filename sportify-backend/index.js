@@ -5,7 +5,9 @@ const sequelize = require('./utils/sequelize/index');
 const app = express();
 app.use(express.json())
 const bodyParser = require('body-parser');
-app.use(bodyParser.urlencoded())
+app.use(bodyParser.urlencoded({
+    extended:true
+}));
 const port = process.env.PORT || "8000";
 
 //Verify DB Connection
@@ -31,3 +33,5 @@ require('./routes')(app);
 app.listen(port, () => {
     console.log(`Listening on http://localhost:${port}`);
 });
+
+module.exports = app;
