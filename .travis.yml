@@ -1,0 +1,11 @@
+language: node_js
+node_js:
+  - "10"
+script:
+  - echo 'Testing Backend'
+  - cd sportify-backend
+  - echo 'Installing Dependencies'
+  - npm install 
+  - npm install bcrypt
+  - echo 'Running test cases'
+  - npm run test
