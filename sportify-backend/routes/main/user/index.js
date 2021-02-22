@@ -4,7 +4,6 @@ const sequelize = require('../../../utils/sequelize/index');
 const bcrypt = require('bcrypt');
 const cors = require('cors')
 
-
 MainAuthRouter = express.Router();
 MainAuthRouter.all('*', cors());
 
@@ -12,7 +11,8 @@ const signingSecret = process.env.JWT_SECRET || 'superSecretString';
 const User = sequelize.models.user
 
 MainAuthRouter.post("/signup", async (req, res) => {
-    const [username, email, password] = req.body
+    const {username, email, password} = req.body
+    console.log(username, email, password)
 
     // use client side validation and send non-empty username/email/password to backend
     if (password.length < 8) {
