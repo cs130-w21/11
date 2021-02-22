@@ -38,10 +38,9 @@ export default function Login() {
         })
             .then((result) => {
 
-                console.log("Result")
-                console.log(result)
+
                 if (result.status === 200) {
-                    console.log("herewtf")
+
 
                     Router.push("../homePage/homePage")
                 }
