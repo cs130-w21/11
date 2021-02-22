@@ -19,7 +19,7 @@ export default function Login() {
     function handleSubmit(event) {
         event.preventDefault();
 
-        console.log("hereeee")
+
         const url = "localhost:8000/auth/signup/"
 
         const reactData = [username, email, password]
