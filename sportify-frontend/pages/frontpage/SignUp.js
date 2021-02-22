@@ -19,15 +19,15 @@ export default function Login() {
     function handleSubmit(event) {
         event.preventDefault();
 
-        console.log("hereeee")
+
         const url = "localhost:8000/auth/signup/"
 
         const reactData = [username, email, password]
 
 
-        console.log(reactData)
 
-        fetch('http://localhost:8000/auth/signup', {
+
+        fetch('http://localhost:8000/user/signup', {
             //mode: "no-cors",
             method: "POST",
             headers: {
@@ -37,8 +37,10 @@ export default function Login() {
             body: JSON.stringify(reactData)
         })
             .then((result) => {
-                console.log(result)
+
+
                 if (result.status === 200) {
+
 
                     Router.push("../homePage/homePage")
                 }

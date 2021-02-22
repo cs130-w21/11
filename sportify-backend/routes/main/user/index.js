@@ -1,14 +1,18 @@
 const express = require('express');
-const jwt =  require('jsonwebtoken');
-const sequelize =  require('../../../utils/sequelize/index');
+const jwt = require('jsonwebtoken');
+const sequelize = require('../../../utils/sequelize/index');
 const bcrypt = require('bcrypt');
+const cors = require('cors')
+
+
 MainAuthRouter = express.Router();
+MainAuthRouter.all('*', cors());
 
 const signingSecret = process.env.JWT_SECRET || 'superSecretString';
 const User = sequelize.models.user
 
 MainAuthRouter.post("/signup", async (req, res) => {
-    const {username, email, password} = req.body
+    const [username, email, password] = req.body
 
     // use client side validation and send non-empty username/email/password to backend
     if (password.length < 8) {
@@ -41,7 +45,7 @@ MainAuthRouter.post("/signup", async (req, res) => {
             message: err.message
         })
     }
-    
+
     return res.status(200).json({
         message: 'Signup successful',
         username,
@@ -52,20 +56,20 @@ MainAuthRouter.post("/signup", async (req, res) => {
 
 MainAuthRouter.post('/signin', async (req, res) => {
 
-    const {username, password} = req.body
+    const { username, password } = req.body
     let token
     try {
-        const user = await User.findOne({where: {username:username}})
+        const user = await User.findOne({ where: { username: username } })
         let hashedPassword = user.password
         let result = await bcrypt.compare(password, hashedPassword)
-        if( !result ){
-            res.status(401).json({message: "Invalid Username or Password"})
+        if (!result) {
+            res.status(401).json({ message: "Invalid Username or Password" })
         }
         let email = user.email
         token = jwt.sign({ username, email }, signingSecret, { expiresIn: "10 days" });
     }
-    catch(err){
-        res.status(401).json({message: "Invalid Username or Password"})
+    catch (err) {
+        res.status(401).json({ message: "Invalid Username or Password" })
     }
     return res.status(200).json({
         message: 'Signin successful',
