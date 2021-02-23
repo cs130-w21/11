@@ -6,10 +6,14 @@ module.exports = (sequelize) => {
             allowNull: false,
             type: DataTypes.INTEGER
         },
-        // TODO: Modify to use coordinates
         location: {
             allowNull: false,
-            type: DataTypes.STRING
+            type: DataTypes.GEOMETRY('Point')
+        },
+        time: {
+            allowNull: false,
+            type: DataTypes.DATE,
+            defaultValue: DataTypes.NOW
         },
         max_group_size: {
             allowNull: false,
@@ -17,7 +21,8 @@ module.exports = (sequelize) => {
         },
         skill_level: {
             allowNull: false,
-            type: DataTypes.INTEGER
+            type: DataTypes.INTEGER,
+            validate: { min: 1, max: 10 }
         },
         comments: {
             type: DataTypes.STRING

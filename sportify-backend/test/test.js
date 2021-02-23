@@ -19,12 +19,14 @@ describe("Test game endpoints", () => {
         sequelize.sync({ force: true }).then(function() {
             done();
         });
-    })
+    });
 
     it("Should create a few new games", async () => {
         const game1 = {
             "sport": 2,
-            "location": "IM Field",
+            "longitude": 55.27,
+            "latitude": 25.21,
+            "dateString": "2021-02-23T23:48:00.000",
             "max_group_size": 10,
             "skill_level": 3,
             "comments": "N/A"
@@ -37,14 +39,15 @@ describe("Test game endpoints", () => {
         expect(res.body.Game).to.include({
             id: 1,
             sport: game1.sport,
-            location: game1.location,
             max_group_size: game1.max_group_size,
             skill_level: game1.skill_level,
         });
 
         const game2 = {
             "sport": 4,
-            "location": "De Neve",
+            "longitude": 121.88,
+            "latitude": 37.33,
+            "dateString": "2021-02-23T11:50:00.000",
             "max_group_size": 4,
             "skill_level": 5,
             "comments": "N/A"
@@ -57,7 +60,6 @@ describe("Test game endpoints", () => {
         expect(res.body.Game).to.include({
             id: 2,
             sport: game2.sport,
-            location: game2.location,
             max_group_size: game2.max_group_size,
             skill_level: game2.skill_level,
         });
@@ -98,6 +100,7 @@ describe("Test game endpoints", () => {
         expect(res.body[0]).to.have.property('id');
         expect(res.body[0]).to.have.property('sport');
         expect(res.body[0]).to.have.property('location');
+        expect(res.body[0]).to.have.property('time');
         expect(res.body[0]).to.have.property('max_group_size');
         expect(res.body[0]).to.have.property('skill_level');
     });

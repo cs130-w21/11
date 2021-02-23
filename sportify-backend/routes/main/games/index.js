@@ -1,23 +1,19 @@
 const express = require('express');
 const sequelize =  require('../../../utils/sequelize/index');
 MainGamesRouter = express.Router();
+const game = sequelize.models.game; 
 
 // Get filtered games from db
 MainGamesRouter.get('/getGames', async (req, res) => {
-    const game = sequelize.models.game; 
     try {
         const sport = req.query.sport;
-        const location = req.query.location;
         const max_group_size = req.query.max_group_size;
         const skill_level = req.query.skill_level;
         var options = {where: {}};
         if(sport) {
             options.where.sport = sport;
         }
-        // TODO: Modify this to use geometry and filter by a radius
-        if(location) {
-            options.where.location = location;
-        }
+        // TODO: Add filter by a radius
         if(max_group_size) {
             options.where.max_group_size = max_group_size;
         }
@@ -32,9 +28,22 @@ MainGamesRouter.get('/getGames', async (req, res) => {
 
 // Create a new game posting
 MainGamesRouter.post('/createGame', async (req, res) => {
-    const game = sequelize.models.game; 
     try {
-        const Game = await game.create(req.body);
+        const lng = req.body['longitude'];
+        const lat = req.body['latitude'];
+        const dateString = req.body['dateString'];
+        const datetime = new Date(dateString);
+        const point = {type: 'Point', coordinates: [lng,lat]};
+        
+        gameReq = {
+            sport: req.body['sport'],
+            location: point,
+            time: datetime,
+            max_group_size: req.body['max_group_size'],
+            skill_level: req.body['skill_level'],
+            comments: req.body['comments']
+        }
+        const Game = await game.create(gameReq);
         return res.status(200).json({Game});
     } catch (err) {
         return res.status(500).send(err.message);
@@ -42,11 +51,24 @@ MainGamesRouter.post('/createGame', async (req, res) => {
 });
 
 // Update a game posting
-MainGamesRouter.put('/updateGame/:id', async (req, res) => {
-    const game = sequelize.models.game; 
+MainGamesRouter.put('/updateGame/:id', async (req, res) => { 
     try {
+        const lng = req.body['longitude'];
+        const lat = req.body['latitude'];
+        const dateString = req.body['dateString'];
+        const datetime = new Date(dateString);
+        const point = {type: 'Point', coordinates: [lng,lat]};
+        
+        gameReq = {
+            sport: req.body['sport'],
+            location: point,
+            time: datetime,
+            max_group_size: req.body['max_group_size'],
+            skill_level: req.body['skill_level'],
+            comments: req.body['comments']
+        }
         const id = req.params.id;
-        const [rowsUpdated, [Game]] = await game.update(req.body, {returning: true, where: {id:id}});
+        const [rowsUpdated, [Game]] = await game.update(gameReq, {returning: true, where: {id:id}});
         return res.status(200).json({Game});
     } catch (err) {
         return res.status(500).send(err.message);
@@ -55,7 +77,6 @@ MainGamesRouter.put('/updateGame/:id', async (req, res) => {
 
 // Delete a game posting by id
 MainGamesRouter.post('/deleteGame/:id', async (req, res) => {
-    const game = sequelize.models.game;
     try {
         const id = req.params.id;
         const deleted = await game.destroy({
