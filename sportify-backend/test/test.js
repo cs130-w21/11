@@ -26,7 +26,7 @@ describe("Test game endpoints", () => {
             "sport": 2,
             "longitude": 55.27,
             "latitude": 25.21,
-            "dateString": "2021-02-23T23:48:00.000",
+            "dateString": "2021-04-01T23:48:00.000",
             "max_group_size": 10,
             "skill_level": 3,
             "comments": "N/A"
@@ -47,7 +47,7 @@ describe("Test game endpoints", () => {
             "sport": 4,
             "longitude": 121.88,
             "latitude": 37.33,
-            "dateString": "2021-02-23T11:50:00.000",
+            "dateString": "2021-02-26T11:50:00.000",
             "max_group_size": 4,
             "skill_level": 5,
             "comments": "N/A"
@@ -91,7 +91,7 @@ describe("Test game endpoints", () => {
         expect(res.body[0]).to.have.property('skill_level');
     });
 
-    it("Should get a filtered list of games", async () => {
+    it("Should get a filtered list of games by sport", async () => {
         let res = await chai.request(server)
             .get('/games/getGames?sport=4')
             .set('Accept', 'application/json');
@@ -99,6 +99,21 @@ describe("Test game endpoints", () => {
         expect(res.body).to.have.length(1);
         expect(res.body[0]).to.have.property('id');
         expect(res.body[0]).to.have.property('sport');
+        expect(res.body[0]).to.have.property('location');
+        expect(res.body[0]).to.have.property('time');
+        expect(res.body[0]).to.have.property('max_group_size');
+        expect(res.body[0]).to.have.property('skill_level');
+    });
+
+    it("Should get a filtered list of games by datetime", async () => {
+        let res = await chai.request(server)
+            .get('/games/getGames?weeksAhead=2')
+            .set('Accept', 'application/json');
+        expect(res.status).to.equal(200);
+        expect(res.body).to.have.length(1);
+        expect(res.body[0]).to.have.property('id');
+        expect(res.body[0]).to.have.property('sport');
+        expect(res.body[0]['sport']).to.equal(4);
         expect(res.body[0]).to.have.property('location');
         expect(res.body[0]).to.have.property('time');
         expect(res.body[0]).to.have.property('max_group_size');

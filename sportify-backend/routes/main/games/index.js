@@ -1,4 +1,5 @@
 const express = require('express');
+const Sequelize = require('sequelize');
 const sequelize =  require('../../../utils/sequelize/index');
 MainGamesRouter = express.Router();
 const game = sequelize.models.game; 
@@ -9,11 +10,18 @@ MainGamesRouter.get('/getGames', async (req, res) => {
         const sport = req.query.sport;
         const max_group_size = req.query.max_group_size;
         const skill_level = req.query.skill_level;
+        const weeksAhead = req.query.weeksAhead;
         var options = {where: {}};
         if(sport) {
             options.where.sport = sport;
         }
         // TODO: Add filter by a radius
+        if(weeksAhead) {
+            var now = new Date();
+            var weeksLater = new Date();
+            weeksLater.setDate(weeksLater.getDate() + weeksAhead*7);
+            options.where.time = {[Sequelize.Op.gt]: now, [Sequelize.Op.lt]: weeksLater}; 
+        }
         if(max_group_size) {
             options.where.max_group_size = max_group_size;
         }
