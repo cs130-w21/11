@@ -79,6 +79,7 @@ MainAuthRouter.post('/signin', async (req, res) => {
 });
 
 MainAuthRouter.get('/getUsers', async (req, res) => {
+    console.log('here')
     const user = sequelize.models.user; 
     try {
         const username = req.query.username;
@@ -98,7 +99,8 @@ MainAuthRouter.get('/getUsers', async (req, res) => {
         if(age) {
             options.where.age= age;
         }
-        user.findAll(options).then(user => res.json(user));
+        
+        user.findAll({attributes:{exclude:['password']}, options}).then(user => res.json(user));
     } catch (err) {
         return res.status(500).send(err.message);
     }
