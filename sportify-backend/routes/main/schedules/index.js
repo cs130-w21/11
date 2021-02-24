@@ -1,41 +1,63 @@
 const express = require('express');
 const sequelize =  require('../../../utils/sequelize/index');
-const Op = sequelize.Op;
+const Op = sequelize.Sequelize.Op;
 MainSchedulesRouter = express.Router();
 
 // Get a user's schedule for a particular week
-MainSchedulesRouter.get('./getSchedule', async(req, res) => {
-    const schedule = sequelize.models.schedule; 
+MainSchedulesRouter.get('/getSchedule', async(req, res) => {
+    const schedule = sequelize.models.schedule;
+    const user = sequelize.models.user; 
     try {
-        const start_date = req.query.start_date;
+        const start_date_arr = req.query.start_date.split("-");
         const userId = req.query.userId;
+        const start_date = new Date(start_date_arr[0], start_date_arr[1], start_date_arr[2])
         var options = {where: {}};
 
-        const location = req.query.location;
-        const max_group_size = req.query.max_group_size;
-        const skill_level = req.query.skill_level;
-        
-        // Not too sure about this right now...
-        // start_date should be between start_date from request and start_date + 7 days 
+        // start_date of the schedule event should be between start_date from request and start_date + 7 days 
         if(start_date) {
-            options.where.date = {
+            options.where.start_date = {
                 [Op.between]: [start_date, new Date(start_date.getTime() + 7 * 24 * 60 * 60 * 1000)]
             }
         }
-
-        // TODO: Modify this to use geometry and filter by a radius
-        if(location) {
-            options.where.location = location;
+        if(userId) {
+            options.where.userId = userId; 
         }
-        if(max_group_size) {
-            options.where.max_group_size = max_group_size;
-        }
-        if(skill_level) {
-            options.where.skill_level = skill_level;
-        }
-        game.findAll(options).then(game => res.json(game));
+        
+        schedule.findAll(options).then(schedule => res.json(schedule));
     } catch (err) {
         return res.status(500).send(err.message);
     }
 });
 
+// Create an event in the user's schedule
+MainSchedulesRouter.post('/createSchedule/:username', async(req, res) => {
+    const schedule = sequelize.models.schedule; 
+    const user = sequelize.models.user;
+    const game = sequelize.models.game;
+    try {
+        const start_date_arr = req.body.start_date.split("-");
+        const end_date_arr = req.body.end_date.split("-");
+        const username = req.params.username;
+        const type = req.body.type;
+        const gameId = req.body.gameId;
+
+        const Schedule = await schedule.create({
+            start_date: new Date(start_date_arr[0], start_date_arr[1], start_date_arr[2], start_date_arr[3], start_date_arr[4]), 
+            end_date: new Date(end_date_arr[0], end_date_arr[1], end_date_arr[2], end_date_arr[3], end_date_arr[4]),
+            type: type
+        });
+
+        const User = await user.findOne({ where: { username: username } });
+        Schedule.setUser(User);
+        if(type == "game" && gameId) {
+            const Game = await game.findOne({ where: {id: gameId} });
+            Schedule.setGame(Game);
+        }
+
+        return res.status(200).json({Schedule});
+    } catch (err) {
+        return res.status(500).send(err.message);
+    }
+});
+
+module.exports = MainSchedulesRouter;

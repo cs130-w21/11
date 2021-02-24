@@ -17,7 +17,8 @@ const sequelize = new Sequelize('d5vvatptuuuv2b', 'ahkzddesngriuf', 'e8ec8427f0f
 //Define models 
 const modelDefiners = [
     require('../../models/user'),
-    require('../../models/game')
+    require('../../models/game'),
+    require('../../models/schedule')
 ]
 for (const modelDefiner of modelDefiners) {
     modelDefiner(sequelize);
@@ -26,7 +27,7 @@ for (const modelDefiner of modelDefiners) {
 //Define Associations:
 const { game, user, schedule } = sequelize.models;
 game.belongsToMany(user, { through: 'userGames' })
-schedule.hasOne(game)
+schedule.belongsTo(game)
 schedule.belongsTo(user)
 
 module.exports = sequelize;

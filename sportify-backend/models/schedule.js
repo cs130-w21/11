@@ -6,15 +6,9 @@ module.exports = (sequelize) => {
             allowNull: false,
             type: DataTypes.DATE
         },
-        // start hour of the game/availability
-        start_time: {
+        end_date: {
             allowNull: false,
-            type: DataTypes.TIME
-        },
-        // end hour of the game/availability
-        end_time: {
-            allowNull: false,
-            type: DataTypes.TIME
+            type: DataTypes.DATE
         },
         // types are "available" and "game"
         type: {
