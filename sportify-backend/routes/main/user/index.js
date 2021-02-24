@@ -1,5 +1,6 @@
 const express = require('express');
 const jwt = require('jsonwebtoken');
+const Sequelize = require('sequelize');
 const sequelize = require('../../../utils/sequelize/index');
 const bcrypt = require('bcrypt');
 const cors = require('cors')
@@ -85,11 +86,13 @@ MainAuthRouter.get('/getUsers', async (req, res) => {
         const username = req.query.username;
         const email = req.query.email;
         const ages = req.query.ages;
-        const sport = req.query.sport
-        const skill_levels = req.query.skill_levels
-        const gender = req.query.gender
-        const location = req.query.location
-        var options = {where: {}, attributes:{excludes:[]}};
+        const sport = req.query.sport;
+        const skill_levels = req.query.skill_levels;
+        const gender = req.query.gender;
+        const radius = req.query.radius;
+        const userLng = req.query.userLng;
+        const userLat = req.query.userLat;
+        var options = {where: {}, attributes:{exclude:[]}};
         if(username) {
             options.where.username = username;
         }
@@ -108,8 +111,18 @@ MainAuthRouter.get('/getUsers', async (req, res) => {
         if(gender) {
             options.where.gender = gender;
         }
-        if(location) {
-            options.where.location = location;
+        if(radius && userLat && userLng) {
+            const radiusInMeters = radius*1609.34; // convert miles to meters
+            options.where = Sequelize.where(
+                Sequelize.fn(
+                    'ST_DWithin',
+                    Sequelize.col('location'), 
+                    Sequelize.fn(
+                        'ST_MakePoint', 
+                        userLng, 
+                        userLat),  
+                    radiusInMeters), 
+                true);
         }
         //{attributes:{exclude:['password']}}, 
         options.attributes.exclude = ['password'];

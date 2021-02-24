@@ -355,8 +355,8 @@ describe("Test endpoints", () => {
         expect(res.body.message).to.equal('Signin successful');
     });
 
-    it("Should update a user's profile", async () => {
-        const user = {
+    it("Should update a few users' profiles", async () => {
+        const user1 = {
             "longitude": 95.32,
             "latitude": 34.05,
             "age": 24,
@@ -368,7 +368,7 @@ describe("Test endpoints", () => {
         let res = await chai.request(server)
             .put('/user/updateProfile/3')
             .set('Accept', 'application/json')
-            .send(user);
+            .send(user1);
         expect(res.status).to.equal(200);
         expect(res.body.User).to.have.property('id');
         expect(res.body.User).to.have.property('username');
@@ -384,6 +384,51 @@ describe("Test endpoints", () => {
         expect(res.body.User.sport).to.equal(2);
         expect(res.body.User.skill_level).to.equal(8);
         expect(res.body.User.about_me).to.equal("This is a test");
+
+        const user2 = {
+            "longitude": 118.45,
+            "latitude": 34.06,
+            "age": 21,
+            "gender": 'F',
+            "sport": 4,
+            "skill_level": 6,
+            "about_me": "This is a test"
+        };
+        res = await chai.request(server)
+            .put('/user/updateProfile/2')
+            .set('Accept', 'application/json')
+            .send(user2);
+        expect(res.status).to.equal(200);
+        expect(res.body.User).to.have.property('id');
+        expect(res.body.User).to.have.property('username');
+        expect(res.body.User).to.have.property('email');
+        expect(res.body.User).to.have.property('password');
+        expect(res.body.User).to.have.property('location');
+        expect(res.body.User).to.have.property('skill_level');
+        expect(res.body.User).to.have.property('age');
+        expect(res.body.User).to.have.property('gender');
+        expect(res.body.User).to.have.property('sport');
+        expect(res.body.User.age).to.equal(21);
+        expect(res.body.User.gender).to.equal('F');
+        expect(res.body.User.sport).to.equal(4);
+        expect(res.body.User.skill_level).to.equal(6);
+        expect(res.body.User.about_me).to.equal("This is a test");
+    });
+
+    it("Should get a filtered list of users by radius", async () => {
+        let res = await chai.request(server)
+            .get('/user/getUsers?radius=2&userLng=118.45&userLat=34.06')
+            .set('Accept', 'application/json');
+        expect(res.status).to.equal(200);
+        expect(res.body).to.have.length(1);
+        expect(res.body[0]).to.have.property('id');
+        expect(res.body[0]).to.have.property('username');
+        expect(res.body[0]).to.have.property('email');
+        expect(res.body[0]).to.have.property('location');
+        expect(res.body[0]).to.have.property('skill_level');
+        expect(res.body[0]).to.have.property('age');
+        expect(res.body[0]).to.have.property('gender');
+        expect(res.body[0]).to.have.property('sport');
     });
 
     it("Should not update a user's profile with an existing username or email or an invalid password", async () => {
