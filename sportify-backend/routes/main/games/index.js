@@ -7,15 +7,31 @@ const game = sequelize.models.game;
 // Get filtered games from db
 MainGamesRouter.get('/getGames', async (req, res) => {
     try {
-        const sport = req.query.sport;
+        const sports = req.query.sports;
         const max_group_size = req.query.max_group_size;
-        const skill_level = req.query.skill_level;
+        const skill_levels = req.query.skill_levels;
         const weeksAhead = req.query.weeksAhead;
+        const radius = req.query.radius;
+        const userLng = req.query.userLng;
+        const userLat = req.query.userLat;
         var options = {where: {}};
-        if(sport) {
-            options.where.sport = sport;
+        if(sports) {
+            options.where.sport = sports;
         }
-        // TODO: Add filter by a radius
+        // TODO: Grab user latitude and longitude
+        if(radius && userLat && userLng) {
+            const radiusInMeters = radius*1609.34; // convert miles to meters
+            options.where = Sequelize.where(
+                Sequelize.fn(
+                    'ST_DWithin',
+                    Sequelize.col('location'), 
+                    Sequelize.fn(
+                        'ST_MakePoint', 
+                        userLng, 
+                        userLat),  
+                    radiusInMeters), 
+                true);
+        }
         if(weeksAhead) {
             var now = new Date();
             var weeksLater = new Date();
@@ -25,8 +41,8 @@ MainGamesRouter.get('/getGames', async (req, res) => {
         if(max_group_size) {
             options.where.max_group_size = max_group_size;
         }
-        if(skill_level) {
-            options.where.skill_level = skill_level;
+        if(skill_levels) {
+            options.where.skill_level = skill_levels;
         }
         game.findAll(options).then(game => res.json(game));
     } catch (err) {

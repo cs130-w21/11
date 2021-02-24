@@ -22,7 +22,7 @@ module.exports = (sequelize) => {
             unique: true
         },
         location: {
-            type: DataTypes.GEOMETRY('Point')
+            type: DataTypes.GEOGRAPHY('Point', 4326) // srid for degrees
         },
         age: {
             type: DataTypes.INTEGER
@@ -35,8 +35,8 @@ module.exports = (sequelize) => {
                 }
             }
         },
-        sports: {
-            type: DataTypes.ARRAY(DataTypes.INTEGER)
+        sport: {
+            type: DataTypes.INTEGER
         },
         skill_level: {
             type: DataTypes.INTEGER,

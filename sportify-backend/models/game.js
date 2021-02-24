@@ -8,7 +8,7 @@ module.exports = (sequelize) => {
         },
         location: {
             allowNull: false,
-            type: DataTypes.GEOMETRY('Point')
+            type: DataTypes.GEOGRAPHY('Point', 4326) //srid for degrees
         },
         time: {
             allowNull: false,
