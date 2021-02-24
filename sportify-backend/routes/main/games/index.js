@@ -83,13 +83,24 @@ MainGamesRouter.put('/updateGame/:id', async (req, res) => {
         const datetime = new Date(dateString);
         const point = {type: 'Point', coordinates: [lng,lat]};
         
-        gameReq = {
-            sport: req.body['sport'],
-            location: point,
-            time: datetime,
-            max_group_size: req.body['max_group_size'],
-            skill_level: req.body['skill_level'],
-            comments: req.body['comments']
+        gameReq = {}
+        if (req.body['sport']) {
+            gameReq.sport = req.body['sport'];
+        }
+        if (req.body['skill_level']) {
+            gameReq.skill_level = req.body['skill_level'];
+        }
+        if (req.body['max_group_size']) {
+            gameReq.max_group_size = req.body['max_group_size'];
+        }
+        if (lat && lng) {
+            gameReq.location = point;
+        }
+        if (dateString) {
+            gameReq.time = datetime;
+        }
+        if (req.body['comments']) {
+            gameReq.comments = req.body['comments'];
         }
         const id = req.params.id;
         const [rowsUpdated, [Game]] = await game.update(gameReq, {returning: true, where: {id:id}});
