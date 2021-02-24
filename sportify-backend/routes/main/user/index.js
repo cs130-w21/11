@@ -78,4 +78,47 @@ MainAuthRouter.post('/signin', async (req, res) => {
     })
 });
 
+MainAuthRouter.get('/getUsers', async (req, res) => {
+    // console.log('here')
+    const user = sequelize.models.user; 
+    try {
+        const username = req.query.username;
+        const email = req.query.email;
+        const age = req.query.age;
+        const sports = req.query.sports
+        const skill_level = req.query.skill_level
+        const gender = req.query.gender
+        const location = req.query.location
+        var options = {where: {}, attributes:{excludes:[]}};
+        if(username) {
+            options.where.username = username;
+        }
+        if(email) {
+            options.where.email = email;
+        }
+        if(age) {
+            options.where.age = age;
+        }
+        if(sports) {
+            options.where.sports = sports;
+        }
+        if(skill_level) {
+            options.where.skill_level = skill_level;
+        }
+        if(gender) {
+            options.where.gender = gender;
+        }
+        if(location) {
+            options.where.location = location;
+        }
+        //{attributes:{exclude:['password']}}, 
+        options.attributes.exclude = ['password'];
+        // console.log(options);
+        user.findAll(options).then(user => res.json(user));
+        
+    } catch (err) {
+        return res.status(500).send(err.message);
+    }
+});
+
 module.exports = MainAuthRouter;
