@@ -132,9 +132,9 @@ const HomePage = (props) => {
 				<div className="navBar">
 					<ul>
 						<li>
-							<Link href='/chatting/chat' passHref>
+							<Link href='/gameChallenge/gameChallenge' passHref>
 								<div className="myChats">
-									<a>My Chats</a>
+									<a>My Game Challenges</a>
 								</div>
 							</Link>
 
