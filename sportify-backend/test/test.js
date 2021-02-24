@@ -8,7 +8,7 @@ const sequelize = require('../utils/sequelize/index');
 const Game = sequelize.models.game;
 
 // Test games routes
-describe("Test game endpoints", () => {
+describe("Test endpoints", () => {
     before((done) => {
         sequelize.sync({ force: true }).then(function() {
             done();
@@ -19,6 +19,154 @@ describe("Test game endpoints", () => {
         sequelize.sync({ force: true }).then(function() {
             done();
         });
+    });
+
+    it('Should create a few new users', async () => {
+        const user1 = {
+            "username": 'test1',
+            "email": 'test1@gmail.com',
+            "password": 'testing1234'
+        };
+        let res = await chai.request(server)
+            .post('/user/signup')
+            .set('Accept', 'application/json')
+            .send(user1);
+        expect(res.status).to.equal(200);
+        expect(res.body).to.include({
+            message: 'Signup successful',
+            username: user1.username,
+            email: user1.email
+        });
+
+        const user2 = {
+            "username": 'test2',
+            "email": 'test2@gmail.com',
+            "password": 'testing2345'
+        };
+        res = await chai.request(server)
+            .post('/user/signup')
+            .set('Accept', 'application/json')
+            .send(user2);
+        expect(res.status).to.equal(200);
+        expect(res.body).to.include({
+            message: 'Signup successful',
+            username: user2.username,
+            email: user2.email
+        });
+
+        const user3 = {
+            "username": 'test3',
+            "email": 'test3@gmail.com',
+            "password": 'testing3456'
+        };
+        res = await chai.request(server)
+            .post('/user/signup')
+            .set('Accept', 'application/json')
+            .send(user3);
+        expect(res.status).to.equal(200);
+        expect(res.body).to.include({
+            message: 'Signup successful',
+            username: user3.username,
+            email: user3.email
+        });
+    });
+
+    it("Should not create a new user signing up with a taken username or email id", async () => {
+        const user1 = {
+            "username": 'test1',
+            "email": 'test6@gmail.com',
+            "password": 'testing1234'
+        };
+        let res = await chai.request(server)
+            .post('/user/signup')
+            .set('Accept', 'application/json')
+            .send(user1);
+        expect(res.message).to.not.equal('Signup successful');
+
+        const user2 = {
+            "username": 'test5',
+            "email": 'test1@gmail.com',
+            "password": 'testing2345'
+        };
+        res = await chai.request(server)
+            .post('/user/signup')
+            .set('Accept', 'application/json')
+            .send(user2);
+        expect(res.message).to.not.equal('Signup successful');
+    });
+
+    it("Should sign in if existing user", async () => {
+        const user1 = {
+            "username": 'test1',
+            "password": 'testing1234'
+        };
+        let res = await chai.request(server)
+            .post('/user/signin')
+            .set('Accept', 'application/json')
+            .send(user1);
+        expect(res.status).to.equal(200);
+        expect(res.body.message).to.equal('Signin successful');
+    });
+
+    it("Should not sign in if user does not exist", async () => {
+        const user1 = {
+            "username": 'test7',
+            "password": 'testing5678'
+        };
+        let res = await chai.request(server)
+            .post('/user/signin')
+            .set('Accept', 'application/json')
+            .send(user1);
+        expect(res.status).to.equal(401);
+        expect(res.message).to.not.equal('Invalid Username or Password');
+    });
+
+    it("Should not sign in if invalid password", async () => {
+        const user1 = {
+            "username": 'test1',
+            "password": 'testing5678'
+        };
+        let res = await chai.request(server)
+            .post('/user/signin')
+            .set('Accept', 'application/json')
+            .send(user1);
+        expect(res.status).to.equal(401);
+        expect(res.message).to.not.equal('Invalid Username or Password');
+    });
+
+    it("Should get all users", async () => {
+        let res = await chai.request(server)
+            .get('/user/getUsers')
+            .set('Accept', 'application/json');
+        expect(res.status).to.equal(200);
+        expect(res.body[0]).to.have.property('id');
+        expect(res.body[0]).to.have.property('username');
+        expect(res.body[0]).to.have.property('email');
+        expect(res.body).to.have.length(3);
+    });
+
+    it("Should get a filtered list of users by username", async () => {
+        let res = await chai.request(server)
+            .get('/user/getUsers?username=test2')
+            .set('Accept', 'application/json');
+        expect(res.status).to.equal(200);
+        expect(res.body).to.have.length(1);
+        expect(res.body[0]).to.have.property('id');
+        expect(res.body[0]).to.have.property('username');
+        expect(res.body[0]).to.have.property('email');
+        expect(res.body[0]['username']).to.equal('test2');
+    });
+
+    it("Should get a filtered list of users by email", async () => {
+        let res = await chai.request(server)
+            .get('/user/getUsers?email=test3@gmail.com')
+            .set('Accept', 'application/json');
+        expect(res.status).to.equal(200);
+        expect(res.body).to.have.length(1);
+        expect(res.body[0]).to.have.property('id');
+        expect(res.body[0]).to.have.property('username');
+        expect(res.body[0]).to.have.property('email');
+        expect(res.body[0]['email']).to.equal('test3@gmail.com');
     });
 
     it("Should create a few new games", async () => {
@@ -110,6 +258,7 @@ describe("Test game endpoints", () => {
         expect(res.body[0]).to.have.property('location');
         expect(res.body[0]).to.have.property('max_group_size');
         expect(res.body[0]).to.have.property('skill_level');
+        expect(res.body).to.have.length(3);
     });
 
     it("Should get a filtered list of games by sport", async () => {
@@ -154,7 +303,7 @@ describe("Test game endpoints", () => {
         expect(res.body[0]).to.have.property('skill_level');
     });
 
-    it('Should delete all the created games', async () => {
+    it('Should delete a specific game', async () => {
         let res = await chai.request(server)
             .post('/games/deleteGame/2')
             .set('Accept', 'application/json')
@@ -168,8 +317,6 @@ describe("Test game endpoints", () => {
         expect(res.status).to.equal(200);
         expect(res.body).to.have.length(2);
     });
-
-
 });
 
 
