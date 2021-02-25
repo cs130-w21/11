@@ -21,11 +21,26 @@ module.exports = (sequelize) => {
             type: DataTypes.STRING,
             unique: true
         },
+        location: {
+            type: DataTypes.GEOMETRY('Point')
+        },
         age: {
             type: DataTypes.INTEGER
         },
-        sport: {
-            type: DataTypes.INTEGER
+        gender: {
+            type: DataTypes.STRING,
+            validate: { isIn: {
+                    args: [['M', 'F', 'O']],
+                    msg: "Must be male, female, or other"
+                }
+            }
+        },
+        sports: {
+            type: DataTypes.ARRAY(DataTypes.INTEGER)
+        },
+        skill_level: {
+            type: DataTypes.INTEGER,
+            validate: { min: 1, max: 10 }
         },
         about_me: {
             type: DataTypes.STRING
