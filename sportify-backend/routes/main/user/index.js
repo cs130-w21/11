@@ -85,6 +85,7 @@ MainAuthRouter.get('/getUsers', async (req, res) => {
     try {
         const username = req.query.username;
         const email = req.query.email;
+<<<<<<< HEAD
         const age = req.query.age;
         const sport = req.query.sport;
         const skill_levels = req.query.skill_levels;
@@ -93,14 +94,27 @@ MainAuthRouter.get('/getUsers', async (req, res) => {
         const userLng = req.query.userLng;
         const userLat = req.query.userLat;
         var options = {where: {}, attributes:{exclude:[]}};
+=======
+        const ages = req.query.ages;
+        const sport = req.query.sport
+        const skill_levels = req.query.skill_levels
+        const gender = req.query.gender
+        const location = req.query.location
+        var options = {where: {}, attributes:{excludes:[]}};
+>>>>>>> 74ce03da0acfa5d23ecc2acc3f4e80e605810274
         if(username) {
             options.where.username = username;
         }
         if(email) {
             options.where.email = email;
         }
+<<<<<<< HEAD
         if(age) {
             options.where.age = {[Sequelize.Op.gt]: age};
+=======
+        if(ages) {
+            options.where.age = ages;
+>>>>>>> 74ce03da0acfa5d23ecc2acc3f4e80e605810274
         }
         if(sport) {
             options.where.sport = sport;

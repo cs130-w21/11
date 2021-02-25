@@ -1,1 +1,3 @@
 .DS_Store
+sportify-frontend/node_modules
+sportify-backend/node_modules
