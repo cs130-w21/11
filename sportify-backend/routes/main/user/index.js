@@ -1,5 +1,6 @@
 const express = require('express');
 const jwt = require('jsonwebtoken');
+const Sequelize = require('sequelize');
 const sequelize = require('../../../utils/sequelize/index');
 const bcrypt = require('bcrypt');
 const cors = require('cors')
@@ -84,20 +85,22 @@ MainAuthRouter.get('/getUsers', async (req, res) => {
     try {
         const username = req.query.username;
         const email = req.query.email;
-        const ages = req.query.ages;
-        const sport = req.query.sport
-        const skill_levels = req.query.skill_levels
-        const gender = req.query.gender
-        const location = req.query.location
-        var options = {where: {}, attributes:{excludes:[]}};
+        const age = req.query.age;
+        const sport = req.query.sport;
+        const skill_levels = req.query.skill_levels;
+        const genders = req.query.genders;
+        const radius = req.query.radius;
+        const userLng = req.query.userLng;
+        const userLat = req.query.userLat;
+        var options = {where: {}, attributes:{exclude:[]}};
         if(username) {
             options.where.username = username;
         }
         if(email) {
             options.where.email = email;
         }
-        if(ages) {
-            options.where.age = ages;
+        if(age) {
+            options.where.age = {[Sequelize.Op.gt]: age};
         }
         if(sport) {
             options.where.sport = sport;
@@ -105,11 +108,21 @@ MainAuthRouter.get('/getUsers', async (req, res) => {
         if(skill_levels) {
             options.where.skill_level = skill_levels;
         }
-        if(gender) {
-            options.where.gender = gender;
+        if(genders) {
+            options.where.gender = genders;
         }
-        if(location) {
-            options.where.location = location;
+        if(radius && userLat && userLng) {
+            const radiusInMeters = radius*1609.34; // convert miles to meters
+            options.where = Sequelize.where(
+                Sequelize.fn(
+                    'ST_DWithin',
+                    Sequelize.col('location'), 
+                    Sequelize.fn(
+                        'ST_MakePoint', 
+                        userLng, 
+                        userLat),  
+                    radiusInMeters), 
+                true);
         }
         //{attributes:{exclude:['password']}}, 
         options.attributes.exclude = ['password'];
@@ -117,6 +130,67 @@ MainAuthRouter.get('/getUsers', async (req, res) => {
         user.findAll(options).then(user => res.json(user));
         
     } catch (err) {
+        return res.status(500).send(err.message);
+    }
+});
+
+MainAuthRouter.put('/updateProfile/:id', async (req, res) => {
+    const user = sequelize.models.user; 
+    try {
+        const lng = req.body['longitude'];
+        const lat = req.body['latitude'];
+        const point = {type: 'Point', coordinates: [lng,lat]};
+        
+        profileReq = {};
+        if (req.body['username']) {
+            profileReq.username = req.body['username'];
+        }
+        if (req.body['email']) {
+            profileReq.email = req.body['email'];
+        }
+        if (req.body['password']) {
+            // use client side validation and send non-empty username/email/password to backend
+            if (req.body['password'].length < 8) {
+                return res.status(500).json({
+                message: 'Invalid password. Must have at least 8 characters.'
+                });
+            }
+            console.log("hashing");
+            //hash password before storing it
+            req.body['password'] = await bcrypt.hash(req.body['password'], 10);
+            profileReq.password = req.body['password'];
+        }
+        if (lat && lng) {
+            profileReq.location = point;
+        }
+        if (req.body['gender']) {
+            profileReq.gender = req.body['gender'];
+        }
+        if (req.body['age']) {
+            profileReq.age = req.body['age'];
+        }
+        if (req.body['skill_level']) {
+            profileReq.skill_level = req.body['skill_level'];
+        }
+        if (req.body['sport']) {
+            profileReq.sport = req.body['sport'];
+        }
+        if (req.body['about_me']) {
+            profileReq.about_me = req.body['about_me'];
+        }
+        const id = req.params.id;
+        const [rowsUpdated, [User]] = await user.update(profileReq, {returning: true, where: {id:id}});
+        return res.status(200).json({User});
+    } catch (err) {
+        if (err.message.includes('duplicate') && err.message.includes('username')) {
+            return res.status(500).json({
+                message: 'Username taken. Create a different username.'
+            })
+        } else if (err.message.includes('duplicate') && err.message.includes('email')) {
+            return res.status(500).json({
+                message: 'Email already in use. Use a different one.'
+            })
+        }
         return res.status(500).send(err.message);
     }
 });

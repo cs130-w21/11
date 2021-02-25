@@ -4,6 +4,7 @@ chai.use(chaiHttp);
 const { response } = require('express');
 const expect = chai.expect;
 const server = require('../index');
+const MainRouter = require('../routes/main');
 const sequelize = require('../utils/sequelize/index');
 const Game = sequelize.models.game;
 
@@ -303,7 +304,180 @@ describe("Test endpoints", () => {
         expect(res.body[0]).to.have.property('skill_level');
     });
 
-    it('Should delete all the created games', async () => {
+    it("Should update a game based on the fields that are passed", async () => {
+        const game = {
+            "sport": 1,
+            "max_group_size": 1
+        };
+        let res = await chai.request(server)
+            .put('/games/updateGame/2')
+            .set('Accept', 'application/json')
+            .send(game);
+        expect(res.status).to.equal(200);
+        expect(res.body.Game).to.have.property('id');
+        expect(res.body.Game).to.have.property('sport');
+        expect(res.body.Game).to.have.property('location');
+        expect(res.body.Game).to.have.property('time');
+        expect(res.body.Game).to.have.property('max_group_size');
+        expect(res.body.Game).to.have.property('skill_level');
+        expect(res.body.Game.sport).to.equal(game.sport);
+        expect(res.body.Game.max_group_size).to.equal(game.max_group_size);
+    });
+
+    it("Should update a user's password", async () => {
+        const user = {
+            "password": "testing78910"
+        };
+        let res = await chai.request(server)
+            .put('/user/updateProfile/2')
+            .set('Accept', 'application/json')
+            .send(user);
+        expect(res.status).to.equal(200);
+        expect(res.body.User).to.have.property('id');
+        expect(res.body.User).to.have.property('username');
+        expect(res.body.User).to.have.property('email');
+        expect(res.body.User).to.have.property('password');
+        expect(res.body.User).to.have.property('location');
+        expect(res.body.User).to.have.property('skill_level');
+        expect(res.body.User).to.have.property('age');
+        expect(res.body.User).to.have.property('gender');
+        expect(res.body.User).to.have.property('sport');
+       
+        const userSignIn = {
+            "username": "test2",
+            "password": "testing78910"
+        }
+        res = await chai.request(server)
+            .post('/user/signin')
+            .set('Accept', 'application/json')
+            .send(userSignIn);
+        expect(res.status).to.equal(200);
+        expect(res.body.message).to.equal('Signin successful');
+    });
+
+    it("Should update a few users' profiles", async () => {
+        const user1 = {
+            "longitude": 95.32,
+            "latitude": 34.05,
+            "age": 24,
+            "gender": 'M',
+            "sport": 2,
+            "skill_level": 8,
+            "about_me": "This is a test"
+        };
+        let res = await chai.request(server)
+            .put('/user/updateProfile/3')
+            .set('Accept', 'application/json')
+            .send(user1);
+        expect(res.status).to.equal(200);
+        expect(res.body.User).to.have.property('id');
+        expect(res.body.User).to.have.property('username');
+        expect(res.body.User).to.have.property('email');
+        expect(res.body.User).to.have.property('password');
+        expect(res.body.User).to.have.property('location');
+        expect(res.body.User).to.have.property('skill_level');
+        expect(res.body.User).to.have.property('age');
+        expect(res.body.User).to.have.property('gender');
+        expect(res.body.User).to.have.property('sport');
+        expect(res.body.User.age).to.equal(24);
+        expect(res.body.User.gender).to.equal('M');
+        expect(res.body.User.sport).to.equal(2);
+        expect(res.body.User.skill_level).to.equal(8);
+        expect(res.body.User.about_me).to.equal("This is a test");
+
+        const user2 = {
+            "longitude": 118.45,
+            "latitude": 34.06,
+            "age": 21,
+            "gender": 'F',
+            "sport": 4,
+            "skill_level": 6,
+            "about_me": "This is a test"
+        };
+        res = await chai.request(server)
+            .put('/user/updateProfile/2')
+            .set('Accept', 'application/json')
+            .send(user2);
+        expect(res.status).to.equal(200);
+        expect(res.body.User).to.have.property('id');
+        expect(res.body.User).to.have.property('username');
+        expect(res.body.User).to.have.property('email');
+        expect(res.body.User).to.have.property('password');
+        expect(res.body.User).to.have.property('location');
+        expect(res.body.User).to.have.property('skill_level');
+        expect(res.body.User).to.have.property('age');
+        expect(res.body.User).to.have.property('gender');
+        expect(res.body.User).to.have.property('sport');
+        expect(res.body.User.age).to.equal(21);
+        expect(res.body.User.gender).to.equal('F');
+        expect(res.body.User.sport).to.equal(4);
+        expect(res.body.User.skill_level).to.equal(6);
+        expect(res.body.User.about_me).to.equal("This is a test");
+    });
+
+    it("Should get a filtered list of users by minimum age", async () => {
+        let res = await chai.request(server)
+            .get('/user/getUsers?age=23')
+            .set('Accept', 'application/json');
+        expect(res.status).to.equal(200);
+        expect(res.body).to.have.length(1);
+        expect(res.body[0]).to.have.property('id');
+        expect(res.body[0]).to.have.property('username');
+        expect(res.body[0]).to.have.property('email');
+        expect(res.body[0]).to.have.property('location');
+        expect(res.body[0]).to.have.property('skill_level');
+        expect(res.body[0]).to.have.property('age');
+        expect(res.body[0]).to.have.property('gender');
+        expect(res.body[0]).to.have.property('sport');
+        expect(res.body[0]['age']).to.equal(24);
+    });
+
+    it("Should get a filtered list of users by radius", async () => {
+        let res = await chai.request(server)
+            .get('/user/getUsers?radius=2&userLng=118.45&userLat=34.06')
+            .set('Accept', 'application/json');
+        expect(res.status).to.equal(200);
+        expect(res.body).to.have.length(1);
+        expect(res.body[0]).to.have.property('id');
+        expect(res.body[0]).to.have.property('username');
+        expect(res.body[0]).to.have.property('email');
+        expect(res.body[0]).to.have.property('location');
+        expect(res.body[0]).to.have.property('skill_level');
+        expect(res.body[0]).to.have.property('age');
+        expect(res.body[0]).to.have.property('gender');
+        expect(res.body[0]).to.have.property('sport');
+    });
+
+    it("Should not update a user's profile with an existing username or email or an invalid password", async () => {
+        const user1 = {
+            "username": "test2"
+        };
+        let res = await chai.request(server)
+            .put('/user/updateProfile/1')
+            .set('Accept', 'application/json')
+            .send(user1);
+        expect(res.status).to.equal(500);
+        
+        const user2 = {
+            "email": "test2@gmail.com"
+        };
+        res = await chai.request(server)
+            .put('/user/updateProfile/1')
+            .set('Accept', 'application/json')
+            .send(user2);
+        expect(res.status).to.equal(500);
+
+        const user3 = {
+            "password": "testing"
+        };
+        res = await chai.request(server)
+            .put('/user/updateProfile/1')
+            .set('Accept', 'application/json')
+            .send(user3);
+        expect(res.status).to.equal(500);
+    });
+
+    it('Should delete a specific game', async () => {
         let res = await chai.request(server)
             .post('/games/deleteGame/2')
             .set('Accept', 'application/json')
