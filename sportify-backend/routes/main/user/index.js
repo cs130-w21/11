@@ -85,10 +85,10 @@ MainAuthRouter.get('/getUsers', async (req, res) => {
     try {
         const username = req.query.username;
         const email = req.query.email;
-        const ages = req.query.ages;
+        const age = req.query.age;
         const sport = req.query.sport;
         const skill_levels = req.query.skill_levels;
-        const gender = req.query.gender;
+        const genders = req.query.genders;
         const radius = req.query.radius;
         const userLng = req.query.userLng;
         const userLat = req.query.userLat;
@@ -99,8 +99,8 @@ MainAuthRouter.get('/getUsers', async (req, res) => {
         if(email) {
             options.where.email = email;
         }
-        if(ages) {
-            options.where.age = ages;
+        if(age) {
+            options.where.age = {[Sequelize.Op.gt]: age};
         }
         if(sport) {
             options.where.sport = sport;
@@ -108,8 +108,8 @@ MainAuthRouter.get('/getUsers', async (req, res) => {
         if(skill_levels) {
             options.where.skill_level = skill_levels;
         }
-        if(gender) {
-            options.where.gender = gender;
+        if(genders) {
+            options.where.gender = genders;
         }
         if(radius && userLat && userLng) {
             const radiusInMeters = radius*1609.34; // convert miles to meters

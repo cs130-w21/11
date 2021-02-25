@@ -39,7 +39,7 @@ MainGamesRouter.get('/getGames', async (req, res) => {
             options.where.time = {[Sequelize.Op.gt]: now, [Sequelize.Op.lt]: weeksLater}; 
         }
         if(max_group_size) {
-            options.where.max_group_size = max_group_size;
+            options.where.max_group_size = {[Sequelize.Op.lt]: max_group_size};
         }
         if(skill_levels) {
             options.where.skill_level = skill_levels;

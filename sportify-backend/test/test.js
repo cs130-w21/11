@@ -415,6 +415,23 @@ describe("Test endpoints", () => {
         expect(res.body.User.about_me).to.equal("This is a test");
     });
 
+    it("Should get a filtered list of users by minimum age", async () => {
+        let res = await chai.request(server)
+            .get('/user/getUsers?age=23')
+            .set('Accept', 'application/json');
+        expect(res.status).to.equal(200);
+        expect(res.body).to.have.length(1);
+        expect(res.body[0]).to.have.property('id');
+        expect(res.body[0]).to.have.property('username');
+        expect(res.body[0]).to.have.property('email');
+        expect(res.body[0]).to.have.property('location');
+        expect(res.body[0]).to.have.property('skill_level');
+        expect(res.body[0]).to.have.property('age');
+        expect(res.body[0]).to.have.property('gender');
+        expect(res.body[0]).to.have.property('sport');
+        expect(res.body[0]['age']).to.equal(24);
+    });
+
     it("Should get a filtered list of users by radius", async () => {
         let res = await chai.request(server)
             .get('/user/getUsers?radius=2&userLng=118.45&userLat=34.06')
