@@ -84,9 +84,9 @@ MainAuthRouter.get('/getUsers', async (req, res) => {
     try {
         const username = req.query.username;
         const email = req.query.email;
-        const age = req.query.age;
-        const sports = req.query.sports
-        const skill_level = req.query.skill_level
+        const ages = req.query.ages;
+        const sport = req.query.sport
+        const skill_levels = req.query.skill_levels
         const gender = req.query.gender
         const location = req.query.location
         var options = {where: {}, attributes:{excludes:[]}};
@@ -96,14 +96,14 @@ MainAuthRouter.get('/getUsers', async (req, res) => {
         if(email) {
             options.where.email = email;
         }
-        if(age) {
-            options.where.age = age;
+        if(ages) {
+            options.where.age = ages;
         }
-        if(sports) {
-            options.where.sports = sports;
+        if(sport) {
+            options.where.sport = sport;
         }
-        if(skill_level) {
-            options.where.skill_level = skill_level;
+        if(skill_levels) {
+            options.where.skill_level = skill_levels;
         }
         if(gender) {
             options.where.gender = gender;
