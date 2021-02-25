@@ -303,7 +303,7 @@ describe("Test endpoints", () => {
         expect(res.body[0]).to.have.property('skill_level');
     });
 
-    it('Should delete a specific game', async () => {
+    it('Should delete all the created games', async () => {
         let res = await chai.request(server)
             .post('/games/deleteGame/2')
             .set('Accept', 'application/json')
