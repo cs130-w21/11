@@ -4,6 +4,7 @@ import Link from 'next/link';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
+//import Link from 'next/link'
 //import soccerPic from "soccer.jpg"
 //import './homePage.module.css';
 
@@ -16,6 +17,11 @@ const sportToImage = {
 	'Volleyball': '/volleyball.jpg',
 	'Tennis': '/tennis.jpg',
 	'Badminton': '/badminton.jpg'
+};
+
+const genderToImage = {
+	'Man': '/maleProfile.png',
+	'Woman': 'femaleProfile.png'
 };
 
 const HomePage = (props) => {
@@ -118,12 +124,38 @@ const HomePage = (props) => {
 							background-color: grey;
 						}
 
+						.person {
+							background-color: tan;
+						}
+
 		      `}</style>
 				<div className="navBar">
 					<ul>
-						<li><a href="default.asp">My Chats</a></li>
-						<li><a href="news.asp">My Games</a></li>
-						<li><a href="contact.asp">View/Edit My Profile</a></li>
+						<li>
+							<Link href='/gameChallenge/gameChallenge' passHref>
+								<div className="myChats">
+									<a>My Game Challenges</a>
+								</div>
+							</Link>
+
+						</li>
+
+						<li>
+							<Link href='/fillOutProfile/viewOrEditProfile' passHref>
+								<div className="viewOrEditProfile">
+									<a>View/Edit my profile</a>
+								</div>
+							</Link>
+						</li>
+
+						<li>
+					        <Link href='/homePage/homePage' passHref>
+					        	<div className="homeDiv">
+									<a>Go home!</a>
+								</div>
+							</Link>
+						</li>
+
 					</ul>
 				</div>
 
@@ -148,7 +180,7 @@ const HomePage = (props) => {
 					<h1> Search Filters </h1>
 
 
-					<form onSubmit>
+					<form> {/* onSubmit */}
 						<label>
 							Sports: {' '}
 					          	<select multiple={true} onChange={sportsFunction} value={Object.keys(sportsSelected).find(key => sportsSelected[key]==true)}>
@@ -227,7 +259,7 @@ const HomePage = (props) => {
 						<br/>
 						
 
-						<input type="submit" value="Submit" />
+						{/* <input type="submit" value="Submit" />  */} 
 
 						<br/>
 						<br/>
@@ -240,9 +272,12 @@ const HomePage = (props) => {
 
 				</div>
 
-				<div className="createGame">
-					<button> Create game now! </button>
-				</div>
+				<Link href='/homePage/createGame' passHref>
+					<div className="createGame">
+						<button> <a>Create game now! </a> </button>
+					</div>
+				</Link>
+
 				<br/>
 				<br/>
 				<br/>
@@ -265,13 +300,21 @@ const HomePage = (props) => {
 
 						<Col >
 							<Box>
+								
 								<div> Event Name </div>
 								<br />
 								<div> Event Location </div>
 								<br />
 								<div> Event description </div>
 								<br />
-								<button> Join game </button>
+
+								<button onClick={(e)=>
+									{
+
+										e.target.innerHTML=(e.target.innerHTML=="Join the game!") ? 
+										"Un-join the game!": "Join the game!";
+
+									} }> Join the game! </button>
 
 							</Box>
 
@@ -280,12 +323,104 @@ const HomePage = (props) => {
 
 						<Col>
 							<Box>
-								<div> Times allowed </div>
+								<div> Start Time </div>
+								<br />
+								<div> End Time </div>
+								<br />
+								<div> Number of people allowed </div>
 								<br />
 								<div> Skill Levels allowed </div>
 								<br />
 								<div> Number of spots left! </div>
 								<br />
+
+							</Box>
+						</Col>
+					</Row>
+				</Container>
+
+				<br/>
+				<br/>
+
+				<Container fluid>
+					<Row className="person">
+						<Col>
+						    <Box>
+								<img src={'/maleProfile.png'} />
+								<br />
+								<div> Person Name </div>
+								<br />
+								<div> Description </div>
+								<br />
+							</Box>
+						</Col>
+
+						<Col >
+							<Box>
+								
+								<div>  </div>
+								<br />
+								<br />
+								<div className="challengeDiv">
+									<b> Challenge? </b>
+									<br />
+
+									<label>
+							          Description:
+							          <input type="text" />
+							        </label>
+									
+									<label>
+							          Location:
+							          <input type="text" />
+							        </label>
+									
+									<br />
+
+									<label>
+							          Number of people allowed (excluding creator):
+							          <input type="number" min={1} />
+							        </label>
+									
+									<br />
+
+									<button onClick={(e)=>
+									{
+
+										e.target.innerHTML=(e.target.innerHTML=="Challenge this athlete!") ? 
+										"Unchallenge this athlete!": "Challenge this athlete!";
+
+									} }> Challenge this athlete! </button>
+
+								</div>
+								
+
+							</Box>
+
+						</Col>
+
+
+						<Col>
+							<Box>
+								<div className="sportInfo"> 
+									<br />
+									<div> Skill Level </div>
+									<br />
+									<div> Times for this sport </div>
+									<br />
+								</div>
+
+								<br/>
+
+								<div className="sportInfo">
+									<br />
+									<div> Skill Level </div>
+									<br />
+									<div> Times for this sport </div>
+									<br />
+								</div>
+								
+								
 
 							</Box>
 
@@ -295,9 +430,6 @@ const HomePage = (props) => {
 
 
 				</Container>
-
-
-
 
 			</div >
 	);

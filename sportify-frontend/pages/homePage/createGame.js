@@ -1,6 +1,9 @@
 import React, {component, useState} from 'react'
 import Head from 'next/head';
 import Link from 'next/link';
+import Container from 'react-bootstrap/Container';
+import Row from 'react-bootstrap/Row'
+import Col from 'react-bootstrap/Col'
 
 const CreateGame = (props) => {
 	const [sport, setSport]=useState('');
@@ -13,84 +16,106 @@ const CreateGame = (props) => {
 	const [endTime, setEndTime]=useState(new Date());
 	const [gendersAllowed, setGendersAllowed]=useState("Both Men And Women");
 
-	return 
-		(
-			<form onSubmit={this.handleSubmit}>
-				<label>
-		          Enter Sport:
-		          <input type="text" value={sport} onChange={(e)=>setSport(e.target.value);} />
-		        </label>
-		        <br />
+	const handleSubmit = (e)=>
+	{
 
-		        <label>
-		          Enter event name:
-		          <input type="text" value={name} onChange={(e)=>setName(e.target.value);} />
-		        </label>
-		        <br />
+	};
 
+	return (
+				<div className="superContainer">
 
-		        <label>
-		          Enter description:
-		          <input type="textArea" value={description} onChange={ (e)=>setDescription(e.target.value); } />
-		        </label>
-		        <br />
+				<style jsx global>{`
+					body {
+						background-color: pink;
+						align: auto;
+						text-align: center;
+					}
+					
+				`}</style>
+				
+				<form onSubmit={(e)=>handleSubmit(e)}>
+					<label>
+			          Enter Sport:
+			          <input type="text" value={sport} onChange={(e)=>setSport(e.target.value)} />
+			        </label>
+			        <br />
 
-				<label>
-		          Min Skill Level:
-		          <input type="number" value={minSkillLevel} min="1" max="10" 
-		          onChange={(e)=>setMinSkillLevel(e.target.value);} />
-		        </label>
-		        <br />
-
-		        <label>
-		          Max Skill Level:
-		          <input type="number" value={maxSkillLevel} min="1" max="10" 
-		          onChange={(e)=>setMaxSkillLevel(e.target.value);} />
-		        </label>
-		        <br />
+			        <label>
+			          Enter event name:
+			          <input type="text" value={name} onChange={(e)=>setName(e.target.value)} />
+			        </label>
+			        <br />
 
 
+			        <label>
+			          Enter description:
+			          <input type="textArea" value={description} onChange={ (e)=>setDescription(e.target.value) } />
+			        </label>
+			        <br />
 
-		          <label>
-		          	Starting time:
-		          	<input type="datetime-local"  value={startTime} onChange={(e)=>setStartTime(e.target.value);}/>
-		          </label>
-		          <br />
+					<label>
+			          Min Skill Level:
+			          <input type="number" value={minSkillLevel} min={1} max={maxSkillLevel}
+			          onChange={(e)=>setMinSkillLevel(e.target.value)} />
+			        </label>
+			        <br />
 
-
-
-		        <label>
-		          	Ending time:
-		          	<input type="datetime-local"  value={endTime} onChange={(e)=>setEndTime(e.target.value);}/>
-		        </label>
-		        <br />
-
-		            
-		        <label>
-					Gender
-			        <select value={gendersAllowed} onChange={(e)=>setGendersAllowed(e.target.value)};
-						<option value="Men only">Men only</option>
-						<option value="Women only">Women Only</option>
-						<option value="Both Men and Women">Both Men and Women</option>
-					</select>
-				</label>
-				<br />
+			        <label>
+			          Max Skill Level:
+			          <input type="number" value={maxSkillLevel} min={minSkillLevel} max={10}
+			          onChange={(e)=>setMaxSkillLevel(e.target.value)} />
+			        </label>
+			        <br />
 
 
 
-		        
-
-		        // <button onClick={submitSportInfo}>
-		        // 	Submit
-		        // </button>
-
-		        <button onClick={cancelSportInfo}>
-		        	Cancel
-		        </button>
+			          <label>
+			          	Starting time:
+			          	<input type="datetime-local"  value={startTime} onChange={(e)=>setStartTime(e.target.value)}/>
+			          </label>
+			          <br />
 
 
-		        <input type="submit" value="Submit" />
-	      	</form>
+
+			        <label>
+			          	Ending time:
+			          	<input type="datetime-local"  value={endTime} onChange={(e)=>setEndTime(e.target.value)}/>
+			        </label>
+			        <br />
+
+			            
+			        <label>
+						Gender
+				        <select value={gendersAllowed} onChange={(e)=>setGendersAllowed(e.target.value)}>
+							<option value="Men only">Men only</option>
+							<option value="Women only">Women Only</option>
+							<option value="Both Men and Women">Both Men and Women</option>
+						</select>
+					</label>
+					<br />
+
+
+
+			        
+					{
+						/*
+			        // <button onClick={submitSportInfo}>
+			        // 	Submit
+			        // </button>
+			        */
+			    	}
+
+			        <Link href='/homePage/homePage' passHref>
+							<button> <a>Cancel creation of game! </a> </button>
+					</Link>
+
+
+			        <Link href='/homePage/homePage' passHref>
+							<button> <a>Submit creation of game! </a> </button>
+					</Link>
+		      	</form>
+	      	
+	      	</div>
 
 
 		);
