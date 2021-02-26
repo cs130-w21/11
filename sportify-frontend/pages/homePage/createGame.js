@@ -1,20 +1,37 @@
-import React, {component, useState} from 'react'
+import React, {component, useState, useEffect} from 'react'
 import Head from 'next/head';
 import Link from 'next/link';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
+import Geocode from 'react-geocode'
+
+
+//API key: AIzaSyDqs8TqTIsIx3xTuD1NEY3hXxmSciVrWZE
 
 const CreateGame = (props) => {
+
+	useEffect(()=>{
+        Geocode.setApiKey("AIzaSyDqs8TqTIsIx3xTuD1NEY3hXxmSciVrWZE");
+        Geocode.setLanguage("en");
+
+    }, []);
+
+	//const geoCoder=Maps.newGeocoder();
+
 	const [sport, setSport]=useState('');
-	const [name, setName]=useState('');
+	//const [name, setName]=useState('');
 	const [description, setDescription]=useState('');
-	const [age, setAge]=useState(1);
+	const [numberOfPeopleIncludingYou, setNumberOfPeopleIncludingYou]=useState(1);
 	const [minSkillLevel, setMinSkillLevel]=useState(1);
-	const [maxSkillLevel, setMaxSkillLevel]=useState(10);
+	// const [maxSkillLevel, setMaxSkillLevel]=useState(10);
 	const [startTime, setStartTime]=useState(new Date());
-	const [endTime, setEndTime]=useState(new Date());
-	const [gendersAllowed, setGendersAllowed]=useState("Both Men And Women");
+
+	// let [latitude, setLatitude] = React.useState(0.1)
+ 	//    let [longitude, setLongitude] = React.useState(0.1)
+    let [address, setAddress] = React.useState('')
+	// const [endTime, setEndTime]=useState(new Date());
+	// const [gendersAllowed, setGendersAllowed]=useState("Both Men And Women");
 
 	const handleSubmit = (e)=>
 	{
@@ -40,9 +57,19 @@ const CreateGame = (props) => {
 			        </label>
 			        <br />
 
+			        { /*
 			        <label>
 			          Enter event name:
 			          <input type="text" value={name} onChange={(e)=>setName(e.target.value)} />
+			        </label>
+			        <br />
+
+			    	*/ }
+
+			    	<label>
+			          Enter address/location:
+			          <input type="textArea" value={address} 
+			          onChange={ (e)=>setAddress(e.target.value) } />
 			        </label>
 			        <br />
 
@@ -55,11 +82,19 @@ const CreateGame = (props) => {
 
 					<label>
 			          Min Skill Level:
-			          <input type="number" value={minSkillLevel} min={1} max={maxSkillLevel}
+			          <input type="number" value={minSkillLevel} min={1}
 			          onChange={(e)=>setMinSkillLevel(e.target.value)} />
 			        </label>
 			        <br />
 
+			        <label>
+			          Number of people in the game including you (creator):
+			          <input type="number" value={numberOfPeopleIncludingYou} min={2}
+			          onChange={(e)=>setNumberOfPeopleIncludingYou(e.target.value)} />
+			        </label>
+			        <br />
+
+			        { /*
 			        <label>
 			          Max Skill Level:
 			          <input type="number" value={maxSkillLevel} min={minSkillLevel} max={10}
@@ -67,23 +102,25 @@ const CreateGame = (props) => {
 			        </label>
 			        <br />
 
+			    	*/ }
 
-
-			          <label>
+			          
+			        <label>
 			          	Starting time:
 			          	<input type="datetime-local"  value={startTime} onChange={(e)=>setStartTime(e.target.value)}/>
-			          </label>
-			          <br />
+			        </label>
+			        <br />
 
 
-
+			        {/*   
 			        <label>
 			          	Ending time:
 			          	<input type="datetime-local"  value={endTime} onChange={(e)=>setEndTime(e.target.value)}/>
 			        </label>
 			        <br />
+			        */}
 
-			            
+			        {/*   
 			        <label>
 						Gender
 				        <select value={gendersAllowed} onChange={(e)=>setGendersAllowed(e.target.value)}>
@@ -93,17 +130,22 @@ const CreateGame = (props) => {
 						</select>
 					</label>
 					<br />
+					*/}
 
 
+			        { /* 
+					
+			        <button onClick={
+			        	(e) => {
+			        		
+			        	}
 
+			        }>
+			        	Submit
+			        </button>
+
+			        */}
 			        
-					{
-						/*
-			        // <button onClick={submitSportInfo}>
-			        // 	Submit
-			        // </button>
-			        */
-			    	}
 
 			        <Link href='/homePage/homePage' passHref>
 							<button> <a>Cancel creation of game! </a> </button>
@@ -111,7 +153,21 @@ const CreateGame = (props) => {
 
 
 			        <Link href='/homePage/homePage' passHref>
-							<button> <a>Submit creation of game! </a> </button>
+							<button onClick={(e)=>{
+
+								// Get latitude & longitude from address.
+								Geocode.fromAddress(address).then(
+								  (response) => {
+								    const { lat, lng } = response.results[0].geometry.location;
+								    console.log(lat, lng);
+
+								  },
+								  (error) => {
+								    console.error(error);
+								  }
+								);
+
+							}}> <a>Submit creation of game! </a> </button>
 					</Link>
 		      	</form>
 	      	
@@ -124,72 +180,3 @@ const CreateGame = (props) => {
 
 export default CreateGame;
 
-// export default class CreateGame extends Component()
-// {
-	
-// 	render()
-// 	{
-// 		return 
-// 		(
-// 			<form onSubmit={this.handleSubmit}>
-// 				<label>
-// 		          Enter Sport:
-// 		          <input type="text" value={this.state.sport} onChange={this.handleSport} />
-// 		        </label>
-// 		        <br />
-
-// 		        <label>
-// 		          Enter description:
-// 		          <input type="textArea" value={this.state.sport} onChange={this.handleSport} />
-// 		        </label>
-// 		        <br />
-
-// 				<label>
-// 		          Min Skill Level:
-// 		          <input type="number" value={this.state.number} min="1" max="10" onChange={this.handlePassword} />
-// 		        </label>
-// 		        <br />
-
-// 		        <label>
-// 		          Max Skill Level:
-// 		          <input type="number" value={this.state.number} min="1" max="10" onChange={this.handlePassword} />
-// 		        </label>
-// 		        <br />
-
-
-
-// 		          <label>
-// 		          	Starting time:
-// 		          	<input type="datetime-local" name="birthdaytime" />
-
-// 		          </label>
-// 		          <br />
-
-
-
-// 		          <label>
-// 		          	Ending time:
-// 		          	<input type="datetime-local" name="birthdaytime" />
-
-// 		          </label>
-// 		          <br />
-
-
-		        
-
-// 		        // <button onClick={submitSportInfo}>
-// 		        // 	Submit
-// 		        // </button>
-
-// 		        <button onClick={cancelSportInfo}>
-// 		        	Cancel
-// 		        </button>
-
-
-// 		        <input type="submit" value="Submit" />
-// 	      	</form>
-
-
-// 		);
-// 	}
-// }

@@ -1,3 +1,8 @@
+
+//Note this file will not be used in the application!!!!
+//NOT USEFUL AT ALL
+
+
 import React, {component, useState} from 'react'
 import Head from 'next/head';
 import Link from 'next/link';
