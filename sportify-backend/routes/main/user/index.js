@@ -92,7 +92,8 @@ MainAuthRouter.get('/getUsers', async (req, res) => {
         const radius = req.query.radius;
         const userLng = req.query.userLng;
         const userLat = req.query.userLat;
-        var options = {where: {}, attributes:{exclude:[]}};
+        var options = {where: {}, attributes:{exclude:[]}, include:[{
+            model: sequelize.models.game, as: 'games', required:false, attibutes: ['id', 'sport', 'comments']}]};
         if(username) {
             options.where.username = username;
         }
