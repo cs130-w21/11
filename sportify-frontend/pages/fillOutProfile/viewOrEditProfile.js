@@ -3,6 +3,9 @@ import React, {useState, useEffect} from "react";
 import Head from 'next/head';
 import Link from 'next/link';
 import Geocode from 'react-geocode'
+import Container from 'react-bootstrap/Container';
+import Row from 'react-bootstrap/Row'
+import Col from 'react-bootstrap/Col'
 
 //API key: AIzaSyDqs8TqTIsIx3xTuD1NEY3hXxmSciVrWZE
 
@@ -24,6 +27,25 @@ const ViewOrEditProfile = (props) => {
 
 	const [currentSport, setSport]=useState('Basketball');
 	const [bestSportSkillLevel, setBestSportSkillLevel]=useState(1);
+
+	const [dayTimes, setDayTimes]=useState(['','','','','','','']);
+
+	const handleScheduleEvent = (e) => {
+		console.log(e.target.getAttribute('type'));
+		if (e.target.getAttribute('type')=='text')
+		{
+			console.log(e.target);
+			let copyTimes=[...dayTimes];
+			let newTimeString=e.target.value;
+
+			let dayIndex= e.target.className;
+			let tempClassNames=dayIndex.split(" ");
+			console.log(newTimeString, dayIndex);
+			copyTimes[(tempClassNames[1]-'0')]=newTimeString;
+			setDayTimes(copyTimes);
+			console.log(dayTimes);
+		}
+	}
  
 	useEffect(()=>{
         Geocode.setApiKey("AIzaSyDqs8TqTIsIx3xTuD1NEY3hXxmSciVrWZE");
@@ -44,6 +66,31 @@ const ViewOrEditProfile = (props) => {
 						align: auto;
 						text-align: center;
 					}
+
+					 ul {
+						  list-style-type: none;
+						  margin: 0;
+						  padding: 0;
+						  overflow: hidden;
+						  background-color: #333;
+						}
+
+						li {
+						  float: left;
+						}
+
+						li a {
+						  display: block;
+						  color: white;
+						  text-align: center;
+						  padding: 14px 16px;
+						  text-decoration: none;
+						}
+
+						/* Change the link color to #111 (black) on hover */
+						li a:hover {
+						  background-color: #111;
+						}
 					
 				`}</style>
 
@@ -154,6 +201,62 @@ const ViewOrEditProfile = (props) => {
 			        </label>
 			        
 			        <br />
+			        <br />
+
+			        <b>
+			        	Times available!
+			        </b>
+
+			        <br />
+			        <br />
+
+			        <label>
+			          Monday Times available: {' '}
+			          <input type="text"  className='0' value={dayTimes[0]} onChange={handleScheduleEvent} />
+			        </label>
+
+			        <br />
+
+			        <label>
+			          Tuesday Times available: {' '}
+			          <input type="text"  className='1' value={dayTimes[1]} onChange={handleScheduleEvent} />
+			        </label>
+
+			        <br />
+
+			        <label>
+			          Wednesday Times available: {' '}
+			          <input type="text"   className='2' value={dayTimes[2]} onChange={handleScheduleEvent} />
+			        </label>
+
+			        <br />
+
+			        <label >
+			          Thursday Times available: {' '}
+			          <input type="text" className='3' value={dayTimes[3]} onChange={handleScheduleEvent} />
+			        </label>
+
+			        <br />
+
+			        <label >
+			          Friday Times available: {' '}
+			          <input type="text" className='4' value={dayTimes[4]} onChange={handleScheduleEvent} />
+			        </label>
+
+			        <br />
+
+			        <label >
+			          Saturday Times available: {' '}
+			          <input type="text"  className='5' value={dayTimes[5]} onChange={handleScheduleEvent} />
+			        </label>
+
+			        <br />
+
+			        <label >
+			          Sunday times available: {' '}
+			          <input type="text" className='6' value={dayTimes[6]} onChange={handleScheduleEvent} />
+			        </label>
+
 			        <br />
 
 					{ /* 
