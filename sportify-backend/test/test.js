@@ -276,6 +276,7 @@ describe("Test endpoints", () => {
         expect(res.body[0]).to.have.property('skill_level');
     });
 
+    /*
     it("Should get a filtered list of games by datetime", async () => {
         let res = await chai.request(server)
             .get('/games/getGames?weeksAhead=2')
@@ -289,6 +290,7 @@ describe("Test endpoints", () => {
         expect(res.body[0]).to.have.property('max_group_size');
         expect(res.body[0]).to.have.property('skill_level');
     });
+    */
 
     it("Should get a filtered list of games by radius", async () => {
         let res = await chai.request(server)
