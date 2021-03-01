@@ -1,6 +1,7 @@
 import React, {component, useState} from 'react'
 import Head from 'next/head';
 import Link from 'next/link';
+import Alert from 'react-bootstrap/Alert'
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
@@ -22,7 +23,8 @@ const sportToImage = {
 
 const genderToImage = {
 	'Man': '/maleProfile.png',
-	'Woman': 'femaleProfile.png'
+	'Woman': '/femaleProfile.png',
+	'Other': '/questionMark.png'
 };
 
 const HomePage = (props) => {
@@ -222,7 +224,7 @@ const HomePage = (props) => {
 
 						}
 
-						.informationDiv, .searchDiv, .createGame {
+						.informationDiv, .searchDiv, .createGame, .searchHeading {
 							margin: auto;
 							text-align: center;
 						}
@@ -239,9 +241,9 @@ const HomePage = (props) => {
 				<div className="navBar">
 					<ul>
 						<li>
-							<Link href='/gameChallenge/gameChallenge' passHref>
-								<div className="myChats">
-									<a>My Game Challenges</a>
+							<Link href='/userGames/userGames' passHref>
+								<div className="myGames">
+									<a>My Games</a>
 								</div>
 							</Link>
 
@@ -288,6 +290,16 @@ const HomePage = (props) => {
 
 				<br/>
 
+
+
+				<Link href='/homePage/createGame' passHref>
+					<div className="createGame">
+						<button> <a>Create game now! </a> </button>
+					</div>
+				</Link>
+
+				<br/>
+				<br/>
 
 
 				<div className="searchDiv">
@@ -365,28 +377,19 @@ const HomePage = (props) => {
 
 						<br/>
 						<br/>
-						<br/>
-						<br/>
-						<br/>
-						<br/>
+						
 					</form>
 
 
 				</div>
 
-				<Link href='/homePage/createGame' passHref>
-					<div className="createGame">
-						<button> <a>Create game now! </a> </button>
-					</div>
-				</Link>
-
-				<br/>
-				<br/>
 				<br/>
 
 				
 
-				
+				<Alert variant='primary' className="searchHeading">Search Results!</Alert>
+
+		      <br/>
 
 
 				
@@ -416,7 +419,15 @@ const HomePage = (props) => {
 										e.target.innerHTML=(e.target.innerHTML=="Join the game!") ? 
 										"Un-join the game!": "Join the game!";
 
-									} }> Join the game! </button>
+									} }>Join the game!</button>
+
+								<Link href='/userGames/gameParticipants' passHref>
+									<div className="gameParticipants">
+										<button> <a>View game participants!</a> </button>
+									</div>
+								</Link>
+
+
 
 							</Box>
 
@@ -429,9 +440,9 @@ const HomePage = (props) => {
 								<br />
 								<div> End Time </div>
 								<br />
-								<div> Number of people allowed </div>
+								<div> Minimum Skill Level Allowed </div>
 								<br />
-								<div> Skill Levels allowed </div>
+								<div> Number of people allowed </div>
 								<br />
 								<div> Number of spots left! </div>
 								<br />
@@ -454,6 +465,10 @@ const HomePage = (props) => {
 								<br />
 								<div> Description </div>
 								<br />
+								<div> Best Sport </div>
+								<br />
+								<div> Best Sport Skill Level </div>
+								<br />
 							</Box>
 						</Col>
 
@@ -463,23 +478,23 @@ const HomePage = (props) => {
 								<div>  </div>
 								<br />
 								<br />
-								<div className="challengeDiv">
-									<b> Challenge? </b>
+								<div className="gameDiv">
+									<b> Join one on one game with this person! </b>
 									<br />
 
-									<label className="challengeDescription">
+									<label className="gameDescription">
 							          Description:
 							          <input type="text" />
 							        </label>
 									
-									<label className="challengeLocation">
+									<label className="gameLocation">
 							          Location:
 							          <input type="text" />
 							        </label>
 									
 									<br />
 
-									<label className="challengeGroupSize">
+									<label className="gameGroupSize">
 							          Number of people allowed (including creator): {' '}
 							          <input type="number" min={2} />
 							        </label>
@@ -488,11 +503,13 @@ const HomePage = (props) => {
 
 									<button onClick={(e)=>
 									{
+										console.log(e.target.innerHTML);
+										e.target.innerHTML=(e.target.innerHTML=="Join one on one game with this athlete!") ? 
+										"Unjoin one on one game with this athlete!": "Join one on one game with this athlete!";
+										console.log(e.target.innerHTML);
 
-										e.target.innerHTML=(e.target.innerHTML=="Challenge this athlete!") ? 
-										"Unchallenge this athlete!": "Challenge this athlete!";
 
-									} }> Challenge this athlete! </button>
+									} }>Join one on one game with this athlete!</button>
 
 								</div>
 								
@@ -505,22 +522,40 @@ const HomePage = (props) => {
 						<Col>
 							<Box>
 								<div className="sportInfo"> 
+									
+									<b> Times for this sport </b>
 									<br />
-									<div> Skill Level </div>
+
+									<Alert variant='secondary' className="mondayTime">Monday Time: 3 pm - 4pm</Alert>
 									<br />
-									<div> Times for this sport </div>
+									<Alert variant='secondary' className="tuesdayTime">Tuesday Time: 3 pm - 4pm</Alert>
 									<br />
+
+									<Alert variant='secondary' className="wednesdayTime">Wednesday Time: 3 pm - 4pm</Alert>
+									<br />
+
+									<Alert variant='secondary' className="thursdayTime">Thursday Time: 3 pm - 4pm</Alert>
+									<br />
+
+
+
+									<Alert variant='secondary' className="fridayTime">Friday Time: 3 pm - 4pm</Alert>
+									<br />
+
+
+									<Alert variant='secondary' className="saturdayTime">Saturday Time: 3 pm - 4pm</Alert>
+									<br />
+
+									<Alert variant='secondary' className="sundayTime">Sunday Time: 3 pm - 4pm</Alert>
+									<br />
+
+
+
 								</div>
 
 								<br/>
 
-								<div className="sportInfo">
-									<br />
-									<div> Skill Level </div>
-									<br />
-									<div> Times for this sport </div>
-									<br />
-								</div>
+								
 								
 								
 

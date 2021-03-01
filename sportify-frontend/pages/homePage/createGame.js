@@ -49,6 +49,46 @@ const CreateGame = (props) => {
 					}
 					
 				`}</style>
+
+				<div className="navBar">
+					<ul>
+						<li>
+							<Link href='/userGames/userGames' passHref>
+								<div className="myGames">
+									<a>My Games</a>
+								</div>
+							</Link>
+
+						</li>
+
+						<li>
+							<Link href='/fillOutProfile/viewOrEditProfile' passHref>
+								<div className="viewOrEditProfile">
+									<a>View/Edit my profile</a>
+								</div>
+							</Link>
+						</li>
+
+						<li>
+					        <Link href='/homePage/homePage' passHref>
+					        	<div className="homeDiv">
+									<a>Go home!</a>
+								</div>
+							</Link>
+						</li>
+
+						<li>
+					        <Link href='/frontpage/Login' passHref>
+					        	<div className="logoutDiv">
+									<a>Logout!</a>
+								</div>
+							</Link>
+						</li>
+
+					</ul>
+				</div>
+
+				<br/>
 				
 				<form onSubmit={(e)=>handleSubmit(e)}>
 					<label>
