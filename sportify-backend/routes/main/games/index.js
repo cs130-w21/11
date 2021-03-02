@@ -1,5 +1,6 @@
 const express = require('express');
 const Sequelize = require('sequelize');
+const { models } = require('../../../utils/sequelize/index');
 const sequelize =  require('../../../utils/sequelize/index');
 MainGamesRouter = express.Router();
 const game = sequelize.models.game; 
@@ -14,7 +15,10 @@ MainGamesRouter.get('/getGames', async (req, res) => {
         const radius = req.query.radius;
         const userLng = req.query.userLng;
         const userLat = req.query.userLat;
-        var options = {where: {}};
+        var options = {where: {}, include:[{
+            model: sequelize.models.user, as: 'users', required:false, attributes:{exclude:['password']}
+        }]}
+
         if(sports) {
             options.where.sport = sports;
         }
@@ -44,6 +48,7 @@ MainGamesRouter.get('/getGames', async (req, res) => {
         if(skill_levels) {
             options.where.skill_level = skill_levels;
         }
+
         game.findAll(options).then(game => res.json(game));
     } catch (err) {
         return res.status(500).send(err.message);
@@ -58,17 +63,41 @@ MainGamesRouter.post('/createGame', async (req, res) => {
         const dateString = req.body['dateString'];
         const datetime = new Date(dateString);
         const point = {type: 'Point', coordinates: [lng,lat]};
-        
+        const user_id = req.body['user'];
+
         gameReq = {
             sport: req.body['sport'],
             location: point,
             time: datetime,
             max_group_size: req.body['max_group_size'],
             skill_level: req.body['skill_level'],
-            comments: req.body['comments']
+            comments: req.body['comments'],
+            users: user_id
         }
         const Game = await game.create(gameReq);
-        return res.status(200).json({Game});
+
+        const user = await models.user.findOne({
+            where: {
+                id:user_id
+            },
+        })
+        // console.log(Game);
+        // console.log("===")
+        // console.log(user);
+        if(!user){
+            res.status(400).send(err.message);
+        }
+        user_games_info = {
+            userId:user_id,
+            gameId: Game.getDataValue('id'),
+            name: user.getDataValue('username')
+        }
+        // console.log("===")
+        // console.log(user_games_info)
+        // console.log("===")
+        const usr_gm = await models.userGames.create(user_games_info);
+        // console.log(usr_gm)
+        return res.status(200).json({Game, usr_gm});
     } catch (err) {
         return res.status(500).send(err.message);
     }
