@@ -22,7 +22,7 @@ export default function Login() {
 
         const url = "localhost:8000/auth/signup/"
 
-        const reactData = [username, email, password]
+        const reactData = { "username": username, "email": email, "password": password }
 
 
 
@@ -40,7 +40,7 @@ export default function Login() {
 
 
                 if (result.status === 200) {
-
+                    console.log(result.body)
 
                     Router.push("../homePage/homePage")
                 }
