@@ -58,25 +58,60 @@ MainScheduleRouter.put('/updateSchedule/:id', async(req, res) => {
 
         scheduleUpdate = {}
         if (monday) {
-            scheduleUpdate.monday = monday;
+            if(monday == "null") {
+                scheduleUpdate.monday = null;
+            }
+            else {
+                scheduleUpdate.monday = monday;
+            }
         }
         if (tuesday) {
-            scheduleUpdate.tuesday = tuesday;
+            if(tuesday == "null") {
+                scheduleUpdate.tuesday = null;
+            }
+            else {
+                scheduleUpdate.tuesday = tuesday;
+            }
         }
         if (wednesday) {
-            scheduleUpdate.wednesday = wednesday;
+            if(wednesday == "null") {
+                scheduleUpdate.wednesday = null;
+            }
+            else {
+                scheduleUpdate.wednesday = wednesday;
+            }
         }
         if (thursday) {
-            scheduleUpdate.thursday = thursday;
+            if(thursday == "null") {
+                scheduleUpdate.thursday = null;
+            }
+            else {
+                scheduleUpdate.thursday = thursday;
+            }
         }
         if (friday) {
-            scheduleUpdate.friday = friday;
+            if(friday == "null") {
+                scheduleUpdate.friday = null;
+            }
+            else {
+                scheduleUpdate.friday = friday;
+            }
         }
         if (saturday) {
-            scheduleUpdate.saturday = saturday;
+            if(saturday == "null") {
+                scheduleUpdate.saturday = null;
+            }
+            else {
+                scheduleUpdate.saturday = saturday;
+            }
         }
         if (sunday) {
-            scheduleUpdate.sunday = sunday;
+            if(sunday == "null") {
+                scheduleUpdate.sunday = null;
+            }
+            else {
+                scheduleUpdate.sunday = sunday;
+            }
         }
 
         const [rowsUpdated, [Schedule]] = await schedule.update(scheduleUpdate, {returning: true, where: {userId: userId}});
