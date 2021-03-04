@@ -57,6 +57,23 @@ MainGamesRouter.get('/getGames', async (req, res) => {
     }
 });
 
+// Get a specific game
+MainGamesRouter.get('/getGame', async (req, res) => {
+    const game = sequelize.models.game;
+    const { game_id } = req.body
+    try {
+        var options = {where: {id:game_id}, attributes:{exclude:[]}, include:[{
+                model: sequelize.models.user, as: 'users', required:false, attributes:{exclude:['password']}}]};
+
+        const currGame = await game.findOne(options);
+        // console.log(currGame);
+        // const usersGames = currUser.getDataValue('games')
+        return res.status(200).send(currGame);
+    } catch (err) {
+        return res.status(500).send(err.message);
+    }
+});
+
 // Create a new game posting
 MainGamesRouter.post('/createGame', async (req, res) => {
     try {

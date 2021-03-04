@@ -138,6 +138,7 @@ MainAuthRouter.get('/getUsers', async (req, res) => {
     }
 });
 
+// Get games associated with a specific user
 MainAuthRouter.get('/getUsersGames', async (req, res) => {
     // console.log('here')
     const user = sequelize.models.user;
