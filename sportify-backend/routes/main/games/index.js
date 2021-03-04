@@ -143,6 +143,26 @@ MainGamesRouter.put('/joinGame', async (req, res) => {
     }
 })
 
+//Leave an existing game posting
+MainGamesRouter.put('/leaveGame', async (req, res) => {
+    const {user_id, game_id} = req.body
+
+    try {
+        let currGame = await game.findOne({where: {id:game_id}});
+        // console.log(currGame);
+        let current_group_size = currGame.current_group_size - 1;
+        let is_full = (current_group_size == currGame.max_group_size);
+        await game.update({'current_group_size':current_group_size, 'is_full':is_full}, {where:{id:game_id}});
+        const currUser = await user.findOne({where:{id:user_id}});
+        // console.log(currUser);
+        currUser.removeGame(currGame);
+        return res.status(200).json({message:"Successfully left game!"})
+    }
+    catch(err){
+        return res.status(500).json({message: err.message})
+    }
+})
+
 // Update a game posting
 MainGamesRouter.put('/updateGame/:id', async (req, res) => { 
     try {
