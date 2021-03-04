@@ -135,62 +135,6 @@ MainAuthRouter.get('/getUsers', async (req, res) => {
     }
 });
 
-MainAuthRouter.get('/getUsers', async (req, res) => {
-    // console.log('here')
-    const user = sequelize.models.user; 
-    try {
-        const username = req.query.username;
-        const email = req.query.email;
-        const age = req.query.age;
-        const sport = req.query.sport;
-        const skill_levels = req.query.skill_levels;
-        const genders = req.query.genders;
-        const radius = req.query.radius;
-        const userLng = req.query.userLng;
-        const userLat = req.query.userLat;
-        var options = {where: {}, attributes:{exclude:[]}, include:[{
-            model: sequelize.models.game, as: 'games', required:false, attibutes: ['id', 'sport', 'comments']}]};
-        if(username) {
-            options.where.username = username;
-        }
-        if(email) {
-            options.where.email = email;
-        }
-        if(age) {
-            options.where.age = {[Sequelize.Op.gt]: age};
-        }
-        if(sport) {
-            options.where.sport = sport;
-        }
-        if(skill_levels) {
-            options.where.skill_level = skill_levels;
-        }
-        if(genders) {
-            options.where.gender = genders;
-        }
-        if(radius && userLat && userLng) {
-            const radiusInMeters = radius*1609.34; // convert miles to meters
-            options.where = Sequelize.where(
-                Sequelize.fn(
-                    'ST_DWithin',
-                    Sequelize.col('location'), 
-                    Sequelize.fn(
-                        'ST_MakePoint', 
-                        userLng, 
-                        userLat),  
-                    radiusInMeters), 
-                true);
-        }
-        //{attributes:{exclude:['password']}}, 
-        options.attributes.exclude = ['password'];
-        // console.log(options);
-        user.findAll(options).then(user => res.json(user));
-        
-    } catch (err) {
-        return res.status(500).send(err.message);
-    }
-});
-
 MainAuthRouter.get('/getUsersGames', async (req, res) => {
     // console.log('here')
     const user = sequelize.models.user;
