@@ -122,7 +122,15 @@ MainAuthRouter.get('/getUsers', async (req, res) => {
         if(genders) {
             options.where.gender = genders;
         }
-        if(radius && userLat && userLng) {
+        if(radius) {
+            var lng = userLng;
+            var lat = userLat;
+            if(!userLng) {
+                lng = 118.4452; // UCLA longitude default
+            }
+            if(!userLat) {
+                lat = 34.0689; // UCLA latitude default
+            }
             const radiusInMeters = radius*1609.34; // convert miles to meters
             options.where = Sequelize.where(
                 Sequelize.fn(
@@ -130,8 +138,8 @@ MainAuthRouter.get('/getUsers', async (req, res) => {
                     Sequelize.col('user.location'), 
                     Sequelize.fn(
                         'ST_MakePoint', 
-                        userLng, 
-                        userLat),  
+                        lng, 
+                        lat),  
                     radiusInMeters), 
                 true);
         }
