@@ -1,16 +1,18 @@
-import React, {component, useState} from 'react'
+import React, { component, useState, useEffect } from 'react'
 import Head from 'next/head';
 import Link from 'next/link';
+import Alert from 'react-bootstrap/Alert'
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
+//import Geocode from "react-geocode"
 //import Link from 'next/link'
 //import soccerPic from "soccer.jpg"
 //import './homePage.module.css';
 
 
 const sportToImage = {
-	'Baseball': '/baseball.jpg', 
+	'Baseball': '/baseball.jpg',
 	'Soccer': '/soccer.jpg',
 	'Football': '/football.png',
 	'Sprinting': '/sprinting.jpg',
@@ -21,39 +23,76 @@ const sportToImage = {
 
 const genderToImage = {
 	'Man': '/maleProfile.png',
-	'Woman': 'femaleProfile.png'
+	'Woman': '/femaleProfile.png',
+	'Other': '/questionMark.png'
 };
 
 const HomePage = (props) => {
 
-	const [sportsSelected, setSportsSelected]=useState({'Tennis': false, 'Soccer': false, 
-	'Badminton': false, 'Baseball': false, 'Sprinting': false, 'Volleyball': false, 'American Football': false});
-	const [timeFromNow, setTimeFromNow]=useState('Within 1 day');
-	const [radius, setRadius]=useState('Within 1 mile');
-	const [gender, setGender]=useState("Both Men and Women");
-	const [skillsSelected, setSkillsSelected]=useState({'1': false, '2':false, '3':false, '4':false, '5':false, '6': false, '7':false, '8':false, '9': false, '10':false});
-	const [typeSelected, setTypeSelected]=useState("Games");
 
-	const sportsFunction = (e) => {
-		if (e.target.getAttribute('type')=="option")
-		{
-			let copySports={...sportsSelected};
-			let sportChosen=e.target.value;
-			copySports[sportChosen]=!(copySports[sportChosen]);
-			setSportsSelected(copySports);
-		}
-		
-	};
+
+	// const [sportsSelected, setSportsSelected]=useState({'Tennis': false, 'Soccer': false, 
+	// 'Badminton': false, 'Baseball': false, 'Sprinting': false, 'Volleyball': false, 'American Football': false});
+	const [searchSport, setSearchSport] = useState('Basketall');
+	const [minSkillLevel, setMinSkillLevel] = useState(1);
+	//const [timeFromNow, setTimeFromNow]=useState('Within 1 day');
+	const [weeksAhead, setWeeksAhead] = useState(1);
+	const [radius, setRadius] = useState('1');
+	const [gendersSelected, setGendersSelected] = useState({ "Men": true, "Women": true, "Other": true });
+	const [skillsSelected, setSkillsSelected] = useState({ '1': false, '2': false, '3': false, '4': false, '5': false, '6': false, '7': false, '8': false, '9': false, '10': false });
+	const [typeSelected, setTypeSelected] = useState("Games");
+	const [username, setUsername] = useState('');
+	const [email, setEmail] = useState('blah@blah.com');
+	const [groupNumber, setGroupNumber] = useState(2);
+	const [minAge, setMinAge] = useState(18);
+	const [foundUser, setUser] = useState("")
+	const [foundUserName, setUsername2] = useState("")
+
+	// const sportsFunction = (e) => {
+	// 	if (e.target.getAttribute('type')=="option")
+	// 	{
+	// 		let copySports={...sportsSelected};
+	// 		let sportChosen=e.target.value;
+	// 		copySports[sportChosen]=!(copySports[sportChosen]);
+	// 		setSportsSelected(copySports);
+	// 	}
+
+	// };
 
 	const skillsFunction = (e) => {
-		if (e.target.getAttribute('type')=="option")
-		{
-			let copySkillLevels={...skillsSelected};
-			let skillLevelChosen=e.target.value;
-			copySkillLevels[skillLevelChosen]=!(copySkillLevels[skillLevelChosen]);
+		if (e.target.getAttribute('type') == "option") {
+			let copySkillLevels = { ...skillsSelected };
+			let skillLevelChosen = e.target.value;
+			copySkillLevels[skillLevelChosen] = !(copySkillLevels[skillLevelChosen]);
 			setSkillsSelected(copySkillLevels);
 		}
-		
+
+	};
+
+
+	useEffect(() => {
+		const loggedInUser = localStorage.getItem("user-id");
+		if (loggedInUser) {
+			const foundUser = JSON.parse(loggedInUser);
+			setUser(foundUser);
+
+		}
+		const loggedInUserName = localStorage.getItem("username");
+		if (loggedInUserName) {
+			const foundUserName = (loggedInUserName);
+			setUsername2(foundUserName);
+
+		}
+
+	}, []);
+
+	const gendersFunction = (e) => {
+		if (e.target.getAttribute('type') == "option") {
+			let copyGenders = { ...gendersSelected };
+			let genderChosen = e.target.value;
+			copyGenders[genderChosen] = !(copyGenders[genderChosen]);
+			setGendersSelected(copyGenders);
+		}
 	};
 
 	// const updateDicts = (e, dictInQuestion, changeDictFunction) => {
@@ -62,9 +101,38 @@ const HomePage = (props) => {
 	// 	changeDictFunction(copyDict);
 	// };
 
-	
-	
 
+	let optionalGenderSelection = typeSelected == "People" ? (
+
+		<label>
+			Gender: {' '}
+			<select multiple={true} value={Object.keys(gendersSelected).find(key => gendersSelected[key] == true)} onChange={setGendersSelected}>
+				<option value="Men">Men</option>
+				<option value="Women">Women</option>
+				<option value="Other">Other</option>
+			</select>
+			{'    '}
+		</label>
+	) : '';
+
+	let optionalUserSelection = typeSelected == "People" ? (
+		<label>
+			Username: {' '}
+			<input type="text" value={username} onChange={(e) => setUsername(e.target.value)} />
+			{'    '}
+		</label>
+	) : '';
+
+	let optionalEmailSelection = typeSelected == "People" ? (
+		<label>
+			Email: {' '}
+			<input type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
+			{'    '}
+		</label>
+	) : '';
+
+
+	{ /*
 	let optionalDateSelection = typeSelected=="Games" ? (
 			<label>
 				Game time: {' '}
@@ -80,10 +148,68 @@ const HomePage = (props) => {
 				<br/>
 			</label>) : '';
 
-	
+	*/	}
+
+	let optionalDateSelection = typeSelected == "Games" ? (
+		<label>
+			Select Within How Many Weeks Ahead the Games Should Be: {' '}
+			<input type="number" min={1} value={weeksAhead} onChange={(e) => setWeeksAhead(e.target.value)} />
+			{'    '}
+		</label>
+	) : '';
+
+	let optionalUserSkillLevels = typeSelected == "Users" ? (
+		<label>
+			Skill Level: {' '}
+			<select multiple onChange={skillsFunction} value={Object.keys(skillsSelected).find(key => skillsSelected[key] == true)}>
+				<option value="1"> 1 </option>
+				<option value="2"> 2 </option>
+				<option value="3"> 3 </option>
+				<option value="4"> 4 </option>
+				<option value="5"> 5 </option>
+				<option value="6"> 6 </option>
+				<option value="7"> 7 </option>
+				<option value="8"> 8 </option>
+				<option value="9"> 9 </option>
+				<option value="10"> 10 </option>
+			</select>
+			{'    '}
+			<br />
+		</label>
+	) : '';
+
+	let optionalMinimumGameSkillLevel = typeSelected == "Games" ? (
+		<label>
+			Minimum Game Skill Level: {' '}
+			<input type="number" min={1} value={minSkillLevel} onChange={(e) => setMinSkillLevel(e.target.value)} />
+			{'   \t'}
+		</label>
+
+	) : '';
+
+
+
+	let optionalMinAge = typeSelected == "Games" ? (
+		<label>
+			Minimum Age: {' '}
+			<input type="number" min={1} value={minAge} onChange={(e) => setMinAge(e.target.value)} />
+			{'   \t'}
+		</label>
+	) : '';
+
+	let optionalMaxGroupSize = typeSelected == "Games" ? (
+		<label>
+			Number of people in group game (including creator): {' '}
+			<input type="number" min={2} value={groupNumber} onChange={(e) => setGroupNumber(e.target.value)} />
+			{'   '}
+		</label>
+	) : '';
+
+
+
 	return (
-			<div>
-				<style jsx global>{`
+		<div>
+			<style jsx global>{`
 								       ul {
 						  list-style-type: none;
 						  margin: 0;
@@ -115,7 +241,7 @@ const HomePage = (props) => {
 
 						}
 
-						.informationDiv, .searchDiv, .createGame {
+						.informationDiv, .searchDiv, .createGame, .searchHeading {
 							margin: auto;
 							text-align: center;
 						}
@@ -129,76 +255,97 @@ const HomePage = (props) => {
 						}
 
 		      `}</style>
-				<div className="navBar">
-					<ul>
-						<li>
-							<Link href='/gameChallenge/gameChallenge' passHref>
-								<div className="myChats">
-									<a>My Game Challenges</a>
-								</div>
-							</Link>
+			<div className="navBar">
+				<ul>
+					<li>
+						<Link href='/userGames/userGames' passHref>
+							<div className="myGames">
+								<a>My Games</a>
+							</div>
+						</Link>
 
-						</li>
+					</li>
 
-						<li>
-							<Link href='/fillOutProfile/viewOrEditProfile' passHref>
-								<div className="viewOrEditProfile">
-									<a>View/Edit my profile</a>
-								</div>
-							</Link>
-						</li>
+					<li>
+						<Link href='/fillOutProfile/viewOrEditProfile' passHref>
+							<div className="viewOrEditProfile">
+								<a>View/Edit my profile</a>
+							</div>
+						</Link>
+					</li>
 
-						<li>
-					        <Link href='/homePage/homePage' passHref>
-					        	<div className="homeDiv">
-									<a>Go home!</a>
-								</div>
-							</Link>
-						</li>
+					<li>
+						<Link href='/homePage/homePage' passHref>
+							<div className="homeDiv">
+								<a>Go home!</a>
+							</div>
+						</Link>
+					</li>
 
-					</ul>
-				</div>
+					<li>
+						<Link href='/frontpage/Login' passHref>
+							<div className="logoutDiv">
+								<a>Logout!</a>
+							</div>
+						</Link>
+					</li>
 
-				<br/>
+				</ul>
+			</div>
+
+			<br />
 
 
-				<div className="informationDiv">
-					<p>
-						Welcome to our app! Note that when searching for people exclusive-or games,
-						you must choose this with respect to your skill level. A 10 refers to an expert
-						within the game, while a 1 refers to a complete beginner. A 5 is around the skill level
-						of a club or tournament player who has competed before.
+			<div className="informationDiv">
+				<h1>Hi {foundUserName}</h1>
+				<p>
+					Welcome to our app! Note that when searching for people exclusive-or games,
+					you must choose this with respect to your skill level. A 10 refers to an expert
+					within the game, while a 1 refers to a complete beginner. A 5 is around the skill level
+					of a club or tournament player who has competed before.
 					</p>
+			</div>
+
+			<br />
+
+
+
+			<Link href='/homePage/createGame' passHref>
+				<div className="createGame">
+					<button> <a>Create game now! </a> </button>
 				</div>
+			</Link>
 
-				<br/>
-
-
-
-				<div className="searchDiv">
-
-					<h1> Search Filters </h1>
+			<br />
+			<br />
 
 
-					<form> {/* onSubmit */}
-						<label>
-							Sports: {' '}
-					          	<select multiple={true} onChange={sportsFunction} value={Object.keys(sportsSelected).find(key => sportsSelected[key]==true)}>
-										<option value="Basketball">Basketball</option>
-										<option value="Tennis">Tennis</option>
-										<option value="Soccer">Soccer</option>
-										<option value="Badminton">Badminton</option>
-										<option value="Baseball">Baseball</option>
-										<option value="Sprinting">Sprinting</option>
-										<option value="Volleyball">Volleyball</option>
-										<option value="American Football">American Football</option>
-								</select>
-						</label>
+			<div className="searchDiv">
 
-						{'    '}
+				<h1> Search Filters </h1>
 
-						<label>
-							Radius: {' '}
+
+				<form> {/* onSubmit */}
+					<label>
+						Sport: {' '}
+						<select value={searchSport} onChange={(e) => setSearchSport(e.target.value)} >
+							<option value="Basketball">Basketball</option>
+							<option value="Tennis">Tennis</option>
+							<option value="Soccer">Soccer</option>
+							<option value="Badminton">Badminton</option>
+							<option value="Baseball">Baseball</option>
+							<option value="Sprinting">Sprinting</option>
+							<option value="Volleyball">Volleyball</option>
+							<option value="American Football">American Football</option>
+						</select>
+					</label>
+
+					{'    '}
+
+
+					<label>
+						Radius (in miles): {' '}
+						{/* 
 					        <select value={radius} onChange={(e)=>setRadius(e.target.value)}>
 								<option value="Within 1 mile">Within 1 mile</option>
 								<option value="Within 3 miles">Within 3 miles</option>
@@ -208,230 +355,236 @@ const HomePage = (props) => {
 								<option value="Within 50 miles">Within 50 miles</option>
 								<option value="Within 100 miles">Within 100 miles</option>
 							</select>
-						</label>
 
-						{'    '}
-					
+							*/ }
+						<input type="number" min={0} value={radius} onChange={(e) => setRadius(e.target.value)} />
 
-
-						<label>
-							Gender: {' '}
-			          		<select value={gender} onChange={(e)=>setGender(e.target.value)}>
-								<option value="Men only">Men only</option>
-								<option value="Women only">Women Only</option>
-								<option value="Both Men and Women">Both Men and Women</option>
-							</select>
-						</label>
-
-						{'    '}
-
-						<label>
-							Skill Level: {' '}
-				          		<select multiple onChange={skillsFunction} value={Object.keys(skillsSelected).find(key => sportsSelected[key]==true)}>
-									<option value="1"> 1 </option>
-									<option value="2"> 2 </option>
-									<option value="3"> 3 </option>
-									<option value="4"> 4 </option>
-									<option value="5"> 5 </option>
-									<option value="6"> 6 </option>
-									<option value="7"> 7 </option>
-									<option value="8"> 8 </option>
-									<option value="9"> 9 </option>
-									<option value="10"> 10 </option>
-								</select>
-						</label>
-
-						{'    '}
+					</label>
 
 
-						<label>
-							People or Games: {' '}
-			          		<select value={typeSelected} onChange={(e)=>setTypeSelected(e.target.value)}>
-								<option value="People"> People </option>
-								<option value="Games"> Games </option>
-							</select>
-						</label>
 
-						{'    '}
-
-						{optionalDateSelection}
-
-						<br/>
-						
-
-						{/* <input type="submit" value="Submit" />  */} 
-
-						<br/>
-						<br/>
-						<br/>
-						<br/>
-						<br/>
-						<br/>
-					</form>
+					{'    '}
 
 
-				</div>
+					<label>
+						People or Games: {' '}
+						<select value={typeSelected} onChange={(e) => setTypeSelected(e.target.value)}>
+							<option value="People"> People </option>
+							<option value="Games"> Games </option>
+						</select>
+					</label>
 
-				<Link href='/homePage/createGame' passHref>
-					<div className="createGame">
-						<button> <a>Create game now! </a> </button>
-					</div>
-				</Link>
+					{'    '}
+					<br />
 
-				<br/>
-				<br/>
-				<br/>
-
-				
-
-				
-
-
-				
-
-				<Container fluid>
-					<Row className="game">
-						<Col>
-						    <Box>
-								<img src="/soccer.jpg" />
-							</Box>
-						</Col>
+					{optionalMaxGroupSize}
+					{optionalDateSelection}
+					{optionalMinimumGameSkillLevel}
 
 
-						<Col >
-							<Box>
-								
-								<div> Event Name </div>
+					{optionalMinAge}
+					{optionalGenderSelection}
+					{optionalUserSkillLevels}
+					{optionalUserSelection}
+					{optionalEmailSelection}
+
+					<br />
+
+
+					{/* <input type="submit" value="Submit" />  */}
+
+					<br />
+					<br />
+
+				</form>
+
+
+			</div>
+
+			<br />
+
+
+
+			<Alert variant='primary' className="searchHeading">Search Results!</Alert>
+
+			<br />
+
+
+
+
+			<Container fluid>
+				<Row className="game">
+					<Col>
+						<Box>
+							<img src="/soccer.jpg" />
+						</Box>
+					</Col>
+
+
+					<Col >
+						<Box>
+
+							<div> Event Name </div>
+							<br />
+							<div> Event Location </div>
+							<br />
+							<div> Event description </div>
+							<br />
+
+							<button onClick={(e) => {
+
+								e.target.innerHTML = (e.target.innerHTML == "Join the game!") ?
+									"Un-join the game!" : "Join the game!";
+
+							}}>Join the game!</button>
+
+							<Link href='/userGames/gameParticipants' passHref>
+								<div className="gameParticipants">
+									<button> <a>View game participants!</a> </button>
+								</div>
+							</Link>
+
+
+
+						</Box>
+
+					</Col>
+
+
+					<Col>
+						<Box>
+							<div> Start Time </div>
+							<br />
+							<div> End Time </div>
+							<br />
+							<div> Minimum Skill Level Allowed </div>
+							<br />
+							<div> Number of people allowed </div>
+							<br />
+							<div> Number of spots left! </div>
+							<br />
+
+						</Box>
+					</Col>
+				</Row>
+			</Container>
+
+			<br />
+			<br />
+
+			<Container fluid>
+				<Row className="person">
+					<Col>
+						<Box>
+							<img src={'/maleProfile.png'} />
+							<br />
+							<div> Person Name </div>
+							<br />
+							<div> Description </div>
+							<br />
+							<div> Best Sport </div>
+							<br />
+							<div> Best Sport Skill Level </div>
+							<br />
+						</Box>
+					</Col>
+
+					<Col >
+						<Box>
+
+							<div>  </div>
+							<br />
+							<br />
+							<div className="gameDiv">
+								<b> Join one on one game with this person! </b>
 								<br />
-								<div> Event Location </div>
-								<br />
-								<div> Event description </div>
-								<br />
 
-								<button onClick={(e)=>
-									{
-
-										e.target.innerHTML=(e.target.innerHTML=="Join the game!") ? 
-										"Un-join the game!": "Join the game!";
-
-									} }> Join the game! </button>
-
-							</Box>
-
-						</Col>
-
-
-						<Col>
-							<Box>
-								<div> Start Time </div>
-								<br />
-								<div> End Time </div>
-								<br />
-								<div> Number of people allowed </div>
-								<br />
-								<div> Skill Levels allowed </div>
-								<br />
-								<div> Number of spots left! </div>
-								<br />
-
-							</Box>
-						</Col>
-					</Row>
-				</Container>
-
-				<br/>
-				<br/>
-
-				<Container fluid>
-					<Row className="person">
-						<Col>
-						    <Box>
-								<img src={'/maleProfile.png'} />
-								<br />
-								<div> Person Name </div>
-								<br />
-								<div> Description </div>
-								<br />
-							</Box>
-						</Col>
-
-						<Col >
-							<Box>
-								
-								<div>  </div>
-								<br />
-								<br />
-								<div className="challengeDiv">
-									<b> Challenge? </b>
-									<br />
-
-									<label>
-							          Description:
+								<label className="gameDescription">
+									Description:
 							          <input type="text" />
-							        </label>
-									
-									<label>
-							          Location:
+								</label>
+
+								<label className="gameLocation">
+									Location:
 							          <input type="text" />
-							        </label>
-									
-									<br />
+								</label>
 
-									<label>
-							          Number of people allowed (excluding creator):
-							          <input type="number" min={1} />
-							        </label>
-									
-									<br />
+								<br />
 
-									<button onClick={(e)=>
-									{
+								<label className="gameGroupSize">
+									Number of people allowed (including creator): {' '}
+									<input type="number" min={2} />
+								</label>
 
-										e.target.innerHTML=(e.target.innerHTML=="Challenge this athlete!") ? 
-										"Unchallenge this athlete!": "Challenge this athlete!";
+								<br />
 
-									} }> Challenge this athlete! </button>
-
-								</div>
-								
-
-							</Box>
-
-						</Col>
+								<button onClick={(e) => {
+									console.log(e.target.innerHTML);
+									e.target.innerHTML = (e.target.innerHTML == "Join one on one game with this athlete!") ?
+										"Unjoin one on one game with this athlete!" : "Join one on one game with this athlete!";
+									console.log(e.target.innerHTML);
 
 
-						<Col>
-							<Box>
-								<div className="sportInfo"> 
-									<br />
-									<div> Skill Level </div>
-									<br />
-									<div> Times for this sport </div>
-									<br />
-								</div>
+								}}>Join one on one game with this athlete!</button>
 
-								<br/>
-
-								<div className="sportInfo">
-									<br />
-									<div> Skill Level </div>
-									<br />
-									<div> Times for this sport </div>
-									<br />
-								</div>
-								
-								
-
-							</Box>
-
-						</Col>
-
-					</Row>
+							</div>
 
 
-				</Container>
+						</Box>
 
-			</div >
+					</Col>
+
+
+					<Col>
+						<Box>
+							<div className="sportInfo">
+
+								<b> Times for this sport </b>
+								<br />
+
+								<Alert variant='secondary' className="mondayTime">Monday Time: 3 pm - 4pm</Alert>
+								<br />
+								<Alert variant='secondary' className="tuesdayTime">Tuesday Time: 3 pm - 4pm</Alert>
+								<br />
+
+								<Alert variant='secondary' className="wednesdayTime">Wednesday Time: 3 pm - 4pm</Alert>
+								<br />
+
+								<Alert variant='secondary' className="thursdayTime">Thursday Time: 3 pm - 4pm</Alert>
+								<br />
+
+
+
+								<Alert variant='secondary' className="fridayTime">Friday Time: 3 pm - 4pm</Alert>
+								<br />
+
+
+								<Alert variant='secondary' className="saturdayTime">Saturday Time: 3 pm - 4pm</Alert>
+								<br />
+
+								<Alert variant='secondary' className="sundayTime">Sunday Time: 3 pm - 4pm</Alert>
+								<br />
+
+
+
+							</div>
+
+							<br />
+
+
+
+
+
+						</Box>
+
+					</Col>
+
+				</Row>
+
+
+			</Container>
+
+		</div >
 	);
 };
 
@@ -439,153 +592,3 @@ const HomePage = (props) => {
 export default HomePage;
 const Box = props => <div className="box">{props.children} </div>;
 
-
-// class homePage extends Component {
-// 	constructor(props) {
-// 		super(props);
-// 		this.state = {
-// 			username: '',
-// 			password: '',
-// 			gameChosen: true,
-// 			name: ''
-
-
-// 		};
-// 	}
-
-
-
-// 	render() {
-
-
-// 		let optionalDateSelection = this.state.gameChosen ? (
-
-// 			<label>
-// 				Game time?:
-// 				<select>
-// 					<option value="Within 1 day">Within 1 day</option>
-// 					<option value="Within 1 week">Within 1 week</option>
-// 					<option value="Within 2 weeks">Within 2 weeks</option>
-// 					<option value="Within 1 month">Within 1 month</option>
-// 					<option value="Within 3 months">Within 3 months</option>
-// 					<option value="Within 6 months">Within 6 months</option>
-// 					<option value="Within 1 year">Within 1 year</option>
-// 				</select>
-// 			</label>
-
-
-// 		) : '';
-
-
-// 		return (
-// 			< div >
-// 				<div className="navBar">
-// 					<ul>
-// 						<li><a href="default.asp">My Chats</a></li>
-// 						<li><a href="news.asp">My Games</a></li>
-// 						<li><a href="contact.asp">View/Edit My Profile</a></li>
-// 					</ul>
-// 				</div>
-
-// 				<div className="informationDiv">
-// 					<p>
-// 						Welcome to our app! Note that when searching for people exclusive-or games,
-// 						you must choose this with respect to your skill level. A 10 refers to an expert
-// 						within the game, while a 1 refers to a complete beginner. A 5 is around the skill level
-// 						of a club or tournament player who has competed before.
-
-// 				</p>
-
-// 				</div>
-
-// 				<div className="searchDiv">
-
-// 					<h1> Search Filters </h1>
-
-
-// 					<form onSubmit>
-// 						<label>
-// 							Sports:
-// 			          <select multiple={true}>
-// 								<option value="Basketball">Basketball</option>
-// 								<option value="Tennis">Tennis</option>
-// 								<option value="Soccer">Soccer</option>
-// 								<option value="Badminton">Badminton</option>
-// 								<option value="Baseball">Baseball</option>
-// 								<option value="Sprinting">Sprinting</option>
-// 								<option value="Volleyball">Volleyball</option>
-// 								<option value="American Football">American Football</option>
-// 							</select>
-// 						</label>
-
-// 						<label>
-// 							Radius:
-// 			          <select multiple={true}>
-// 								<option value="Within 1 mile">Within 1 mile</option>
-// 								<option value="Within 3 miles">Within 3 miles</option>
-// 								<option value="Within 5 miles">Within 5 miles</option>
-// 								<option value="Within 10 miles">Within 10 miles</option>
-// 								<option value="Within 20 miles">Within 20 miles</option>
-// 								<option value="Within 50 miles">Within 50 miles</option>
-// 								<option value="Within 100 miles">Within 100 miles</option>
-// 							</select>
-// 						</label>
-					
-
-
-// 						<label>
-// 							Gender
-// 			          		<select>
-// 								<option value="Men only">Men only</option>
-// 								<option value="Women only">Women Only</option>
-// 								<option value="Both Men and Women">Both Men and Women</option>
-// 							</select>
-// 						</label>
-
-// 						<label>
-// 							Skill Level
-// 			          <select multiple={true}>
-// 								<option value="1"> 1 </option>
-// 								<option value="2"> 2 </option>
-// 								<option value="3"> 3 </option>
-// 								<option value="4"> 4 </option>
-// 								<option value="5"> 5 </option>
-// 								<option value="6"> 6 </option>
-// 								<option value="7"> 7 </option>
-// 								<option value="8"> 8 </option>
-// 								<option value="9"> 9 </option>
-// 								<option value="10"> 10 </option>
-// 							</select>
-// 						</label>
-
-
-// 						<label>
-// 							People or Games
-// 			          <select value="Games">
-// 								<option value="People"> People </option>
-// 								<option value="Games"> Games </option>
-// 							</select>
-// 						</label>
-
-
-// 						{optionalDateSelection}
-
-
-// 						<input type="submit" value="Submit" />
-// 					</form>
-
-
-// 				</div>
-
-// 				<div className="createGame">
-// 					<button> Create game now! </button>
-
-// 				</div>
-// 			</div >
-
-
-// 		);
-// 	}
-// }
-
-// export default homePage;

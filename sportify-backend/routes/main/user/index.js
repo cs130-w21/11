@@ -3,7 +3,8 @@ const jwt = require('jsonwebtoken');
 const Sequelize = require('sequelize');
 const sequelize = require('../../../utils/sequelize/index');
 const bcrypt = require('bcrypt');
-const cors = require('cors')
+const cors = require('cors');
+const user = require('../../../models/user');
 
 MainAuthRouter = express.Router();
 MainAuthRouter.all('*', cors());
@@ -13,7 +14,6 @@ const User = sequelize.models.user
 
 MainAuthRouter.post("/signup", async (req, res) => {
     const {username, email, password} = req.body
-    console.log(username, email, password)
 
     // use client side validation and send non-empty username/email/password to backend
     if (password.length < 8) {
@@ -31,7 +31,15 @@ MainAuthRouter.post("/signup", async (req, res) => {
     console.log("adding to db")
     //add user to db
     try {
-        await User.create(req.body)
+        await User.create(req.body).then(addedUser =>{
+            console.log('User', username, 'added successfully!')
+            return res.status(200).json({
+                message: 'Signup Successful!',
+                username: addedUser.username,
+                id: addedUser.id,
+                token: token
+            })
+        })
     } catch (err) {
         if (err.message.includes('duplicate') && err.message.includes('username')) {
             return res.json({
@@ -46,21 +54,15 @@ MainAuthRouter.post("/signup", async (req, res) => {
             message: err.message
         })
     }
-
-    return res.status(200).json({
-        message: 'Signup successful',
-        username,
-        email,
-        token
-    })
 });
 
 MainAuthRouter.post('/signin', async (req, res) => {
 
     const { username, password } = req.body
     let token
+    let user
     try {
-        const user = await User.findOne({ where: { username: username } })
+        user = await User.findOne({ where: { username: username } })
         let hashedPassword = user.password
         let result = await bcrypt.compare(password, hashedPassword)
         if (!result) {
@@ -74,7 +76,8 @@ MainAuthRouter.post('/signin', async (req, res) => {
     }
     return res.status(200).json({
         message: 'Signin successful',
-        username,
+        username: user.username,
+        id: user.id,
         token
     })
 });
