@@ -5,6 +5,10 @@ import Alert from 'react-bootstrap/Alert'
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
+import Geocode from 'react-geocode'
+
+
+
 //import Geocode from "react-geocode"
 //import Link from 'next/link'
 //import soccerPic from "soccer.jpg"
@@ -29,22 +33,26 @@ const genderToImage = {
 
 const HomePage = (props) => {
 
+	useEffect(()=>{
+        Geocode.setApiKey("AIzaSyDqs8TqTIsIx3xTuD1NEY3hXxmSciVrWZE");
+        Geocode.setLanguage("en");
+    }, []);
 
 
 	// const [sportsSelected, setSportsSelected]=useState({'Tennis': false, 'Soccer': false, 
 	// 'Badminton': false, 'Baseball': false, 'Sprinting': false, 'Volleyball': false, 'American Football': false});
-	const [searchSport, setSearchSport] = useState('Basketall');
-	const [minSkillLevel, setMinSkillLevel] = useState(1);
+	const [searchSport, setSearchSport] = useState('No selection');
+	const [minSkillLevel, setMinSkillLevel] = useState('');
 	//const [timeFromNow, setTimeFromNow]=useState('Within 1 day');
-	const [weeksAhead, setWeeksAhead] = useState(1);
-	const [radius, setRadius] = useState('1');
-	const [gendersSelected, setGendersSelected] = useState({ "Men": true, "Women": true, "Other": true });
+	const [weeksAhead, setWeeksAhead] = useState('');
+	const [radius, setRadius] = useState('');
+	const [gendersSelected, setGendersSelected] = useState({ 'Men': false, 'Women': false, 'Other': false});
 	const [skillsSelected, setSkillsSelected] = useState({ '1': false, '2': false, '3': false, '4': false, '5': false, '6': false, '7': false, '8': false, '9': false, '10': false });
 	const [typeSelected, setTypeSelected] = useState("Games");
 	const [username, setUsername] = useState('');
-	const [email, setEmail] = useState('blah@blah.com');
-	const [groupNumber, setGroupNumber] = useState(2);
-	const [minAge, setMinAge] = useState(18);
+	const [email, setEmail] = useState('');
+	const [groupNumber, setGroupNumber] = useState('');
+	const [minAge, setMinAge] = useState('');
 	const [foundUser, setUser] = useState("")
 	const [foundUserName, setUsername2] = useState("")
 
@@ -92,6 +100,7 @@ const HomePage = (props) => {
 			let genderChosen = e.target.value;
 			copyGenders[genderChosen] = !(copyGenders[genderChosen]);
 			setGendersSelected(copyGenders);
+			console.log(gendersSelected);
 		}
 	};
 
@@ -102,11 +111,32 @@ const HomePage = (props) => {
 	// };
 
 
+	let optionalUserSkillLevels = typeSelected == "People" ? (
+		<label>
+			Skill Level: {' '}
+			<select multiple onChange={skillsFunction} value={Object.keys(skillsSelected).find(key => skillsSelected[key] == true)}>
+				<option value="1">1</option>
+				<option value="2">2</option>
+				<option value="3">3</option>
+				<option value="4">4</option>
+				<option value="5">5</option>
+				<option value="6">6 </option>
+				<option value="7">7</option>
+				<option value="8">8</option>
+				<option value="9">9</option>
+				<option value="10">10</option>
+			</select>
+			{'    '}
+			<br />
+		</label>
+	) : '';
+
+
 	let optionalGenderSelection = typeSelected == "People" ? (
 
 		<label>
-			Gender: {' '}
-			<select multiple={true} value={Object.keys(gendersSelected).find(key => gendersSelected[key] == true)} onChange={setGendersSelected}>
+			Genders: {' '}
+			<select multiple onChange={gendersFunction} value={Object.keys(gendersSelected).find(key => gendersSelected[key] == true)} >
 				<option value="Men">Men</option>
 				<option value="Women">Women</option>
 				<option value="Other">Other</option>
@@ -158,31 +188,13 @@ const HomePage = (props) => {
 		</label>
 	) : '';
 
-	let optionalUserSkillLevels = typeSelected == "Users" ? (
-		<label>
-			Skill Level: {' '}
-			<select multiple onChange={skillsFunction} value={Object.keys(skillsSelected).find(key => skillsSelected[key] == true)}>
-				<option value="1"> 1 </option>
-				<option value="2"> 2 </option>
-				<option value="3"> 3 </option>
-				<option value="4"> 4 </option>
-				<option value="5"> 5 </option>
-				<option value="6"> 6 </option>
-				<option value="7"> 7 </option>
-				<option value="8"> 8 </option>
-				<option value="9"> 9 </option>
-				<option value="10"> 10 </option>
-			</select>
-			{'    '}
-			<br />
-		</label>
-	) : '';
+	
 
 	let optionalMinimumGameSkillLevel = typeSelected == "Games" ? (
 		<label>
 			Minimum Game Skill Level: {' '}
 			<input type="number" min={1} value={minSkillLevel} onChange={(e) => setMinSkillLevel(e.target.value)} />
-			{'   \t'}
+			{'    '}
 		</label>
 
 	) : '';
@@ -199,7 +211,7 @@ const HomePage = (props) => {
 
 	let optionalMaxGroupSize = typeSelected == "Games" ? (
 		<label>
-			Number of people in group game (including creator): {' '}
+			Max Number of people in group game (including creator): {' '}
 			<input type="number" min={2} value={groupNumber} onChange={(e) => setGroupNumber(e.target.value)} />
 			{'   '}
 		</label>
@@ -326,9 +338,21 @@ const HomePage = (props) => {
 
 
 				<form> {/* onSubmit */}
+
+					<label>
+						People or Games: {' '}
+						<select value={typeSelected} onChange={(e) => setTypeSelected(e.target.value)}>
+							<option value="People"> People </option>
+							<option value="Games"> Games </option>
+						</select>
+					</label>
+
+					{'    '}
+
 					<label>
 						Sport: {' '}
 						<select value={searchSport} onChange={(e) => setSearchSport(e.target.value)} >
+							<option value="No selection">No Selection</option>
 							<option value="Basketball">Basketball</option>
 							<option value="Tennis">Tennis</option>
 							<option value="Soccer">Soccer</option>
@@ -366,15 +390,7 @@ const HomePage = (props) => {
 					{'    '}
 
 
-					<label>
-						People or Games: {' '}
-						<select value={typeSelected} onChange={(e) => setTypeSelected(e.target.value)}>
-							<option value="People"> People </option>
-							<option value="Games"> Games </option>
-						</select>
-					</label>
-
-					{'    '}
+					
 					<br />
 
 					{optionalMaxGroupSize}
@@ -388,7 +404,80 @@ const HomePage = (props) => {
 					{optionalUserSelection}
 					{optionalEmailSelection}
 
+
 					<br />
+
+					<button className="submitSearchFilters" onClick={(e)=>{
+							e.preventDefault();
+							let lati, long;
+							console.log("In submit filters handler function!");
+							//const userNameData= {username: foundUser};
+							//let jsonUserData;
+							fetch('http://localhost:8000/user/getUsers', {
+				            //mode: "no-cors",
+				            method: "GET",
+				            headers: {
+				                'Content-type': 'application/json',
+				                "Access-Control-Allow-Origin": '*'
+				            },
+				            //query: JSON.stringify(userNameData)
+				        })
+				            .then(response => response.json())
+				            .then(json => {
+				                console.log(json);
+
+				            })
+				            .catch (errorMessage =>{
+				            	console.log(errorMessage);
+				            	// lati=-76;
+				                //    long=-148;
+				            }); 
+
+				    //         Geocode.fromAddress(address).then(
+								//   (response) => {
+								//     const { lat, lng } = response.results[0].geometry.location;
+								//     // console.log(lat, lng);
+								//     // lati=lat;
+								//     // long=lng;
+
+								//   },
+								//   (error) => {
+								//     console.error(error);
+								//   }
+								// );
+
+
+
+
+							// const reactData = { "sports": searchSport, "max_group_size": groupNumber,
+							// "skill_levels": skillsSelected, "weeksAhead": weeksAhead, "radius": radius,
+							// }
+							// fetch('http://localhost:8000/user/signin', {
+				   //          //mode: "no-cors",
+				   //          method: "POST",
+				   //          headers: {
+				   //              'Content-type': 'application/json',
+				   //              "Access-Control-Allow-Origin": '*'
+				   //          },
+				   //          body: JSON.stringify(reactData)
+				   //      })
+				   //          .then(response => response.json())
+				   //          .then(json => {
+				   //              if (json.message === "Signin successful") {
+				   //                  console.log("Result Here")
+				   //                  console.log(json)
+				   //                  localStorage.setItem('user-id', json.id)
+				   //                  localStorage.setItem('username', json.username)
+				   //                  Router.push("../homePage/homePage")
+				   //              }
+
+
+
+				   //          })
+					
+						}}>Submit search filters!</button>
+
+					<br/>
 
 
 					{/* <input type="submit" value="Submit" />  */}

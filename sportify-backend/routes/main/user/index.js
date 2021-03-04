@@ -96,7 +96,7 @@ MainAuthRouter.get('/getUsers', async (req, res) => {
         const userLng = req.query.userLng;
         const userLat = req.query.userLat;
         var options = {where: {}, attributes:{exclude:[]}, include:[{
-            model: sequelize.models.game, as: 'games', required:false, attibutes: ['id', 'sport', 'comments']}]};
+            model: sequelize.models.game, as: 'games', required:false, attributes: ['id', 'sport', 'comments']}]};
         if(username) {
             options.where.username = username;
         }
@@ -137,6 +137,42 @@ MainAuthRouter.get('/getUsers', async (req, res) => {
         return res.status(500).send(err.message);
     }
 });
+
+// MainAuthRouter.get('/getUser', async (req, res) => {
+//     // console.log('here')
+//     const user = sequelize.models.user; 
+//     try {
+//         const userName = req.query.username;
+        
+//         User.findOne({ where: { username: username } })
+        
+//         options.attributes.exclude = ['password'];
+//         // console.log(options);
+//         const user=await user.findOne({ where: { username: userName }, 
+
+//             attributes: {exclude: ['password']}
+//         });
+//         if (jsonUser!=null)
+//         {
+//             console.log(jsonUser);
+//             return res.status(200).json({
+//                 message: 'Getuser successful',
+//                 username: user.username,
+//                 id: user.id,
+//                 jsonUser
+//         }
+//         else
+//         {
+//             return res.status(500).send(err.message);
+//         }
+
+            
+//     })
+
+//     } catch (err) {
+//         return res.status(500).send(err.message);
+//     }
+// });
 
 MainAuthRouter.put('/updateProfile/:id', async (req, res) => {
     const user = sequelize.models.user; 
