@@ -1,9 +1,11 @@
 const express = require('express');
+const { where } = require('sequelize');
 const Sequelize = require('sequelize');
 const { models } = require('../../../utils/sequelize/index');
 const sequelize =  require('../../../utils/sequelize/index');
 MainGamesRouter = express.Router();
 const game = sequelize.models.game; 
+const user = sequelize.models.user;
 
 // Get filtered games from db
 MainGamesRouter.get('/getGames', async (req, res) => {
@@ -18,9 +20,9 @@ MainGamesRouter.get('/getGames', async (req, res) => {
         var options = {where: {}, include:[{
             model: sequelize.models.user, as: 'users', required:false, attributes:{exclude:['password']}
         }]}
-
         if(sports) {
             options.where.sport = sports;
+            options.where.is_full = false;
         }
         // TODO: Grab user latitude and longitude
         if(radius && userLat && userLng) {
@@ -102,6 +104,27 @@ MainGamesRouter.post('/createGame', async (req, res) => {
         return res.status(500).send(err.message);
     }
 });
+
+//Join an existing game posting
+MainGamesRouter.put('/joinGame', async (req, res) => {
+    const {user_id, game_id} = req.body
+
+    try {
+        let currGame = await game.findOne({where: {id:game_id}})
+        if (currGame.is_full){
+            return res.status(409).json({message: "Game is already full!"})
+        }
+        let current_group_size = currGame.current_group_size + 1;
+        let is_full = (current_group_size == currGame.max_group_size)
+        await game.update({'current_group_size':current_group_size, 'is_full':is_full}, {where:{id:game_id}});
+        const currUser = await user.findOne({where:{id:user_id}});
+        currUser.addGame(currGame)
+        return res.status(200).json({message:"Successfully joined game!"})
+    }
+    catch(err){
+        return res.status(500).json({message: err.message})
+    }
+})
 
 // Update a game posting
 MainGamesRouter.put('/updateGame/:id', async (req, res) => { 
