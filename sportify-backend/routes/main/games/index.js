@@ -28,7 +28,7 @@ MainGamesRouter.get('/getGames', async (req, res) => {
             options.where = Sequelize.where(
                 Sequelize.fn(
                     'ST_DWithin',
-                    Sequelize.col('location'), 
+                    Sequelize.col('game.location'), 
                     Sequelize.fn(
                         'ST_MakePoint', 
                         userLng, 
