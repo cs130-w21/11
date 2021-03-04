@@ -156,6 +156,16 @@ MainGamesRouter.put('/leaveGame', async (req, res) => {
         const currUser = await user.findOne({where:{id:user_id}});
         // console.log(currUser);
         currUser.removeGame(currGame);
+
+        if(current_group_size == 0){
+            const deleted = await game.destroy({
+                where: {id: game_id}
+            });
+            if (deleted) {
+                return res.status(200).send("Successfully left game, game deleted");
+            }
+            throw new Error("Game not found");
+        }
         return res.status(200).json({message:"Successfully left game!"})
     }
     catch(err){
