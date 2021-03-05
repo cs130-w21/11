@@ -190,9 +190,9 @@ const editProfile = (props) => {
 				<label>
 					Gender: {' '}
 					<select value={gender} onChange={(e) => setGender(e.target.value)} >
-						<option value="Man">Man</option>
-						<option value="Woman">Woman</option>
-						<option value="Other">Other </option>
+						<option value="M">Man</option>
+						<option value="F">Woman</option>
+						<option value="O">Other </option>
 					</select>
 				</label>
 
@@ -203,14 +203,14 @@ const editProfile = (props) => {
 				<label>
 					Best Sport: {' '}
 					< select value={currentSport} onChange={(e) => setSport(e.target.value)} >
-						<option value="Basketball">Basketball</option>
-						<option value="Tennis">Tennis</option>
-						<option value="Soccer">Soccer</option>
-						<option value="Badminton">Badminton</option>
-						<option value="Baseball">Baseball</option>
-						<option value="Sprinting">Sprinting</option>
-						<option value="Volleyball">Volleyball</option>
-						<option value="American Football">American Football</option>
+						<option value="1">Basketball</option>
+						<option value="2">Tennis</option>
+						<option value="3">Soccer</option>
+						<option value="4">Badminton</option>
+						<option value="5">Baseball</option>
+						<option value="6">Sprinting</option>
+						<option value="7">Volleyball</option>
+						<option value="8">American Football</option>
 					</select>
 				</label>
 				<br />
@@ -306,7 +306,7 @@ const editProfile = (props) => {
 
 
 
-								fetch('http://localhost:8000/user/updateProfile/:' + parseInt(foundUser) + '/', {
+								fetch('http://localhost:8000/user/updateProfile/' + foundUser, {
 									//mode: "no-cors",
 									method: "PUT",
 									headers: {
