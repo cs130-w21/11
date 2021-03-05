@@ -163,12 +163,13 @@ MainAuthRouter.get('/getUserLocation/:id', async(req, res) => {
     }
 });
 
-MainAuthRouter.get('/getUserProfile/:id', async(req, res) => {
+MainAuthRouter.get('/getProfile/:id', async(req, res) => {
     const user = sequelize.models.user;
     const id = req.params.id;
     var options = {where: {id:id}, attributes: ['age', 'gender', 'sport', 'skill_level', 'about_me']};
     try {
-        let findUser=await user.findOne(options).then(user => res.json([user.age, user.gender, user.sport, user.skill_level, user.about_me]));
+        let currUser =await user.findOne(options)
+        return res.status(200).json(currUser)
     } catch (err) {
         return res.status(500).send(err.message);
     }
