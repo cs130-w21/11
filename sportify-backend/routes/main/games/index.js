@@ -1,9 +1,12 @@
 const express = require('express');
 const Sequelize = require('sequelize');
+const cors = require('cors');
 const { models } = require('../../../utils/sequelize/index');
-const sequelize =  require('../../../utils/sequelize/index');
+const sequelize = require('../../../utils/sequelize/index');
 MainGamesRouter = express.Router();
-const game = sequelize.models.game; 
+MainGamesRouter.all('*', cors());
+
+const game = sequelize.models.game;
 
 // Get filtered games from db
 MainGamesRouter.get('/getGames', async (req, res) => {
@@ -15,44 +18,39 @@ MainGamesRouter.get('/getGames', async (req, res) => {
         const radius = req.query.radius;
         const userLng = req.query.userLng;
         const userLat = req.query.userLat;
-        var options = {where: {}, include:[{
-            model: sequelize.models.user, as: 'users', required:false, attributes:{exclude:['password']}
-        }]}
+        var options = {
+            where: {}, include: [{
+                model: sequelize.models.user, as: 'users', required: false, attributes: { exclude: ['password'] }
+            }]
+        }
 
-        if(sports) {
+        if (sports) {
             options.where.sport = sports;
         }
-        if(radius) {
-            var lng = userLng;
-            var lat = userLat;
-            if(!userLng) {
-                lng = 118.4452; // UCLA longitude default
-            }
-            if(!userLat) {
-                lat = 34.0689; // UCLA latitude default
-            }
-            const radiusInMeters = radius*1609.34; // convert miles to meters
+        // TODO: Grab user latitude and longitude
+        if (radius && userLat && userLng) {
+            const radiusInMeters = radius * 1609.34; // convert miles to meters
             options.where = Sequelize.where(
                 Sequelize.fn(
                     'ST_DWithin',
-                    Sequelize.col('game.location'), 
+                    Sequelize.col('location'),
                     Sequelize.fn(
-                        'ST_MakePoint', 
-                        userLng, 
-                        userLat),  
-                    radiusInMeters), 
+                        'ST_MakePoint',
+                        userLng,
+                        userLat),
+                    radiusInMeters),
                 true);
         }
-        if(weeksAhead) {
+        if (weeksAhead) {
             var now = new Date();
             var weeksLater = new Date();
-            weeksLater.setDate(weeksLater.getDate() + weeksAhead*7);
-            options.where.time = {[Sequelize.Op.gt]: now, [Sequelize.Op.lt]: weeksLater}; 
+            weeksLater.setDate(weeksLater.getDate() + weeksAhead * 7);
+            options.where.time = { [Sequelize.Op.gt]: now, [Sequelize.Op.lt]: weeksLater };
         }
-        if(max_group_size) {
-            options.where.max_group_size = {[Sequelize.Op.lt]: max_group_size};
+        if (max_group_size) {
+            options.where.max_group_size = { [Sequelize.Op.lt]: max_group_size };
         }
-        if(skill_levels) {
+        if (skill_levels) {
             options.where.skill_level = skill_levels;
         }
 
@@ -64,12 +62,14 @@ MainGamesRouter.get('/getGames', async (req, res) => {
 
 // Create a new game posting
 MainGamesRouter.post('/createGame', async (req, res) => {
+
+
     try {
         const lng = req.body['longitude'];
         const lat = req.body['latitude'];
         const dateString = req.body['dateString'];
         const datetime = new Date(dateString);
-        const point = {type: 'Point', coordinates: [lng,lat]};
+        const point = { type: 'Point', coordinates: [lng, lat] };
         const user_id = req.body['user'];
 
         gameReq = {
@@ -85,17 +85,18 @@ MainGamesRouter.post('/createGame', async (req, res) => {
 
         const user = await models.user.findOne({
             where: {
-                id:user_id
+                id: user_id
             },
         })
         // console.log(Game);
         // console.log("===")
         // console.log(user);
-        if(!user){
+        if (!user) {
+
             res.status(400).send(err.message);
         }
         user_games_info = {
-            userId:user_id,
+            userId: user_id,
             gameId: Game.getDataValue('id'),
             name: user.getDataValue('username')
         }
@@ -103,22 +104,24 @@ MainGamesRouter.post('/createGame', async (req, res) => {
         // console.log(user_games_info)
         // console.log("===")
         const usr_gm = await models.userGames.create(user_games_info);
-        // console.log(usr_gm)
-        return res.status(200).json({Game, usr_gm});
+        console.log(usr_gm)
+
+        return res.status(200).json({ Game, usr_gm });
     } catch (err) {
-        return res.status(500).send(err.message);
+        console.log(err)
+        return res.status(500).send(err.message).json;
     }
 });
 
 // Update a game posting
-MainGamesRouter.put('/updateGame/:id', async (req, res) => { 
+MainGamesRouter.put('/updateGame/:id', async (req, res) => {
     try {
         const lng = req.body['longitude'];
         const lat = req.body['latitude'];
         const dateString = req.body['dateString'];
         const datetime = new Date(dateString);
-        const point = {type: 'Point', coordinates: [lng,lat]};
-        
+        const point = { type: 'Point', coordinates: [lng, lat] };
+
         gameReq = {}
         if (req.body['sport']) {
             gameReq.sport = req.body['sport'];
@@ -139,10 +142,10 @@ MainGamesRouter.put('/updateGame/:id', async (req, res) => {
             gameReq.comments = req.body['comments'];
         }
         const id = req.params.id;
-        const [rowsUpdated, [Game]] = await game.update(gameReq, {returning: true, where: {id:id}});
-        return res.status(200).json({Game});
+        const [rowsUpdated, [Game]] = await game.update(gameReq, { returning: true, where: { id: id } });
+        return res.status(200).json({ Game });
     } catch (err) {
-        return res.status(500).send(err.message);
+        return res.status(500).send(err.message).json;
     }
 });
 
@@ -151,7 +154,7 @@ MainGamesRouter.post('/deleteGame/:id', async (req, res) => {
     try {
         const id = req.params.id;
         const deleted = await game.destroy({
-            where: {id: id}
+            where: { id: id }
         });
         if (deleted) {
             return res.status(200).send("Game deleted");
