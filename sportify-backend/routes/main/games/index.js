@@ -49,13 +49,14 @@ MainGamesRouter.get('/getGames', async (req, res) => {
             var now = new Date();
             var weeksLater = new Date();
             weeksLater.setDate(weeksLater.getDate() + weeksAhead*7);
-            options.where.time = {[Sequelize.Op.gt]: now, [Sequelize.Op.lt]: weeksLater}; 
+            options.where.time = {[Sequelize.Op.gt]: now, [Sequelize.Op.lte]: weeksLater}; 
         }
         if(max_group_size) {
-            options.where.max_group_size = {[Sequelize.Op.lt]: max_group_size};
+            options.where.max_group_size = {[Sequelize.Op.lte]: max_group_size};
         }
         if(skill_levels) {
-            options.where.skill_level = skill_levels;
+            const minSkillLevel = Math.min(...skill_levels);
+            options.where.skill_level = {[Sequelize.Op.gte]: minSkillLevel};
         }
 
         game.findAll(options).then(game => res.json(game));
