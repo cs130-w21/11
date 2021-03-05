@@ -15,6 +15,11 @@ module.exports = (sequelize) => {
             type: DataTypes.DATE,
             defaultValue: DataTypes.NOW
         },
+        current_group_size: {
+            allowNull: false,
+            type: DataTypes.INTEGER,
+            defaultValue: 1
+        },
         max_group_size: {
             allowNull: false,
             type: DataTypes.INTEGER
@@ -23,6 +28,10 @@ module.exports = (sequelize) => {
             allowNull: false,
             type: DataTypes.INTEGER,
             validate: { min: 1, max: 10 }
+        },
+        is_full: {
+            type: DataTypes.BOOLEAN,
+            defaultValue: false
         },
         comments: {
             type: DataTypes.STRING

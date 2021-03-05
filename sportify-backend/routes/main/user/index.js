@@ -175,6 +175,24 @@ MainAuthRouter.get('/getProfile/:id', async(req, res) => {
     }
 });
 
+// Get games associated with a specific user
+MainAuthRouter.get('/getUsersGames', async (req, res) => {
+    // console.log('here')
+    const user = sequelize.models.user;
+    const { user_id } = req.body
+    try {
+        var options = {where: {id:user_id}, attributes:{exclude:[]}, include:[{
+            model: sequelize.models.game, as: 'games', required:false, attibutes: ['id', 'sport', 'comments']}]};
+        options.attributes.exclude = ['password'];
+        const currUser = await user.findOne(options);
+        // console.log(currUser.getDataValue('games'));
+        const usersGames = currUser.getDataValue('games')
+        return res.status(200).send(usersGames);
+    } catch (err) {
+        return res.status(500).send(err.message);
+    }
+});
+
 MainAuthRouter.put('/updateProfile/:id', async (req, res) => {
     const user = sequelize.models.user; 
     try {
