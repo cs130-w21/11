@@ -111,13 +111,14 @@ MainAuthRouter.get('/getUsers', async (req, res) => {
             options.where.email = email;
         }
         if(age) {
-            options.where.age = {[Sequelize.Op.gt]: age};
+            options.where.age = {[Sequelize.Op.gte]: age};
         }
         if(sport) {
             options.where.sport = sport;
         }
         if(skill_levels) {
-            options.where.skill_level = skill_levels;
+            const minSkillLevel = Math.min(...skill_levels);
+            options.where.skill_level = {[Sequelize.Op.gte]: minSkillLevel};
         }
         if(genders) {
             options.where.gender = genders;
@@ -157,7 +158,14 @@ MainAuthRouter.get('/getUserLocation/:id', async(req, res) => {
     const id = req.params.id;
     var options = {where: {id:id}, attributes: ['location']};
     try {
-        user.findAll(options).then(user => res.json([user[0].location.coordinates[1], user[0].location.coordinates[0]]));
+        user.findAll(options).then(user =>  {
+            if (user[0]) {
+                res.json([user[0].location.coordinates[1], user[0].location.coordinates[0]]);
+            }
+            else {
+                res.json(null);
+            }
+        });
     } catch (err) {
         return res.status(500).send(err.message);
     }
