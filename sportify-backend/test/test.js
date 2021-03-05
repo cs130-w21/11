@@ -34,9 +34,8 @@ describe("Test endpoints", () => {
             .send(user1);
         expect(res.status).to.equal(200);
         expect(res.body).to.include({
-            message: 'Signup successful',
+            message: 'Signup Successful!',
             username: user1.username,
-            email: user1.email
         });
 
         const user2 = {
@@ -50,9 +49,8 @@ describe("Test endpoints", () => {
             .send(user2);
         expect(res.status).to.equal(200);
         expect(res.body).to.include({
-            message: 'Signup successful',
+            message: 'Signup Successful!',
             username: user2.username,
-            email: user2.email
         });
 
         const user3 = {
@@ -66,9 +64,8 @@ describe("Test endpoints", () => {
             .send(user3);
         expect(res.status).to.equal(200);
         expect(res.body).to.include({
-            message: 'Signup successful',
+            message: 'Signup Successful!',
             username: user3.username,
-            email: user3.email
         });
     });
 
@@ -137,18 +134,18 @@ describe("Test endpoints", () => {
 
     it("Should get all users", async () => {
         let res = await chai.request(server)
-            .get('/user/getUsers')
+            .get('/user/getUsers?currentUser=test1')
             .set('Accept', 'application/json');
         expect(res.status).to.equal(200);
         expect(res.body[0]).to.have.property('id');
         expect(res.body[0]).to.have.property('username');
         expect(res.body[0]).to.have.property('email');
-        expect(res.body).to.have.length(3);
+        expect(res.body).to.have.length(2);
     });
 
     it("Should get a filtered list of users by username", async () => {
         let res = await chai.request(server)
-            .get('/user/getUsers?username=test2')
+            .get('/user/getUsers?currentUser=test1&username=test2')
             .set('Accept', 'application/json');
         expect(res.status).to.equal(200);
         expect(res.body).to.have.length(1);
@@ -160,7 +157,7 @@ describe("Test endpoints", () => {
 
     it("Should get a filtered list of users by email", async () => {
         let res = await chai.request(server)
-            .get('/user/getUsers?email=test3@gmail.com')
+            .get('/user/getUsers?currentUser=test1&email=test3@gmail.com')
             .set('Accept', 'application/json');
         expect(res.status).to.equal(200);
         expect(res.body).to.have.length(1);
@@ -178,7 +175,8 @@ describe("Test endpoints", () => {
             "dateString": "2021-04-01T23:48:00.000",
             "max_group_size": 10,
             "skill_level": 3,
-            "comments": "N/A"
+            "comments": "N/A",
+            "user": 1
         };
         let res = await chai.request(server)
             .post('/games/createGame')
@@ -199,7 +197,8 @@ describe("Test endpoints", () => {
             "dateString": "2021-02-26T11:50:00.000",
             "max_group_size": 4,
             "skill_level": 5,
-            "comments": "N/A"
+            "comments": "N/A",
+            "user": 1
         };
         res = await chai.request(server)
             .post('/games/createGame')
@@ -217,10 +216,11 @@ describe("Test endpoints", () => {
             "sport": 3,
             "longitude": 111.88,
             "latitude": 27.33,
-            "dateString": "2021-02-28T11:50:00.000",
+            "dateString": "2021-03-17T11:50:00.000",
             "max_group_size": 6,
             "skill_level": 2,
-            "comments": "N/A"
+            "comments": "N/A",
+            "user": 1
         };
         res = await chai.request(server)
             .post('/games/createGame')
@@ -276,13 +276,13 @@ describe("Test endpoints", () => {
         expect(res.body[0]).to.have.property('skill_level');
     });
 
-    /*
+    
     it("Should get a filtered list of games by datetime", async () => {
         let res = await chai.request(server)
             .get('/games/getGames?weeksAhead=2')
             .set('Accept', 'application/json');
         expect(res.status).to.equal(200);
-        expect(res.body).to.have.length(2);
+        expect(res.body).to.have.length(1);
         expect(res.body[0]).to.have.property('id');
         expect(res.body[0]).to.have.property('sport');
         expect(res.body[0]).to.have.property('location');
@@ -290,7 +290,6 @@ describe("Test endpoints", () => {
         expect(res.body[0]).to.have.property('max_group_size');
         expect(res.body[0]).to.have.property('skill_level');
     });
-    */
 
     it("Should get a filtered list of games by radius", async () => {
         let res = await chai.request(server)
@@ -417,6 +416,14 @@ describe("Test endpoints", () => {
         expect(res.body.User.about_me).to.equal("This is a test");
     });
 
+    it("Should get a specific user's location", async() => {
+        let res = await chai.request(server)
+            .get('/user/getUserLocation/2')
+            .set('Accept', 'application/json');
+        expect(res.status).to.equal(200);
+        expect(res.body).to.have.length(2);
+    });
+
     it("Should get a filtered list of users by minimum age", async () => {
         let res = await chai.request(server)
             .get('/user/getUsers?age=23')
@@ -436,7 +443,7 @@ describe("Test endpoints", () => {
 
     it("Should get a filtered list of users by radius", async () => {
         let res = await chai.request(server)
-            .get('/user/getUsers?radius=2&userLng=118.45&userLat=34.06')
+            .get('/user/getUsers?currentUser=test1&radius=2&userLng=118.45&userLat=34.06')
             .set('Accept', 'application/json');
         expect(res.status).to.equal(200);
         expect(res.body).to.have.length(1);

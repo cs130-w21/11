@@ -86,6 +86,7 @@ MainAuthRouter.get('/getUsers', async (req, res) => {
     // console.log('here')
     const user = sequelize.models.user; 
     try {
+        const currentUser = req.query.currentUser;
         const username = req.query.username;
         const email = req.query.email;
         const age = req.query.age;
@@ -96,9 +97,15 @@ MainAuthRouter.get('/getUsers', async (req, res) => {
         const userLng = req.query.userLng;
         const userLat = req.query.userLat;
         var options = {where: {}, attributes:{exclude:[]}, include:[{
-            model: sequelize.models.game, as: 'games', required:false, attibutes: ['id', 'sport', 'comments']}]};
+            model: sequelize.models.game, as: 'games', required:false, attributes: ['id', 'sport', 'comments']}]};
         if(username) {
             options.where.username = username;
+        }
+        if(currentUser) {
+            options.where.username = {[Sequelize.Op.ne]: currentUser};
+        }
+        if(username && currentUser) {
+            options.where.username = {[Sequelize.Op.and]: [{[Sequelize.Op.ne]: currentUser}, {[Sequelize.Op.eq]:username}]};
         }
         if(email) {
             options.where.email = email;
@@ -115,16 +122,24 @@ MainAuthRouter.get('/getUsers', async (req, res) => {
         if(genders) {
             options.where.gender = genders;
         }
-        if(radius && userLat && userLng) {
+        if(radius) {
+            var lng = userLng;
+            var lat = userLat;
+            if(!userLng) {
+                lng = 118.4452; // UCLA longitude default
+            }
+            if(!userLat) {
+                lat = 34.0689; // UCLA latitude default
+            }
             const radiusInMeters = radius*1609.34; // convert miles to meters
             options.where = Sequelize.where(
                 Sequelize.fn(
                     'ST_DWithin',
-                    Sequelize.col('location'), 
+                    Sequelize.col('user.location'), 
                     Sequelize.fn(
                         'ST_MakePoint', 
-                        userLng, 
-                        userLat),  
+                        lng, 
+                        lat),  
                     radiusInMeters), 
                 true);
         }
@@ -132,7 +147,29 @@ MainAuthRouter.get('/getUsers', async (req, res) => {
         options.attributes.exclude = ['password'];
         // console.log(options);
         user.findAll(options).then(user => res.json(user));
-        
+    } catch (err) {
+        return res.status(500).send(err.message);
+    }
+});
+
+MainAuthRouter.get('/getUserLocation/:id', async(req, res) => {
+    const user = sequelize.models.user;
+    const id = req.params.id;
+    var options = {where: {id:id}, attributes: ['location']};
+    try {
+        user.findAll(options).then(user => res.json([user[0].location.coordinates[1], user[0].location.coordinates[0]]));
+    } catch (err) {
+        return res.status(500).send(err.message);
+    }
+});
+
+MainAuthRouter.get('/getProfile/:id', async(req, res) => {
+    const user = sequelize.models.user;
+    const id = req.params.id;
+    var options = {where: {id:id}, attributes: ['age', 'gender', 'sport', 'skill_level', 'about_me']};
+    try {
+        let currUser =await user.findOne(options)
+        return res.status(200).json(currUser)
     } catch (err) {
         return res.status(500).send(err.message);
     }

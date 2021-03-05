@@ -24,13 +24,20 @@ MainGamesRouter.get('/getGames', async (req, res) => {
             options.where.sport = sports;
             options.where.is_full = false;
         }
-        // TODO: Grab user latitude and longitude
-        if(radius && userLat && userLng) {
+        if(radius) {
+            var lng = userLng;
+            var lat = userLat;
+            if(!userLng) {
+                lng = 118.4452; // UCLA longitude default
+            }
+            if(!userLat) {
+                lat = 34.0689; // UCLA latitude default
+            }
             const radiusInMeters = radius*1609.34; // convert miles to meters
             options.where = Sequelize.where(
                 Sequelize.fn(
                     'ST_DWithin',
-                    Sequelize.col('location'), 
+                    Sequelize.col('game.location'), 
                     Sequelize.fn(
                         'ST_MakePoint', 
                         userLng, 
