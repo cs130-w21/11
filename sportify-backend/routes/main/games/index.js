@@ -1,12 +1,15 @@
 const express = require('express');
+const { where } = require('sequelize');
 const Sequelize = require('sequelize');
 const cors = require('cors');
 const { models } = require('../../../utils/sequelize/index');
 const sequelize = require('../../../utils/sequelize/index');
 MainGamesRouter = express.Router();
-MainGamesRouter.all('*', cors());
 
-const game = sequelize.models.game;
+MainGamesRouter.all('*', cors());
+const game = sequelize.models.game; 
+const user = sequelize.models.user;
+
 
 // Get filtered games from db
 MainGamesRouter.get('/getGames', async (req, res) => {
@@ -18,14 +21,13 @@ MainGamesRouter.get('/getGames', async (req, res) => {
         const radius = req.query.radius;
         const userLng = req.query.userLng;
         const userLat = req.query.userLat;
-        var options = {
-            where: {}, include: [{
-                model: sequelize.models.user, as: 'users', required: false, attributes: { exclude: ['password'] }
-            }]
-        }
 
-        if (sports) {
+        var options = {where: {}, include:[{
+            model: sequelize.models.user, as: 'users', required:false, attributes:{exclude:['password']}
+        }]}
+        if(sports) {
             options.where.sport = sports;
+            options.where.is_full = false;
         }
         // TODO: Grab user latitude and longitude
         if (radius && userLat && userLng) {
@@ -44,17 +46,36 @@ MainGamesRouter.get('/getGames', async (req, res) => {
         if (weeksAhead) {
             var now = new Date();
             var weeksLater = new Date();
-            weeksLater.setDate(weeksLater.getDate() + weeksAhead * 7);
-            options.where.time = { [Sequelize.Op.gt]: now, [Sequelize.Op.lt]: weeksLater };
+
+            weeksLater.setDate(weeksLater.getDate() + weeksAhead*7);
+            options.where.time = {[Sequelize.Op.gt]: now, [Sequelize.Op.lte]: weeksLater}; 
         }
-        if (max_group_size) {
-            options.where.max_group_size = { [Sequelize.Op.lt]: max_group_size };
+        if(max_group_size) {
+            options.where.max_group_size = {[Sequelize.Op.lte]: max_group_size};
         }
-        if (skill_levels) {
-            options.where.skill_level = skill_levels;
+        if(skill_levels) {
+            const minSkillLevel = Math.min(...skill_levels);
+            options.where.skill_level = {[Sequelize.Op.gte]: minSkillLevel};
         }
 
         game.findAll(options).then(game => res.json(game));
+    } catch (err) {
+        return res.status(500).send(err.message);
+    }
+});
+
+// Get a specific game
+MainGamesRouter.get('/getGame', async (req, res) => {
+    const game = sequelize.models.game;
+    const { game_id } = req.body
+    try {
+        var options = {where: {id:game_id}, attributes:{exclude:[]}, include:[{
+                model: sequelize.models.user, as: 'users', required:false, attributes:{exclude:['password']}}]};
+
+        const currGame = await game.findOne(options);
+        // console.log(currGame);
+        // const usersGames = currUser.getDataValue('games')
+        return res.status(200).send(currGame);
     } catch (err) {
         return res.status(500).send(err.message);
     }
@@ -112,6 +133,57 @@ MainGamesRouter.post('/createGame', async (req, res) => {
         return res.status(500).send(err.message).json;
     }
 });
+
+//Join an existing game posting
+MainGamesRouter.put('/joinGame', async (req, res) => {
+    const {user_id, game_id} = req.body
+
+    try {
+        let currGame = await game.findOne({where: {id:game_id}})
+        if (currGame.is_full){
+            return res.status(409).json({message: "Game is already full!"})
+        }
+        let current_group_size = currGame.current_group_size + 1;
+        let is_full = (current_group_size == currGame.max_group_size)
+        await game.update({'current_group_size':current_group_size, 'is_full':is_full}, {where:{id:game_id}});
+        const currUser = await user.findOne({where:{id:user_id}});
+        currUser.addGame(currGame)
+        return res.status(200).json({message:"Successfully joined game!"})
+    }
+    catch(err){
+        return res.status(500).json({message: err.message})
+    }
+})
+
+//Leave an existing game posting
+MainGamesRouter.put('/leaveGame', async (req, res) => {
+    const {user_id, game_id} = req.body
+
+    try {
+        let currGame = await game.findOne({where: {id:game_id}});
+        // console.log(currGame);
+        let current_group_size = currGame.current_group_size - 1;
+        let is_full = (current_group_size == currGame.max_group_size);
+        await game.update({'current_group_size':current_group_size, 'is_full':is_full}, {where:{id:game_id}});
+        const currUser = await user.findOne({where:{id:user_id}});
+        // console.log(currUser);
+        currUser.removeGame(currGame);
+
+        if(current_group_size == 0){
+            const deleted = await game.destroy({
+                where: {id: game_id}
+            });
+            if (deleted) {
+                return res.status(200).send("Successfully left game, game deleted");
+            }
+            throw new Error("Game not found");
+        }
+        return res.status(200).json({message:"Successfully left game!"})
+    }
+    catch(err){
+        return res.status(500).json({message: err.message})
+    }
+})
 
 // Update a game posting
 MainGamesRouter.put('/updateGame/:id', async (req, res) => {

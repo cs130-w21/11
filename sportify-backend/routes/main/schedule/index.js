@@ -15,7 +15,7 @@ MainScheduleRouter.get('/getSchedule', async(req, res) => {
 });
 
 // Create a user's schedule
-MainScheduleRouter.post('/createSchedule', async(req, res) => {
+MainScheduleRouter.post('/createUpdateSchedule', async(req, res) => {
     const schedule = sequelize.models.schedule; 
     try {
         const userId = req.body.id;
@@ -27,95 +27,81 @@ MainScheduleRouter.post('/createSchedule', async(req, res) => {
         const saturday = req.body.saturday;
         const sunday = req.body.sunday;
 
-        const Schedule = await schedule.create({
-            userId: userId,
-            monday: monday,
-            tuesday: tuesday,
-            wednesday: wednesday,
-            thursday: thursday,
-            friday: friday,
-            saturday: saturday,
-            sunday: sunday
-        });
-        return res.status(200).json({Schedule});
-    } catch (err) {
-        return res.status(500).send(err.message);
-    }
-});
-
-// Update a user's schedule
-MainScheduleRouter.put('/updateSchedule/:id', async(req, res) => {
-    const schedule = sequelize.models.schedule; 
-    try {
-        const userId = req.params.id;
-        const monday = req.body.monday;
-        const tuesday = req.body.tuesday;
-        const wednesday = req.body.wednesday;
-        const thursday = req.body.thursday;
-        const friday = req.body.friday;
-        const saturday = req.body.saturday;
-        const sunday = req.body.sunday;
-
-        scheduleUpdate = {}
-        if (monday) {
-            if(monday == "null") {
-                scheduleUpdate.monday = null;
+        const findSched = await schedule.findOne({where: {userId: userId} });
+        if(findSched) {
+            scheduleUpdate = {}
+            if (monday) {
+                if(monday == "null") {
+                    scheduleUpdate.monday = null;
+                }
+                else {
+                    scheduleUpdate.monday = monday;
+                }
             }
-            else {
-                scheduleUpdate.monday = monday;
+            if (tuesday) {
+                if(tuesday == "null") {
+                    scheduleUpdate.tuesday = null;
+                }
+                else {
+                    scheduleUpdate.tuesday = tuesday;
+                }
             }
+            if (wednesday) {
+                if(wednesday == "null") {
+                    scheduleUpdate.wednesday = null;
+                }
+                else {
+                    scheduleUpdate.wednesday = wednesday;
+                }
+            }
+            if (thursday) {
+                if(thursday == "null") {
+                    scheduleUpdate.thursday = null;
+                }
+                else {
+                    scheduleUpdate.thursday = thursday;
+                }
+            }
+            if (friday) {
+                if(friday == "null") {
+                    scheduleUpdate.friday = null;
+                }
+                else {
+                    scheduleUpdate.friday = friday;
+                }
+            }
+            if (saturday) {
+                if(saturday == "null") {
+                    scheduleUpdate.saturday = null;
+                }
+                else {
+                    scheduleUpdate.saturday = saturday;
+                }
+            }
+            if (sunday) {
+                if(sunday == "null") {
+                    scheduleUpdate.sunday = null;
+                }
+                else {
+                    scheduleUpdate.sunday = sunday;
+                }
+            }
+            const [rowsUpdated, [Schedule]] = await schedule.update(scheduleUpdate, {returning: true, where: {userId: userId}});
+            return res.status(200).json({Schedule});
         }
-        if (tuesday) {
-            if(tuesday == "null") {
-                scheduleUpdate.tuesday = null;
-            }
-            else {
-                scheduleUpdate.tuesday = tuesday;
-            }
+        else {
+            const Schedule = await schedule.create({
+                userId: userId,
+                monday: monday,
+                tuesday: tuesday,
+                wednesday: wednesday,
+                thursday: thursday,
+                friday: friday,
+                saturday: saturday,
+                sunday: sunday
+            });
+            return res.status(200).json({Schedule});
         }
-        if (wednesday) {
-            if(wednesday == "null") {
-                scheduleUpdate.wednesday = null;
-            }
-            else {
-                scheduleUpdate.wednesday = wednesday;
-            }
-        }
-        if (thursday) {
-            if(thursday == "null") {
-                scheduleUpdate.thursday = null;
-            }
-            else {
-                scheduleUpdate.thursday = thursday;
-            }
-        }
-        if (friday) {
-            if(friday == "null") {
-                scheduleUpdate.friday = null;
-            }
-            else {
-                scheduleUpdate.friday = friday;
-            }
-        }
-        if (saturday) {
-            if(saturday == "null") {
-                scheduleUpdate.saturday = null;
-            }
-            else {
-                scheduleUpdate.saturday = saturday;
-            }
-        }
-        if (sunday) {
-            if(sunday == "null") {
-                scheduleUpdate.sunday = null;
-            }
-            else {
-                scheduleUpdate.sunday = sunday;
-            }
-        }
-
-        const [rowsUpdated, [Schedule]] = await schedule.update(scheduleUpdate, {returning: true, where: {userId: userId}});
-        return res.status(200).json({Schedule});
     } catch (err) {
         return res.status(500).send(err.message);
     }
