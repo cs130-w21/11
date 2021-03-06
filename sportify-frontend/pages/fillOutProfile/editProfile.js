@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, Router } from "react";
 import Head from 'next/head';
 import Link from 'next/link';
 import Geocode from 'react-geocode'
@@ -34,7 +34,7 @@ const editProfile = (props) => {
 	const [currentSport, setSport] = useState('1');
 	const [bestSportSkillLevel, setBestSportSkillLevel] = useState(1);
 
-	const [dayTimes, setDayTimes] = useState(['', '', '', '', '', '', '']);
+	const [dayTimes, setDayTimes] = useState(["", "", "", "", "", "", ""]);
 
 	const handleScheduleEvent = (e) => {
 		console.log(e.target.getAttribute('type'));
@@ -317,11 +317,12 @@ const editProfile = (props) => {
 
 
 								const reactData = { "latitude": lat, "longitude": lng, "skill_level": bestSportSkillLevel, "gender": gender, "about_me": description, "sport": currentSport, "username": foundUserName, "password": password }
-								const reactData2 = { "id": foundUser, "monday": dayTimes[0], "tuesday": dayTimes[1], "wednesday": dayTimes[2], "thursday": dayTimes[3], "friday": dayTimes[4], "saturday": dayTimes[5], "sunday": dayTimes[6] }
+								const reactData2 = { "id": String(foundUser), "monday": dayTimes[0], "tuesday": dayTimes[1], "wednesday": dayTimes[2], "thursday": dayTimes[3], "friday": dayTimes[4], "saturday": dayTimes[5], "sunday": dayTimes[6] }
 
+								console.log("The body is")
+								console.log(JSON.stringify(reactData2))
 
-
-								fetch('http://localhost:8000/user/updateProfile/' + parseInt(foundUser) + '/', {
+								fetch(process.env.backend_url + '/user/updateProfile/' + parseInt(foundUser) + '/', {
 									//mode: "no-cors",
 									method: "PUT",
 									headers: {
@@ -349,7 +350,7 @@ const editProfile = (props) => {
 									})
 									.then(
 
-										fetch('http://localhost:8000/schedule/createUpdateSchedule', {
+										fetch(process.env.backend_url + '/schedule/createUpdateSchedule', {
 
 											//mode: "no-cors",
 											method: "POST",
@@ -366,7 +367,7 @@ const editProfile = (props) => {
 													console.log("here" + response.json)
 
 
-													Router.push("../homePage/homePage")
+													//Router.push("../homePage/homePage")
 												}
 												else {
 													console.log("here" + response.json)

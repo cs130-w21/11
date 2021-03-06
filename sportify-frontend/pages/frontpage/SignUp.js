@@ -16,7 +16,7 @@ export default function Login() {
     function validateForm() {
         // console.log("Here");
         // console.log(email.length, username.length, password.length)
-        return username.length>0 && email.length > 0 && password.length > 0;
+        return username.length > 0 && email.length > 0 && password.length > 0;
     }
 
     function handleSubmit(event) {
@@ -30,7 +30,7 @@ export default function Login() {
 
         //console.log(reactData);
 
-        fetch('http://localhost:8000/user/signup', {
+        fetch(process.env.backend_url + '/user/signup', {
             //mode: "no-cors",
             method: "POST",
             headers: {
@@ -47,7 +47,7 @@ export default function Login() {
                     console.log(json)
                     localStorage.setItem('user-id', json.id)
                     localStorage.setItem('username', json.username)
-                    Router.push("../homePage/homePage")
+                    Router.push("../fillOutProfile/editProfile")
                 }
 
 
