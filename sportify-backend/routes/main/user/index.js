@@ -13,7 +13,7 @@ const signingSecret = process.env.JWT_SECRET || 'superSecretString';
 const User = sequelize.models.user
 
 MainAuthRouter.post("/signup", async (req, res) => {
-    const {username, email, password} = req.body
+    const { username, email, password } = req.body
 
     // use client side validation and send non-empty username/email/password to backend
     if (password.length < 8) {
@@ -31,7 +31,7 @@ MainAuthRouter.post("/signup", async (req, res) => {
     console.log("adding to db")
     //add user to db
     try {
-        await User.create(req.body).then(addedUser =>{
+        await User.create(req.body).then(addedUser => {
             console.log('User', username, 'added successfully!')
             return res.status(200).json({
                 message: 'Signup Successful!',
@@ -84,7 +84,7 @@ MainAuthRouter.post('/signin', async (req, res) => {
 
 MainAuthRouter.get('/getUsers', async (req, res) => {
     // console.log('here')
-    const user = sequelize.models.user; 
+    const user = sequelize.models.user;
     try {
         const currentUser = req.query.currentUser;
         const username = req.query.username;
@@ -96,52 +96,60 @@ MainAuthRouter.get('/getUsers', async (req, res) => {
         const radius = req.query.radius;
         const userLng = req.query.userLng;
         const userLat = req.query.userLat;
-        var options = {where: {}, attributes:{exclude:[]}, include:[{
-            model: sequelize.models.game, as: 'games', required:false, attributes: ['id', 'sport', 'comments']}]};
-        if(username) {
+        var options = {
+            where: {}, attributes: { exclude: [] }, include: [{
+                model: sequelize.models.game, as: 'games', required: false, attributes: ['id', 'sport', 'comments']
+            }]
+        };
+        if (username) {
             options.where.username = username;
         }
-        if(currentUser) {
-            options.where.username = {[Sequelize.Op.ne]: currentUser};
+        if (currentUser) {
+            options.where.username = { [Sequelize.Op.ne]: currentUser };
         }
-        if(username && currentUser) {
-            options.where.username = {[Sequelize.Op.and]: [{[Sequelize.Op.ne]: currentUser}, {[Sequelize.Op.eq]:username}]};
+        if (username && currentUser) {
+            options.where.username = { [Sequelize.Op.and]: [{ [Sequelize.Op.ne]: currentUser }, { [Sequelize.Op.eq]: username }] };
         }
-        if(email) {
+        if (email) {
             options.where.email = email;
         }
+
+      
         if(age) {
             options.where.age = {[Sequelize.Op.gte]: age};
+
         }
-        if(sport) {
+        if (sport) {
             options.where.sport = sport;
         }
+
         if(skill_levels) {
             const minSkillLevel = Math.min(...skill_levels);
             options.where.skill_level = {[Sequelize.Op.gte]: minSkillLevel};
+
         }
-        if(genders) {
+        if (genders) {
             options.where.gender = genders;
         }
-        if(radius) {
+        if (radius) {
             var lng = userLng;
             var lat = userLat;
-            if(!userLng) {
+            if (!userLng) {
                 lng = 118.4452; // UCLA longitude default
             }
-            if(!userLat) {
+            if (!userLat) {
                 lat = 34.0689; // UCLA latitude default
             }
-            const radiusInMeters = radius*1609.34; // convert miles to meters
+            const radiusInMeters = radius * 1609.34; // convert miles to meters
             options.where = Sequelize.where(
                 Sequelize.fn(
                     'ST_DWithin',
-                    Sequelize.col('user.location'), 
+                    Sequelize.col('user.location'),
                     Sequelize.fn(
-                        'ST_MakePoint', 
-                        lng, 
-                        lat),  
-                    radiusInMeters), 
+                        'ST_MakePoint',
+                        lng,
+                        lat),
+                    radiusInMeters),
                 true);
         }
         //{attributes:{exclude:['password']}}, 
@@ -153,10 +161,10 @@ MainAuthRouter.get('/getUsers', async (req, res) => {
     }
 });
 
-MainAuthRouter.get('/getUserLocation/:id', async(req, res) => {
+MainAuthRouter.get('/getUserLocation/:id', async (req, res) => {
     const user = sequelize.models.user;
     const id = req.params.id;
-    var options = {where: {id:id}, attributes: ['location']};
+    var options = { where: { id: id }, attributes: ['location'] };
     try {
         user.findAll(options).then(user =>  {
             if (user[0]) {
@@ -202,12 +210,12 @@ MainAuthRouter.get('/getUsersGames', async (req, res) => {
 });
 
 MainAuthRouter.put('/updateProfile/:id', async (req, res) => {
-    const user = sequelize.models.user; 
+    const user = sequelize.models.user;
     try {
         const lng = req.body['longitude'];
         const lat = req.body['latitude'];
-        const point = {type: 'Point', coordinates: [lng,lat]};
-        
+        const point = { type: 'Point', coordinates: [lng, lat] };
+
         profileReq = {};
         if (req.body['username']) {
             profileReq.username = req.body['username'];
@@ -219,7 +227,7 @@ MainAuthRouter.put('/updateProfile/:id', async (req, res) => {
             // use client side validation and send non-empty username/email/password to backend
             if (req.body['password'].length < 8) {
                 return res.status(500).json({
-                message: 'Invalid password. Must have at least 8 characters.'
+                    message: 'Invalid password. Must have at least 8 characters.'
                 });
             }
             console.log("hashing");
@@ -246,9 +254,10 @@ MainAuthRouter.put('/updateProfile/:id', async (req, res) => {
             profileReq.about_me = req.body['about_me'];
         }
         const id = req.params.id;
-        const [rowsUpdated, [User]] = await user.update(profileReq, {returning: true, where: {id:id}});
-        return res.status(200).json({User});
+        const [rowsUpdated, [User]] = await user.update(profileReq, { returning: true, where: { id: id } });
+        return res.status(200).json({ User });
     } catch (err) {
+        console.log(err)
         if (err.message.includes('duplicate') && err.message.includes('username')) {
             return res.status(500).json({
                 message: 'Username taken. Create a different username.'
