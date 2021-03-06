@@ -34,10 +34,23 @@ const numberToSport={ 1:'Basketball',  2:'Tennis', 3: 'Soccer', 4: 'Badminton',
 
 const HomePage = (props) => {
 
-	// useEffect(()=>{
- //        Geocode.setApiKey("AIzaSyDqs8TqTIsIx3xTuD1NEY3hXxmSciVrWZE");
- //        Geocode.setLanguage("en");
- //    }, []);
+	useEffect(()=>{
+        Geocode.setApiKey("AIzaSyDqs8TqTIsIx3xTuD1NEY3hXxmSciVrWZE");
+        Geocode.setLanguage("en");
+
+        const loggedInUser = localStorage.getItem("user-id");
+		if (loggedInUser) {
+			const foundUser = JSON.parse(loggedInUser);
+			setUser(foundUser);
+
+		}
+		const loggedInUserName = localStorage.getItem("username");
+		if (loggedInUserName) {
+			const foundUserName = (loggedInUserName);
+			setUsername2(foundUserName);
+
+		}
+    }, []);
 
 
 	
@@ -59,24 +72,6 @@ const HomePage = (props) => {
 	const [listOfGames, setListOfGames]=useState([]);
 	
 
-	
-
-
-	useEffect(() => {
-		const loggedInUser = localStorage.getItem("user-id");
-		if (loggedInUser) {
-			const foundUser = JSON.parse(loggedInUser);
-			setUser(foundUser);
-
-		}
-		const loggedInUserName = localStorage.getItem("username");
-		if (loggedInUserName) {
-			const foundUserName = (loggedInUserName);
-			setUsername2(foundUserName);
-
-		}
-
-	}, []);
 
 	const skillsFunction = (e) => {
 		let setOfSkills=Array.from(event.target.selectedOptions, (item) => item.value);
@@ -233,11 +228,15 @@ const HomePage = (props) => {
 						}
 
 						.game {
-							background-color: grey;
+							background-color: #cce7ff;
 						}
 
 						.person {
 							background-color: tan;
+						}
+
+						.gameParticipants {
+							color: black;
 						}
 
 		      `}</style>
@@ -406,7 +405,7 @@ const HomePage = (props) => {
 					<button className="submitSearchFilters" onClick={(e)=>{
 							e.preventDefault();
 							// let lati=34.0689;
-							// let long=118.4452;
+							// let long=-118.4452;
 
 							let lati;
 							let long;
@@ -705,6 +704,31 @@ const HomePage = (props) => {
 								
 								console.log(baseUrlGames)
 
+								const getAddress = ((jsonElement) => 
+								{
+									console.log(jsonElement.location.coordinates[1], jsonElement.location.coordinates[0])
+									let addressDisplayed="Unknown address"
+									if (jsonElement.location)
+									{
+										// Get address from latitude & longitude.
+										Geocode.fromLatLng(`${jsonElement.location.coordinates[1]}`, `${jsonElement.location.coordinates[0]}`).then(
+										  (response) => {
+										    const address = response.results[0].formatted_address;
+										   
+										    console.log(address);
+										    addressDisplayed=address;
+										    //return address;
+										  },
+										  (error) => {
+										    console.error(error);
+										    //return "Unknown address"
+										  }
+										);
+									}
+									
+									return addressDisplayed;
+								});
+
 								fetch(baseUrlGames, {
 							            //mode: "no-cors",
 							            method: "GET",
@@ -717,74 +741,108 @@ const HomePage = (props) => {
 							            .then(response => response.json())
 							            .then(json => {
 							                console.log(json);
+							                const filteredGames=json.filter((jsonElement)=> 
+							                	(jsonElement.is_full==false)
+							                );
+							                console.log(filteredGames);
+							                const furtherFilteredGames=filteredGames.filter((jsonElement)=>
+							                
+							                	( ! (jsonElement.users.some(user => user.id == foundUser)) )
+							                )
+							                console.log(furtherFilteredGames)
 
-							    //             const gamesList = json.map((jsonElement) =>
-											//   <li key={jsonElement.id}>
-											//     <Container fluid>
-											// 		<Row className="game">
-											// 			<Col>
-											// 				<Box>
-											// 					<img src="/soccer.jpg" />
-											// 				</Box>
-											// 			</Col>
-
-
-											// 			<Col >
-											// 				<Box>
-
-											// 					<div> Event Name </div>
-											// 					<br />
-											// 					<div> Event Location </div>
-											// 					<br />
-											// 					<div> Event description </div>
-											// 					<br />
-
-											// 					<button onClick={(e) => {
-
-											// 						e.target.innerHTML = (e.target.innerHTML == "Join the game!") ?
-											// 							"Un-join the game!" : "Join the game!";
-
-											// 					}}>Join the game!</button>
-
-											// 					<Link href='/userGames/gameParticipants' passHref>
-											// 						<div className="gameParticipants">
-											// 							<button> <a>View game participants!</a> </button>
-											// 						</div>
-											// 					</Link>
+							                const gamesList = furtherFilteredGames.map((jsonElement) =>
+											  <li key={jsonElement.id}>
+											    <Container fluid>
+													<Row className="game">
+														<Col>
+															<Box>
+																<img src={jsonElement.sport in numberToSport ? 
+																sportToImage[numberToSport[jsonElement.sport]] : '/questionMark.png' } />
+															</Box>
+														</Col>
 
 
+														<Col >
+															<Box>
 
-											// 				</Box>
+																<div> Event Location: {getAddress(jsonElement)} </div>
+																<br />
+																<div> Event description: {jsonElement.comments} </div>
+																<br />
 
-											// 			</Col>
+																<button onClick={(e) => {
+																	const requestOptions = {
+																	        method: 'PUT',
+																	        headers: { 'Content-Type': 'application/json',  "Access-Control-Allow-Origin": '*' },
+																	        body: JSON.stringify({ user_id: foundUser, game_id: jsonElement.id})
+																	    };
+																	if (e.target.innerHTML=="Join the game!")
+																	{
+
+																		fetch('http://localhost:8000/games/joinGame/', requestOptions)
+																        .then(response => response.json())
+																        .then(data => {
+																        	console.log(data);
+																        	e.target.innerHTML="Un-join the game!";
+																        })
+																        .catch ( error => {console.log(error)})
+																	}
+																	else if (e.target.innerHTML=="Un-join the game!")
+																	{
+																		fetch('http://localhost:8000/games/leaveGame/', requestOptions)
+																        .then(response => response.json())
+																        .then(data => {
+																        	console.log(data);
+																        	e.target.innerHTML="Join the game!";
+																        })
+																        .catch ( error => {console.log(error)})
+																	}
+				
+
+																}}>Join the game!</button>
+
+																
+																	<div className="gameParticipants">
+																		<button onClick={(e)=>
+																		{
+																			localStorage.setItem('homeGameId', `${jsonElement.id}`)
+																			Router.push("../userGames/gameParticipants")
+																		}}>View game participants! </button>
+																	</div>
 
 
-											// 			<Col>
-											// 				<Box>
-											// 					<div> Start Time </div>
-											// 					<br />
-											// 					<div> End Time </div>
-											// 					<br />
-											// 					<div> Minimum Skill Level Allowed </div>
-											// 					<br />
-											// 					<div> Number of people allowed </div>
-											// 					<br />
-											// 					<div> Number of spots left! </div>
-											// 					<br />
 
-											// 				</Box>
-											// 			</Col>
-											// 		</Row>
+															</Box>
+
+														</Col>
+
+
+														<Col>
+															<Box>
+																<div> Start Time: {(jsonElement.time)}</div>
+																<br />
+																
+																<div> Minimum Skill Level Allowed: {jsonElement.skill_level}</div>
+																<br />
+																<div> Number of people allowed in game: {jsonElement.max_group_size} </div>
+																<br />
+																<div> Number of spots left assuming {foundUserName} joins: {jsonElement.max_group_size-jsonElement.current_group_size-1} </div>
+																<br />
+
+															</Box>
+														</Col>
+													</Row>
 
 													
 
-											// 	</Container>
-											// 	<br />
-											// 	<br />
-											//   </li>
-											// );
+												</Container>
+												<br />
+												<br />
+											  </li>
+											);
 
-											// setListOfGames(gamesList);
+											setListOfGames(gamesList);
 
 
 							               	

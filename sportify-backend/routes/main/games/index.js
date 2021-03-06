@@ -32,7 +32,7 @@ MainGamesRouter.get('/getGames', async (req, res) => {
             var lng = userLng;
             var lat = userLat;
             if(!userLng) {
-                lng = 118.4452; // UCLA longitude default
+                lng = -118.4452; // UCLA longitude default
             }
             if(!userLat) {
                 lat = 34.0689; // UCLA latitude default
@@ -44,8 +44,8 @@ MainGamesRouter.get('/getGames', async (req, res) => {
                     Sequelize.col('game.location'), 
                     Sequelize.fn(
                         'ST_MakePoint', 
-                        userLng, 
-                        userLat),  
+                        lng, 
+                        lat),  
                     radiusInMeters), 
                 true);
         }

@@ -167,7 +167,7 @@ const CreateOneOnOne = (props) => {
 			        {/* <Link href='/homePage/homePage' passHref> */ }
 							<button onClick={(e)=>{
 
-								let long = 118.4452; // UCLA 
+								let long = -118.4452; // UCLA 
 								let lat = 34.0689; // UCLA
 
 								// Get latitude & longitude from address.

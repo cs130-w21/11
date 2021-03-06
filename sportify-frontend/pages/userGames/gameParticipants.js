@@ -1,13 +1,64 @@
-import React, {component, useState} from 'react'
 import Head from 'next/head';
 import Link from 'next/link';
 import {useRouter} from 'next/router';
+import React, { component, useState, useEffect } from 'react'
+
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
 import Alert from 'react-bootstrap/Alert'
 
 const gameParticipants = (props ) => {
+
+	useEffect(() => {
+		const loggedInUser = localStorage.getItem("user-id");
+		if (loggedInUser) {
+			const foundUser = JSON.parse(loggedInUser);
+			setUser(foundUser);
+
+		}
+		const loggedInUserName = localStorage.getItem("username");
+		if (loggedInUserName) {
+			const foundUserName = (loggedInUserName);
+			setUsername2(foundUserName);
+
+		}
+
+		const homeGameId=localStorage.getItem('homeGameId');
+		if (homeGameId)
+		{
+			const homeGameIdCopy=(homeGameId);
+			setGameId(parseInt(homeGameIdCopy))
+
+		   console.log("Get game id")
+           fetch(`http://localhost:8000/games/getGame?game_id=${homeGameIdCopy}`, {
+            //mode: "no-cors",
+            method: "GET",
+            headers: {
+                'Content-type': 'application/json',
+                "Access-Control-Allow-Origin": '*'
+            },
+            
+        })
+            .then(response => response.json())
+            .then(json => {
+                console.log(json);
+                userSchedule=json;
+
+            })
+            .catch (errorMessage =>{
+            	console.log(errorMessage);
+            	console.log("Bye")
+            	
+            });
+		}
+
+	}, []);
+
+	const [foundUser, setUser] = useState("");
+	const [foundUserName, setUsername2] = useState("");
+	const [gameId, setGameId]=useState("")
+	const [gameUsernames, setGameUsernames]=useState([])
 	
 	return (
 
