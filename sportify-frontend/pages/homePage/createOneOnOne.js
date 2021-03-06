@@ -129,7 +129,6 @@ const CreateOneOnOne = (props) => {
 
 				<br/>
 				
-				<form >
 					
 					<h2> Enter the details of one on one game (minimum skill level is automatically 1)! </h2>
 
@@ -187,6 +186,7 @@ const CreateOneOnOne = (props) => {
 								const reactData = { "latitude": lat, "longitude": long, "dateString": startTime, "skill_level": 1, "max_group_size": 2, "comments": description, "sport": sportNumber, "user": foundUser }
 
 								console.log(reactData);
+								console.log(foundUser, opponentId)
 
 								fetch('http://localhost:8000/games/createGame', {
 									//mode: "no-cors",
@@ -201,21 +201,23 @@ const CreateOneOnOne = (props) => {
 									.then(json => {
 										console.log("Here checking")
 										console.log(json)
-										let gameId=json.id;
+										let gameId=json.usr_gm.gameId;
 										
 									    
-									        
+									    console.log(gameId, opponentId)
 									    return gameId;
 
 									})
 									.then((gameId)=>
 									{
+										console.log(gameId, opponentId);
 										const requestOptions = {
 									        method: 'PUT',
 									        headers: { 'Content-Type': 'application/json',  "Access-Control-Allow-Origin": '*' },
-									        body: JSON.stringify({ user_id: opponentId, game_id: gameId})
+									        body: JSON.stringify({ user_id: parseInt(opponentId), game_id: gameId})
 									    };
-										fetch('http//localhost:8000/games/joinGame/', requestOptions)
+									    console.log(requestOptions);
+										fetch('http://localhost:8000/games/joinGame/', requestOptions)
 									        .then(response => response.json())
 									        .then(data => {
 									        	console.log(data);
@@ -226,10 +228,11 @@ const CreateOneOnOne = (props) => {
 									})
 									.catch ( error => {console.log(error)})
 
+							
 
 							}}> <a>Submit creation of one on one game! </a> </button>
 					{/* </Link> */ }
-		      	</form>
+		      	
 	      	
 	      	</div>
 

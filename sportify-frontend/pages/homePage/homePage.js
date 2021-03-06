@@ -21,13 +21,16 @@ const sportToImage = {
 };
 
 const genderToImage = {
-	'Man': '/maleProfile.png',
-	'Woman': '/femaleProfile.png',
-	'Other': '/other.png'
+	'M': '/maleProfile.png',
+	'F': '/femaleProfile.png',
+	'O': '/other.png'
 };
 
 const sportToNumber={'Basketball': 1, 'Tennis': 2, 'Soccer': 3, 'Badminton': 4, 
 'Baseball': 5, 'Sprinting': 6, 'Volleyball': 7, 'American Football': 8 }
+
+const numberToSport={ 1:'Basketball',  2:'Tennis', 3: 'Soccer', 4: 'Badminton', 
+5: 'Baseball', 6: 'Sprinting', 7: 'Volleyball', 8: 'American Football'}
 
 const HomePage = (props) => {
 
@@ -172,7 +175,7 @@ const HomePage = (props) => {
 
 
 
-	let optionalMinAge = typeSelected == "Games" ? (
+	let optionalMinAge = typeSelected == "People" ? (
 		<label>
 			Minimum Age of Participants: {' '}
 			<input type="number" min={1} value={minAge} onChange={(e) => setMinAge(e.target.value)} />
@@ -370,23 +373,27 @@ const HomePage = (props) => {
 
 					<Row>
 
-					<Col xs={3}>
+					<Col xs={2}>
 					{ (typeSelected=="Games") ? optionalMinimumSkillLevelForGame: userSkillLevels}
 					</Col>
 
-					<Col xs={3}>
+					<Col xs={2}>
 					{ (typeSelected=="Games") ? optionalMaxGroupSize: optionalGenderSelection }
 					</Col>
 
 					
 					
 					
-					<Col xs={3}>
+					<Col xs={2}>
 					{ (typeSelected=="Games") ? optionalDateSelection: optionalUserSelection }
 					</Col>
 
-					<Col xs={3}>
-					{ (typeSelected=="Games") ? optionalMinAge: optionalEmailSelection }
+					<Col xs={2}>
+					{ typeSelected=="People" ? optionalEmailSelection : <h1>Have fun!</h1>}
+					</Col>
+
+					<Col xs={2}>
+					{ typeSelected=="People" ?  optionalMinAge: <h1>Stay Safe!</h1> }
 					</Col>
 
 					
@@ -553,7 +560,7 @@ const HomePage = (props) => {
 																<br />
 																<div> <b>Bio:</b> {jsonElement.description ? jsonElement.description: "No bio"} </div>
 																<br />
-																<div> <b>Best Sport:</b> {jsonElement.sport ? jsonElement.sport : "No sport specified (Soccer default will used for 1 v 1's)"} </div>
+																<div> <b>Best Sport:</b> {jsonElement.sport ? numberToSport[jsonElement.sport] : "No sport specified (Soccer default will used for 1 v 1's)"} </div>
 																<br />
 																<div> <b>Best Sport Skill Level:</b> {jsonElement.skill_level ? jsonElement.skill_level: "No skill level specified"} </div>
 																<br />
@@ -563,7 +570,6 @@ const HomePage = (props) => {
 														<Col >
 															<Box>
 
-																<div>  </div>
 																<br />
 																<br />
 																<div className="gameDiv">
@@ -666,7 +672,7 @@ const HomePage = (props) => {
 							}
 							else
 							{
-								let baseUrlGames="http://localhost:8000/user/getGames?"
+								let baseUrlGames="http://localhost:8000/games/getGames?"
 
 								if (groupNumber!='')
 									baseUrlGames+=( `max_group_size=${groupNumber}`)
@@ -698,6 +704,101 @@ const HomePage = (props) => {
 									baseUrlGames+=(baseUrlGames, `&userLat=${lati}`)
 								
 								console.log(baseUrlGames)
+
+								fetch(baseUrlGames, {
+							            //mode: "no-cors",
+							            method: "GET",
+							            headers: {
+							                'Content-type': 'application/json',
+							                "Access-Control-Allow-Origin": '*'
+							            },
+							            
+							        })
+							            .then(response => response.json())
+							            .then(json => {
+							                console.log(json);
+
+							    //             const gamesList = json.map((jsonElement) =>
+											//   <li key={jsonElement.id}>
+											//     <Container fluid>
+											// 		<Row className="game">
+											// 			<Col>
+											// 				<Box>
+											// 					<img src="/soccer.jpg" />
+											// 				</Box>
+											// 			</Col>
+
+
+											// 			<Col >
+											// 				<Box>
+
+											// 					<div> Event Name </div>
+											// 					<br />
+											// 					<div> Event Location </div>
+											// 					<br />
+											// 					<div> Event description </div>
+											// 					<br />
+
+											// 					<button onClick={(e) => {
+
+											// 						e.target.innerHTML = (e.target.innerHTML == "Join the game!") ?
+											// 							"Un-join the game!" : "Join the game!";
+
+											// 					}}>Join the game!</button>
+
+											// 					<Link href='/userGames/gameParticipants' passHref>
+											// 						<div className="gameParticipants">
+											// 							<button> <a>View game participants!</a> </button>
+											// 						</div>
+											// 					</Link>
+
+
+
+											// 				</Box>
+
+											// 			</Col>
+
+
+											// 			<Col>
+											// 				<Box>
+											// 					<div> Start Time </div>
+											// 					<br />
+											// 					<div> End Time </div>
+											// 					<br />
+											// 					<div> Minimum Skill Level Allowed </div>
+											// 					<br />
+											// 					<div> Number of people allowed </div>
+											// 					<br />
+											// 					<div> Number of spots left! </div>
+											// 					<br />
+
+											// 				</Box>
+											// 			</Col>
+											// 		</Row>
+
+													
+
+											// 	</Container>
+											// 	<br />
+											// 	<br />
+											//   </li>
+											// );
+
+											// setListOfGames(gamesList);
+
+
+							               	
+						    				
+
+							            })
+							            .catch (errorMessage =>{
+							            	console.log(errorMessage);
+							            	
+							            }); 
+
+
+
+
 							}
 
 
