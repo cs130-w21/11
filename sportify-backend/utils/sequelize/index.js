@@ -25,11 +25,9 @@ for (const modelDefiner of modelDefiners) {
 }
 
 //Define Associations:
-const { game, user, schedule } = sequelize.models;
+const { game, user } = sequelize.models;
 game.belongsToMany(user, { through: 'userGames', as:'users'});
 user.belongsToMany(game, { through: 'userGames', as:'games' });
-schedule.belongsTo(game);
-schedule.belongsTo(user);
 
 console.log(sequelize.models)
 

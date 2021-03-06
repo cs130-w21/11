@@ -86,6 +86,7 @@ MainAuthRouter.get('/getUsers', async (req, res) => {
     // console.log('here')
     const user = sequelize.models.user; 
     try {
+        const currentUser = req.query.currentUser;
         const username = req.query.username;
         const email = req.query.email;
         const age = req.query.age;
@@ -100,31 +101,46 @@ MainAuthRouter.get('/getUsers', async (req, res) => {
         if(username) {
             options.where.username = username;
         }
+        if(currentUser) {
+            options.where.username = {[Sequelize.Op.ne]: currentUser};
+        }
+        if(username && currentUser) {
+            options.where.username = {[Sequelize.Op.and]: [{[Sequelize.Op.ne]: currentUser}, {[Sequelize.Op.eq]:username}]};
+        }
         if(email) {
             options.where.email = email;
         }
         if(age) {
-            options.where.age = {[Sequelize.Op.gt]: age};
+            options.where.age = {[Sequelize.Op.gte]: age};
         }
         if(sport) {
             options.where.sport = sport;
         }
         if(skill_levels) {
-            options.where.skill_level = skill_levels;
+            const minSkillLevel = Math.min(...skill_levels);
+            options.where.skill_level = {[Sequelize.Op.gte]: minSkillLevel};
         }
         if(genders) {
             options.where.gender = genders;
         }
-        if(radius && userLat && userLng) {
+        if(radius) {
+            var lng = userLng;
+            var lat = userLat;
+            if(!userLng) {
+                lng = 118.4452; // UCLA longitude default
+            }
+            if(!userLat) {
+                lat = 34.0689; // UCLA latitude default
+            }
             const radiusInMeters = radius*1609.34; // convert miles to meters
             options.where = Sequelize.where(
                 Sequelize.fn(
                     'ST_DWithin',
-                    Sequelize.col('location'), 
+                    Sequelize.col('user.location'), 
                     Sequelize.fn(
                         'ST_MakePoint', 
-                        userLng, 
-                        userLat),  
+                        lng, 
+                        lat),  
                     radiusInMeters), 
                 true);
         }
@@ -132,47 +148,59 @@ MainAuthRouter.get('/getUsers', async (req, res) => {
         options.attributes.exclude = ['password'];
         // console.log(options);
         user.findAll(options).then(user => res.json(user));
-        
     } catch (err) {
         return res.status(500).send(err.message);
     }
 });
 
-// MainAuthRouter.get('/getUser', async (req, res) => {
-//     // console.log('here')
-//     const user = sequelize.models.user; 
-//     try {
-//         const userName = req.query.username;
-        
-//         User.findOne({ where: { username: username } })
-        
-//         options.attributes.exclude = ['password'];
-//         // console.log(options);
-//         const user=await user.findOne({ where: { username: userName }, 
+MainAuthRouter.get('/getUserLocation/:id', async(req, res) => {
+    const user = sequelize.models.user;
+    const id = req.params.id;
+    var options = {where: {id:id}, attributes: ['location']};
+    try {
+        user.findAll(options).then(user =>  {
+            if (user[0] && user[0].location) {
+                
+                res.json([user[0].location.coordinates[1], user[0].location.coordinates[0]]);
+            }
+            else {
+                res.json(null);
+            }
+        });
+    } catch (err) {
+        return res.status(500).send(err.message);
+    }
+});
 
-//             attributes: {exclude: ['password']}
-//         });
-//         if (jsonUser!=null)
-//         {
-//             console.log(jsonUser);
-//             return res.status(200).json({
-//                 message: 'Getuser successful',
-//                 username: user.username,
-//                 id: user.id,
-//                 jsonUser
-//         }
-//         else
-//         {
-//             return res.status(500).send(err.message);
-//         }
+MainAuthRouter.get('/getProfile/:id', async(req, res) => {
+    const user = sequelize.models.user;
+    const id = req.params.id;
+    var options = {where: {id:id}, attributes: ['age', 'gender', 'sport', 'skill_level', 'about_me']};
+    try {
+        let currUser =await user.findOne(options)
+        return res.status(200).json(currUser)
+    } catch (err) {
+        return res.status(500).send(err.message);
+    }
+});
 
-            
-//     })
-
-//     } catch (err) {
-//         return res.status(500).send(err.message);
-//     }
-// });
+// Get games associated with a specific user
+MainAuthRouter.get('/getUsersGames', async (req, res) => {
+    // console.log('here')
+    const user = sequelize.models.user;
+    const { user_id } = req.body
+    try {
+        var options = {where: {id:user_id}, attributes:{exclude:[]}, include:[{
+            model: sequelize.models.game, as: 'games', required:false, attibutes: ['id', 'sport', 'comments']}]};
+        options.attributes.exclude = ['password'];
+        const currUser = await user.findOne(options);
+        // console.log(currUser.getDataValue('games'));
+        const usersGames = currUser.getDataValue('games')
+        return res.status(200).send(usersGames);
+    } catch (err) {
+        return res.status(500).send(err.message);
+    }
+});
 
 MainAuthRouter.put('/updateProfile/:id', async (req, res) => {
     const user = sequelize.models.user; 

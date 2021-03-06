@@ -43,7 +43,7 @@ export default function Login() {
                 console.log(json);
 
                 if (json.message=== 'Signup Successful!') {
-                    console.log(json.body)
+                    //console.log(json.body)
                     localStorage.setItem('user-id', json.id)
                     localStorage.setItem('username', json.username)
                     console.log("Before pushing home page")
