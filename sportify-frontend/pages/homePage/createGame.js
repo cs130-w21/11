@@ -105,11 +105,28 @@ const CreateGame = (props) => {
 
 			<br />
 
+<<<<<<< HEAD
+				<label>
+						Sport: {' '}
+						<select value={sport} onChange={(e) => setSport(e.target.value)} >
+							<option value="Basketball">Basketball</option>
+							<option value="Tennis">Tennis</option>
+							<option value="Soccer">Soccer</option>
+							<option value="Badminton">Badminton</option>
+							<option value="Baseball">Baseball</option>
+							<option value="Sprinting">Sprinting</option>
+							<option value="Volleyball">Volleyball</option>
+							<option value="American Football">American Football</option>
+						</select>
+					</label>
+
+=======
 			<form onSubmit={(e) => handleSubmit(e)}>
 				<label>
 					Enter Sport:
 			          <input type="text" value={sport} onChange={(e) => setSport(e.target.value)} />
 				</label>
+>>>>>>> origin/dev
 				<br />
 
 				{ /*
@@ -118,7 +135,6 @@ const CreateGame = (props) => {
 			          <input type="text" value={name} onChange={(e)=>setName(e.target.value)} />
 			        </label>
 			        <br />
-
 			    	*/ }
 
 				<label>
@@ -156,9 +172,17 @@ const CreateGame = (props) => {
 			          onChange={(e)=>setMaxSkillLevel(e.target.value)} />
 			        </label>
 			        <br />
-
 			    	*/ }
 
+<<<<<<< HEAD
+=======
+
+				<label>
+					Starting time:
+			          	<input type="datetime-local" value={startTime} onChange={(e) => setStartTime(e.target.value)} />
+				</label>
+				<br />
+>>>>>>> origin/dev
 
 				<label>
 					Starting time:
@@ -166,7 +190,10 @@ const CreateGame = (props) => {
 				</label>
 				<br />
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> origin/dev
 				{/*   
 			        <label>
 			          	Ending time:
@@ -194,13 +221,13 @@ const CreateGame = (props) => {
 			        	(e) => {
 			        		
 			        	}
-
 			        }>
 			        	Submit
 			        </button>
-
 			        */}
 
+<<<<<<< HEAD
+=======
 
 				<Link href='/homePage/homePage' passHref>
 					<button> <a>Cancel creation of game! </a> </button>
@@ -267,9 +294,65 @@ const CreateGame = (props) => {
 									console.log("here" + json)
 									console.log(json.message)
 								}
+>>>>>>> origin/dev
+
+				<Link href='/homePage/homePage' passHref>
+					<button> <a>Cancel creation of game! </a> </button>
+				</Link>
+
+
+<<<<<<< HEAD
+				<Link href='/homePage/homePage' passHref>
+					<button onClick={(e) => {
+						var lat = 34.0689
+						var long = -118.4452
+
+						// Get latitude & longitude from address.
+						Geocode.fromAddress(address).then(
+							(response) => {
+								lat, long = response.results[0].geometry.location;
+								console.log(lat, long);
+
+							},
+							(error) => {
+								console.error(error);
+							}
+						)
+						var currSport = 0
+						switch (sport) {
+							case "Basketball":
+								currSport = 1
+								break;
+							case "Tennis":
+								currSport = 2
+								break;
+							case "Soccer":
+								currSport = 3
+								break;
+							case "Badminton":
+								currSport = 4
+								break;
+							case 'Baseball':
+								currSport=5
+								break;
+							case 'Sprinting':
+								currSport=6
+								break;
+							case 'Volleyball':
+								currSport=7
+								break;
+							case 'American Football':
+								currSport=8
+								break;
+
+
+						}
+						console.log("wtf is going on")
 
 
 
+						const reactData = { "latitude": lat, "longitude": long, "dateString": startTime, "skill_level": minSkillLevel, "max_group_size": numberOfPeopleIncludingYou, "comments": description, "sport": currSport, "user": foundUser }
+=======
 							})
 
 					}}> <a>Submit creation of game! </a> </button>
@@ -280,8 +363,35 @@ const CreateGame = (props) => {
 
 
 	);
+>>>>>>> origin/dev
+
+
+
+						fetch('http://localhost:8000/games/createGame', {
+							//mode: "no-cors",
+							method: "POST",
+							headers: {
+								'Content-type': 'application/json',
+								"Access-Control-Allow-Origin": '*'
+							},
+							body: JSON.stringify(reactData)
+						})
+							.then(response => response.json())
+							.then(json => {
+								console.log(json)
+
+
+
+							})
+
+					}}> <a>Submit creation of game! </a> </button>
+				</Link>
+
+		</div>
+
+
+	);
 
 };
 
 export default CreateGame;
-
