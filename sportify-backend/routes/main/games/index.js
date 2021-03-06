@@ -29,18 +29,25 @@ MainGamesRouter.get('/getGames', async (req, res) => {
             options.where.sport = sports;
             options.where.is_full = false;
         }
-        // TODO: Grab user latitude and longitude
-        if (radius && userLat && userLng) {
-            const radiusInMeters = radius * 1609.34; // convert miles to meters
+        if(radius) {
+            var lng = userLng;
+            var lat = userLat;
+            if(!userLng) {
+                lng = -118.4452; // UCLA longitude default
+            }
+            if(!userLat) {
+                lat = 34.0689; // UCLA latitude default
+            }
+            const radiusInMeters = radius*1609.34; // convert miles to meters
             options.where = Sequelize.where(
                 Sequelize.fn(
                     'ST_DWithin',
-                    Sequelize.col('location'),
+                    Sequelize.col('game.location'), 
                     Sequelize.fn(
-                        'ST_MakePoint',
-                        userLng,
-                        userLat),
-                    radiusInMeters),
+                        'ST_MakePoint', 
+                        lng, 
+                        lat),  
+                    radiusInMeters), 
                 true);
         }
         if (weeksAhead) {
@@ -65,9 +72,10 @@ MainGamesRouter.get('/getGames', async (req, res) => {
 });
 
 // Get a specific game
-MainGamesRouter.get('/getGame', async (req, res) => {
+MainGamesRouter.get('/getGame/:ider', async (req, res) => {
     const game = sequelize.models.game;
-    const { game_id } = req.body
+    // const { game_id } = req.body
+    const game_id=req.params.ider;
     try {
         var options = {where: {id:game_id}, attributes:{exclude:[]}, include:[{
                 model: sequelize.models.user, as: 'users', required:false, attributes:{exclude:['password']}}]};
@@ -169,15 +177,15 @@ MainGamesRouter.put('/leaveGame', async (req, res) => {
         // console.log(currUser);
         currUser.removeGame(currGame);
 
-        if(current_group_size == 0){
-            const deleted = await game.destroy({
-                where: {id: game_id}
-            });
-            if (deleted) {
-                return res.status(200).send("Successfully left game, game deleted");
-            }
-            throw new Error("Game not found");
-        }
+        // if(current_group_size == 0){
+        //     const deleted = await game.destroy({
+        //         where: {id: game_id}
+        //     });
+        //     if (deleted) {
+        //         return res.status(200).send("Successfully left game, game deleted");
+        //     }
+        //     throw new Error("Game not found");
+        // }
         return res.status(200).json({message:"Successfully left game!"})
     }
     catch(err){

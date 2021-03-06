@@ -117,7 +117,6 @@ MainAuthRouter.get('/getUsers', async (req, res) => {
       
         if(age) {
             options.where.age = {[Sequelize.Op.gte]: age};
-
         }
         if (sport) {
             options.where.sport = sport;
@@ -126,7 +125,6 @@ MainAuthRouter.get('/getUsers', async (req, res) => {
         if(skill_levels) {
             const minSkillLevel = Math.min(...skill_levels);
             options.where.skill_level = {[Sequelize.Op.gte]: minSkillLevel};
-
         }
         if (genders) {
             options.where.gender = genders;
@@ -192,10 +190,10 @@ MainAuthRouter.get('/getProfile/:id', async(req, res) => {
 });
 
 // Get games associated with a specific user
-MainAuthRouter.get('/getUsersGames', async (req, res) => {
+MainAuthRouter.get('/getUsersGames/:id', async (req, res) => {
     // console.log('here')
     const user = sequelize.models.user;
-    const { user_id } = req.body
+    const user_id=req.params.id
     try {
         var options = {where: {id:user_id}, attributes:{exclude:[]}, include:[{
             model: sequelize.models.game, as: 'games', required:false, attibutes: ['id', 'sport', 'comments']}]};

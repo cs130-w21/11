@@ -105,11 +105,20 @@ const CreateGame = (props) => {
 
 			<br />
 
-			<form onSubmit={(e) => handleSubmit(e)}>
 				<label>
-					Enter Sport:
-			          <input type="text" value={sport} onChange={(e) => setSport(e.target.value)} />
-				</label>
+						Sport: {' '}
+						<select value={sport} onChange={(e) => setSport(e.target.value)} >
+							<option value="Basketball">Basketball</option>
+							<option value="Tennis">Tennis</option>
+							<option value="Soccer">Soccer</option>
+							<option value="Badminton">Badminton</option>
+							<option value="Baseball">Baseball</option>
+							<option value="Sprinting">Sprinting</option>
+							<option value="Volleyball">Volleyball</option>
+							<option value="American Football">American Football</option>
+						</select>
+					</label>
+
 				<br />
 
 				{ /*
@@ -118,7 +127,6 @@ const CreateGame = (props) => {
 			          <input type="text" value={name} onChange={(e)=>setName(e.target.value)} />
 			        </label>
 			        <br />
-
 			    	*/ }
 
 				<label>
@@ -156,7 +164,6 @@ const CreateGame = (props) => {
 			          onChange={(e)=>setMaxSkillLevel(e.target.value)} />
 			        </label>
 			        <br />
-
 			    	*/ }
 
 
@@ -165,7 +172,6 @@ const CreateGame = (props) => {
 			          	<input type="datetime-local" value={startTime} onChange={(e) => setStartTime(e.target.value)} />
 				</label>
 				<br />
-
 
 				{/*   
 			        <label>
@@ -194,11 +200,9 @@ const CreateGame = (props) => {
 			        	(e) => {
 			        		
 			        	}
-
 			        }>
 			        	Submit
 			        </button>
-
 			        */}
 
 
@@ -209,8 +213,8 @@ const CreateGame = (props) => {
 
 				<Link href='/homePage/homePage' passHref>
 					<button onClick={(e) => {
-						var lat = -76
-						var long = -148
+						var lat = 34.0689
+						var long = -118.4452
 
 						// Get latitude & longitude from address.
 						Geocode.fromAddress(address).then(
@@ -230,13 +234,26 @@ const CreateGame = (props) => {
 								break;
 							case "Tennis":
 								currSport = 2
-								break
+								break;
 							case "Soccer":
 								currSport = 3
-								break
+								break;
 							case "Badminton":
 								currSport = 4
-								break
+								break;
+							case 'Baseball':
+								currSport=5
+								break;
+							case 'Sprinting':
+								currSport=6
+								break;
+							case 'Volleyball':
+								currSport=7
+								break;
+							case 'American Football':
+								currSport=8
+								break;
+
 
 						}
 						console.log("wtf is going on")
@@ -252,21 +269,13 @@ const CreateGame = (props) => {
 							method: "POST",
 							headers: {
 								'Content-type': 'application/json',
-								//"Access-Control-Allow-Origin": '*'
+								"Access-Control-Allow-Origin": '*'
 							},
 							body: JSON.stringify(reactData)
 						})
 							.then(response => response.json())
 							.then(json => {
-								if (json.message === "Signin successful") {
-									console.log("Result Here")
-									console.log(json)
-									Router.push("../homePage/homePage")
-								}
-								else {
-									console.log("here" + json)
-									console.log(json.message)
-								}
+								console.log(json)
 
 
 
@@ -274,7 +283,6 @@ const CreateGame = (props) => {
 
 					}}> <a>Submit creation of game! </a> </button>
 				</Link>
-			</form>
 
 		</div>
 
@@ -284,4 +292,3 @@ const CreateGame = (props) => {
 };
 
 export default CreateGame;
-
