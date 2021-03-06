@@ -44,8 +44,8 @@ MainGamesRouter.get('/getGames', async (req, res) => {
                     Sequelize.col('game.location'), 
                     Sequelize.fn(
                         'ST_MakePoint', 
-                        userLng, 
-                        userLat),  
+                        lng, 
+                        lat),  
                     radiusInMeters), 
                 true);
         }
