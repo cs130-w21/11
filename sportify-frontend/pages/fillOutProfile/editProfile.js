@@ -317,10 +317,11 @@ const editProfile = (props) => {
 
 
 								const reactData = { "latitude": lat, "longitude": lng, "skill_level": bestSportSkillLevel, "gender": gender, "about_me": description, "sport": currentSport, "username": foundUserName, "password": password }
+								const reactData2 = { "id": foundUser, "monday": dayTimes[0], "tuesday": dayTimes[1], "wednesday": dayTimes[2], "thursday": dayTimes[3], "friday": dayTimes[4], "saturday": dayTimes[5], "sunday": dayTimes[6] }
 
 
 
-								fetch('http://localhost:8000/user/updateProfile/' + foundUser, {
+								fetch('http://localhost:8000/user/updateProfile/' + parseInt(foundUser) + '/', {
 									//mode: "no-cors",
 									method: "PUT",
 									headers: {
@@ -329,22 +330,58 @@ const editProfile = (props) => {
 									},
 									body: JSON.stringify(reactData)
 								})
-									.then(response => response.json())
-									.then(json => {
-										console.log(json)
-										if (json.message === "Signin successful") {
-											console.log("Result Here")
-											console.log(json)
-											Router.push("../homePage/homePage")
+									.then(response => {
+
+										if (response.status === 200) {
+											console.log("Result Here Lol")
+											console.log("here" + response.json)
+
+
+											//Router.push("../homePage/homePage")
 										}
 										else {
-											console.log("here" + json)
-											console.log(json.message)
+											console.log("here" + response.json)
+
 										}
 
 
 
 									})
+									.then(
+
+										fetch('http://localhost:8000/schedule/createUpdateSchedule', {
+
+											//mode: "no-cors",
+											method: "POST",
+											headers: {
+												'Content-type': 'application/json',
+												"Access-Control-Allow-Origin": '*'
+											},
+											body: JSON.stringify(reactData2)
+										})
+											.then(response => {
+
+												if (response.status === 200) {
+													console.log("Result Here Schedule")
+													console.log("here" + response.json)
+
+
+													Router.push("../homePage/homePage")
+												}
+												else {
+													console.log("here" + response.json)
+
+												}
+
+
+
+											})
+
+
+									)
+
+
+
 
 							},
 							(error) => {

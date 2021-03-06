@@ -14,19 +14,21 @@ export default function Login() {
 
 
     function validateForm() {
-        return email.length > 0 && password.length > 0;
+        // console.log("Here");
+        // console.log(email.length, username.length, password.length)
+        return username.length>0 && email.length > 0 && password.length > 0;
     }
 
     function handleSubmit(event) {
         event.preventDefault();
-
+        console.log("signing up");
 
         const url = "localhost:8000/auth/signup/"
 
         const reactData = { "username": username, "email": email, "password": password }
 
 
-
+        //console.log(reactData);
 
         fetch('http://localhost:8000/user/signup', {
             //mode: "no-cors",
@@ -55,9 +57,9 @@ export default function Login() {
 
 
 
-
-
     }
+
+
     return (
         <div>
             <style jsx global>{`

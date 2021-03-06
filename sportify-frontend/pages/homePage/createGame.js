@@ -225,4 +225,3 @@ const CreateGame = (props) => {
 };
 
 export default CreateGame;
-
