@@ -6,6 +6,10 @@ import Geocode from 'react-geocode'
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
+import Nav from 'react-bootstrap/Nav';
+import Form from 'react-bootstrap/Form';
+import Navbar from 'react-bootstrap/Navbar';
+import Button from 'react-bootstrap/Button';
 
 //API key: AIzaSyDqs8TqTIsIx3xTuD1NEY3hXxmSciVrWZE
 
@@ -36,7 +40,7 @@ class viewProfile extends React.Component {
             <div>
                 <style jsx global>{`
 					body {
-						background-color: cyan;
+						background-color: #D2D2D2;
 						align: auto;
 						text-align: center;
 					}
@@ -68,6 +72,16 @@ class viewProfile extends React.Component {
 					
 				`}</style>
 
+                <Navbar bg="dark" variant="dark">
+                    <Navbar.Brand href="/homePage/homePage">Sportify</Navbar.Brand>
+                    <Nav className="mr-auto">
+                        <Nav.Link href="/fillOutProfile/viewProfile" active="true">Profile</Nav.Link>
+                        <Nav.Link href="/userGames/userGames">My Games</Nav.Link>
+                    </Nav>
+                    <Nav inline="true">
+                        <Nav.Link href="/frontpage/Login">Logout</Nav.Link>
+				    </Nav>
+			    </Navbar>
                 <h1> Here's your profile </h1>
 
                 <div>

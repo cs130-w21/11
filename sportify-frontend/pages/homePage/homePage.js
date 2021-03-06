@@ -5,6 +5,11 @@ import Alert from 'react-bootstrap/Alert'
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
+import Nav from 'react-bootstrap/Nav';
+import Form from 'react-bootstrap/Form';
+import Navbar from 'react-bootstrap/Navbar';
+import Button from 'react-bootstrap/Button';
+import FormControl from 'react-bootstrap/FormControl';
 //import Geocode from "react-geocode"
 //import Link from 'next/link'
 //import soccerPic from "soccer.jpg"
@@ -236,7 +241,7 @@ const HomePage = (props) => {
 						}
 
 						body {
-							background-color: yellow;
+							background-color: #D2D2D2;
 							
 
 						}
@@ -255,45 +260,16 @@ const HomePage = (props) => {
 						}
 
 		      `}</style>
-			<div className="navBar">
-				<ul>
-					<li>
-						<Link href='/userGames/userGames' passHref>
-							<div className="myGames">
-								<a>My Games</a>
-							</div>
-						</Link>
-
-					</li>
-
-
-
-					<li>
-						<Link href='/fillOutProfile/viewProfile' passHref>
-							<div className="viewProfile">
-								<a>View my profile</a>
-							</div>
-						</Link>
-					</li>
-
-					<li>
-						<Link href='/homePage/homePage' passHref>
-							<div className="homeDiv">
-								<a>Go home!</a>
-							</div>
-						</Link>
-					</li>
-
-					<li>
-						<Link href='/frontpage/Login' passHref>
-							<div className="logoutDiv">
-								<a>Logout!</a>
-							</div>
-						</Link>
-					</li>
-
-				</ul>
-			</div>
+			<Navbar bg="dark" variant="dark">
+				<Navbar.Brand href="/homePage/homePage">Sportify</Navbar.Brand>
+				<Nav className="mr-auto">
+					<Nav.Link href="/fillOutProfile/viewProfile">Profile</Nav.Link>
+					<Nav.Link href="/userGames/userGames">My Games</Nav.Link>
+				</Nav>
+				<Nav inline="true">
+					<Nav.Link href="/frontpage/Login">Logout</Nav.Link>
+				</Nav>
+			</Navbar>
 
 			<br />
 

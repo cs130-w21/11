@@ -4,6 +4,11 @@ import Link from 'next/link';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
+import Nav from 'react-bootstrap/Nav';
+import Form from 'react-bootstrap/Form';
+import Navbar from 'react-bootstrap/Navbar';
+import Button from 'react-bootstrap/Button';
+import FormControl from 'react-bootstrap/FormControl';
 
 const userGames = (props ) => {
 	
@@ -38,7 +43,7 @@ const userGames = (props ) => {
 						}
 
 						body {
-							background-color: green;
+							background-color: #D2D2D2;
 							
 
 						}
@@ -57,46 +62,18 @@ const userGames = (props ) => {
 
 		      `}</style>
 
-		      	<div className="navBar">
-					<ul>
-						<li>
-							<Link href='/userGames/userGames' passHref>
-								<div className="myGames">
-									<a>My Games</a>
-								</div>
-							</Link>
+			<Navbar bg="dark" variant="dark">
+				<Navbar.Brand href="/homePage/homePage">Sportify</Navbar.Brand>
+				<Nav className="mr-auto">
+					<Nav.Link href="/fillOutProfile/viewProfile">Profile</Nav.Link>
+					<Nav.Link href="/userGames/userGames" active="true">My Games</Nav.Link>
+				</Nav>
+				<Nav inline="true">
+					<Nav.Link href="/frontpage/Login">Logout</Nav.Link>
+				</Nav>
+			</Navbar>
 
-						</li>
-
-						<li>
-							<Link href='/fillOutProfile/viewOrEditProfile' passHref>
-								<div className="viewOrEditProfile">
-									<a>View/Edit my profile</a>
-								</div>
-							</Link>
-						</li>
-
-						<li>
-					        <Link href='/homePage/homePage' passHref>
-					        	<div className="homeDiv">
-									<a>Go home!</a>
-								</div>
-							</Link>
-						</li>
-
-						<li>
-					        <Link href='/frontpage/Login' passHref>
-					        	<div className="logoutDiv">
-									<a>Logout!</a>
-								</div>
-							</Link>
-						</li>
-
-					</ul>
-				</div>
-
-				<br/>
-
+			<br />
 
 		    <div className="informationDiv">
 					<p>
