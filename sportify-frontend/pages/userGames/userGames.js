@@ -1,11 +1,63 @@
-import React, {component, useState} from 'react'
+import React, {component, useState, useEffect} from 'react'
 import Head from 'next/head';
 import Link from 'next/link';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
+import Geocode from 'react-geocode'
+import Router from 'next/router';
+
 
 const userGames = (props ) => {
+
+	const [foundUser, setUser] = useState("");
+	const [foundUserName, setUsername2] = useState("");
+
+	useEffect(()=>{
+        Geocode.setApiKey("AIzaSyDqs8TqTIsIx3xTuD1NEY3hXxmSciVrWZE");
+        Geocode.setLanguage("en");
+
+        const loggedInUser = localStorage.getItem("user-id");
+		if (loggedInUser) {
+			const foundUser = JSON.parse(loggedInUser);
+			setUser(foundUser);
+
+		}
+
+		if (loggedInUser)
+		{
+
+		   console.log("Get user games")
+           fetch(`http://localhost:8000/games/getGame/${parseInt(homeGameId)}`, {
+            //mode: "no-cors",
+            method: "GET",
+            headers: {
+                'Content-type': 'application/json',
+                "Access-Control-Allow-Origin": '*',
+
+            },
+            //query: JSON.stringify({game_id: parseInt(homeGameId)})
+            
+        })
+            .then(response => response.json())
+            .then(json => {
+                console.log(json);  
+                setPlayers(json.users);
+            })
+            .catch (errorMessage =>{
+            	console.log(errorMessage);
+            	console.log("Bye")
+            	
+            });
+		}
+		const loggedInUserName = localStorage.getItem("username");
+		if (loggedInUserName) {
+			const foundUserName = (loggedInUserName);
+			setUsername2(foundUserName);
+
+		}
+    }, []);
+
 	
 	return (
 

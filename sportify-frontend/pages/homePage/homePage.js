@@ -704,30 +704,33 @@ const HomePage = (props) => {
 								
 								console.log(baseUrlGames)
 
-								const getAddress = ((jsonElement) => 
+								async function getAddress(jsonElement)
 								{
 									console.log(jsonElement.location.coordinates[1], jsonElement.location.coordinates[0])
 									let addressDisplayed="Unknown address"
 									if (jsonElement.location)
 									{
 										// Get address from latitude & longitude.
-										Geocode.fromLatLng(`${jsonElement.location.coordinates[1]}`, `${jsonElement.location.coordinates[0]}`).then(
+										await Geocode.fromLatLng(`${jsonElement.location.coordinates[1]}`, `${jsonElement.location.coordinates[0]}`).then(
 										  (response) => {
 										    const address = response.results[0].formatted_address;
-										   
-										    console.log(address);
+										   console.log(response.results[0])
+										    console.log(address, address.tagName, address.type);
+										    console.log("Good response")
 										    addressDisplayed=address;
+										    console.log("addressDisplayed", addressDisplayed)
 										    //return address;
 										  },
 										  (error) => {
 										    console.error(error);
+										    console.log("Ugh")
 										    //return "Unknown address"
 										  }
 										);
 									}
 									
 									return addressDisplayed;
-								});
+								};
 
 								fetch(baseUrlGames, {
 							            //mode: "no-cors",
@@ -739,7 +742,7 @@ const HomePage = (props) => {
 							            
 							        })
 							            .then(response => response.json())
-							            .then(json => {
+							            .then(async json => {
 							                console.log(json);
 							                const filteredGames=json.filter((jsonElement)=> 
 							                	(jsonElement.is_full==false)
@@ -751,7 +754,7 @@ const HomePage = (props) => {
 							                )
 							                console.log(furtherFilteredGames)
 
-							                const gamesList = furtherFilteredGames.map((jsonElement) =>
+							                const gamesList = await Promise.all(furtherFilteredGames.map(async (jsonElement) => (
 											  <li key={jsonElement.id}>
 											    <Container fluid>
 													<Row className="game">
@@ -766,7 +769,7 @@ const HomePage = (props) => {
 														<Col >
 															<Box>
 
-																<div> Event Location: {getAddress(jsonElement)} </div>
+																<div> Event Location: {await getAddress(jsonElement)} </div>
 																<br />
 																<div> Event description: {jsonElement.comments} </div>
 																<br />
@@ -839,8 +842,8 @@ const HomePage = (props) => {
 												</Container>
 												<br />
 												<br />
-											  </li>
-											);
+											  </li> )
+											));
 
 											setListOfGames(gamesList);
 
