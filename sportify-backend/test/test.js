@@ -8,16 +8,19 @@ const MainRouter = require('../routes/main');
 const sequelize = require('../utils/sequelize/index');
 const Game = sequelize.models.game;
 
+const config = env.process.config || 'dev'
+
 // Test games routes
+if(config == 'test'){
 describe("Test endpoints", () => {
     before((done) => {
-        sequelize.sync({ force: true }).then(function() {
+        sequelize.sync(/*{ force: true }*/).then(function() {
             done();
         });
     });
 
     after((done) => {
-        sequelize.sync({ force: true }).then(function() {
+        sequelize.sync(/*{ force: true }*/).then(function() {
             done();
         });
     });
@@ -517,5 +520,5 @@ describe("Test endpoints", () => {
         expect(res.body).to.have.length(2);
     });
 });
-
+}
 
