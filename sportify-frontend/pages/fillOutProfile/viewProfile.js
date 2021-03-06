@@ -139,9 +139,9 @@ class viewProfile extends React.Component {
             .then(json => {
 
                 console.log(json[0])
-                if (json) {
+                if (typeof json !== undefined) {
 
-                    if (json[0].monday) {
+                    if (typeof (json[0].monday) !== 'undefined') {
                         this.setState({
                             monday: json[0].monday
                         })
