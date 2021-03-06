@@ -264,7 +264,7 @@ const CreateGame = (props) => {
 
 
 
-						fetch('http://localhost:8000/games/createGame', {
+						fetch(process.env.backend_url + '/games/createGame', {
 							//mode: "no-cors",
 							method: "POST",
 							headers: {
