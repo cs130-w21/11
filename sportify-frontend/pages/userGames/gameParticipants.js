@@ -10,6 +10,11 @@ import Alert from 'react-bootstrap/Alert'
 
 const gameParticipants = (props ) => {
 
+	const [foundUser, setUser] = useState("");
+	const [foundUserName, setUsername2] = useState("");
+	const [gameId, setGameId]=useState("")
+	const [players, setPlayers]=useState([])
+
 	useEffect(() => {
 		const loggedInUser = localStorage.getItem("user-id");
 		if (loggedInUser) {
@@ -30,21 +35,22 @@ const gameParticipants = (props ) => {
 			const homeGameIdCopy=(homeGameId);
 			setGameId(parseInt(homeGameIdCopy))
 
-		   console.log("Get game id")
-           fetch(`http://localhost:8000/games/getGame?game_id=${homeGameIdCopy}`, {
+		   console.log("Get game id", parseInt(homeGameId))
+           fetch(`http://localhost:8000/games/getGame/${parseInt(homeGameId)}`, {
             //mode: "no-cors",
             method: "GET",
             headers: {
                 'Content-type': 'application/json',
-                "Access-Control-Allow-Origin": '*'
+                "Access-Control-Allow-Origin": '*',
+
             },
+            //query: JSON.stringify({game_id: parseInt(homeGameId)})
             
         })
             .then(response => response.json())
             .then(json => {
-                console.log(json);
-                userSchedule=json;
-
+                console.log(json);  
+                setPlayers(json.users);
             })
             .catch (errorMessage =>{
             	console.log(errorMessage);
@@ -55,10 +61,7 @@ const gameParticipants = (props ) => {
 
 	}, []);
 
-	const [foundUser, setUser] = useState("");
-	const [foundUserName, setUsername2] = useState("");
-	const [gameId, setGameId]=useState("")
-	const [gameUsernames, setGameUsernames]=useState([])
+	
 	
 	return (
 
@@ -158,23 +161,21 @@ const gameParticipants = (props ) => {
 
 		     
 		     <Container fluid>
-		     	<Row className='participant'>
-		     		<Col>
-		     			<Alert variant='secondary' className='text-center'>John, Male, 32</Alert>
-		     		</Col>
-		     	</Row>
+		     	<ul className="ul">
+			     	{players.map(jsonElement=>
+		                (
+		                	<li key={jsonElement.id}>
+			                	<Row className='participant'>
+						     		<Col>
+						     			<Alert variant='secondary' className='text-center'>
+						     			{jsonElement.username ? jsonElement.username : "Username not known"}, {jsonElement.gender ? jsonElement.gender : "Gender not known"}, 
+						     			{jsonElement.age ? jsonElement.age : " Age not known"}</Alert>
+						     		</Col>
+					     		</Row>
+				     		</li>
 
-		     	<Row className='participant'>
-		     		<Col>
-		     			<Alert variant='secondary' className='text-center'>Gilda, Female, 21</Alert>
-		     		</Col>
-		     	</Row>
-
-		     	<Row className='participant'>
-		     		<Col>
-		     			<Alert variant='secondary' className='text-center'>Aerin, Other, 22</Alert>
-		     		</Col>
-		     	</Row>
+		                ))}
+		     	</ul>
 
 
 		    

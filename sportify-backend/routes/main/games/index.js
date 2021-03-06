@@ -70,9 +70,10 @@ MainGamesRouter.get('/getGames', async (req, res) => {
 });
 
 // Get a specific game
-MainGamesRouter.get('/getGame', async (req, res) => {
+MainGamesRouter.get('/getGame/:ider', async (req, res) => {
     const game = sequelize.models.game;
-    const { game_id } = req.body
+    // const { game_id } = req.body
+    const game_id=req.params.ider;
     try {
         var options = {where: {id:game_id}, attributes:{exclude:[]}, include:[{
                 model: sequelize.models.user, as: 'users', required:false, attributes:{exclude:['password']}}]};
