@@ -214,6 +214,7 @@ MainAuthRouter.put('/updateProfile/:id', async (req, res) => {
         const [rowsUpdated, [User]] = await user.update(profileReq, { returning: true, where: { id: id } });
         return res.status(200).json({ User });
     } catch (err) {
+        console.log(err)
         if (err.message.includes('duplicate') && err.message.includes('username')) {
             return res.status(500).json({
                 message: 'Username taken. Create a different username.'
