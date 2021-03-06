@@ -251,10 +251,12 @@ const HomePage = (props) => {
 
 					</li>
 
+
+
 					<li>
-						<Link href='/fillOutProfile/viewOrEditProfile' passHref>
-							<div className="viewOrEditProfile">
-								<a>View/Edit my profile</a>
+						<Link href='/fillOutProfile/viewProfile' passHref>
+							<div className="viewProfile">
+								<a>View my profile</a>
 							</div>
 						</Link>
 					</li>

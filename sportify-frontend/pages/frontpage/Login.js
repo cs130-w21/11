@@ -26,7 +26,7 @@ export default function Login() {
             //mode: "no-cors",
             method: "POST",
             headers: {
-                'Content-type': 'application/json',
+                'Content-Type': 'application/json',
                 "Access-Control-Allow-Origin": '*'
             },
             body: JSON.stringify(reactData)

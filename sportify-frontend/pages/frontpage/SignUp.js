@@ -38,6 +38,7 @@ export default function Login() {
             },
             body: JSON.stringify(reactData)
         })
+<<<<<<< HEAD
             .then(result => result.json())
             .then(json => {
                 console.log(json);
@@ -50,6 +51,25 @@ export default function Login() {
                     Router.push("../homePage/homePage")
                 }
             });
+=======
+            .then(response => response.json())
+            .then(json => {
+                console.log(json)
+                if (json.message === "Signup Successful!") {
+                    console.log("Result Here")
+                    console.log(json)
+                    localStorage.setItem('user-id', json.id)
+                    localStorage.setItem('username', json.username)
+                    Router.push("../homePage/homePage")
+                }
+
+
+
+            })
+
+
+
+>>>>>>> origin/dev
 
     }
 

@@ -1,15 +1,15 @@
 const express = require('express');
 const { where } = require('sequelize');
 const Sequelize = require('sequelize');
-const { models } = require('../../../utils/sequelize/index');
-const sequelize =  require('../../../utils/sequelize/index');
 const cors = require('cors');
-
+const { models } = require('../../../utils/sequelize/index');
+const sequelize = require('../../../utils/sequelize/index');
 MainGamesRouter = express.Router();
-MainGamesRouter.all('*', cors());
 
+MainGamesRouter.all('*', cors());
 const game = sequelize.models.game; 
 const user = sequelize.models.user;
+
 
 // Get filtered games from db
 MainGamesRouter.get('/getGames', async (req, res) => {
@@ -21,6 +21,7 @@ MainGamesRouter.get('/getGames', async (req, res) => {
         const radius = req.query.radius;
         const userLng = req.query.userLng;
         const userLat = req.query.userLat;
+
         var options = {where: {}, include:[{
             model: sequelize.models.user, as: 'users', required:false, attributes:{exclude:['password']}
         }]}
@@ -49,9 +50,10 @@ MainGamesRouter.get('/getGames', async (req, res) => {
                     radiusInMeters), 
                 true);
         }
-        if(weeksAhead) {
+        if (weeksAhead) {
             var now = new Date();
             var weeksLater = new Date();
+
             weeksLater.setDate(weeksLater.getDate() + weeksAhead*7);
             options.where.time = {[Sequelize.Op.gt]: now, [Sequelize.Op.lte]: weeksLater}; 
         }
@@ -89,12 +91,14 @@ MainGamesRouter.get('/getGame/:ider', async (req, res) => {
 
 // Create a new game posting
 MainGamesRouter.post('/createGame', async (req, res) => {
+
+
     try {
         const lng = req.body['longitude'];
         const lat = req.body['latitude'];
         const dateString = req.body['dateString'];
         const datetime = new Date(dateString);
-        const point = {type: 'Point', coordinates: [lng,lat]};
+        const point = { type: 'Point', coordinates: [lng, lat] };
         const user_id = req.body['user'];
 
         gameReq = {
@@ -110,17 +114,18 @@ MainGamesRouter.post('/createGame', async (req, res) => {
 
         const user = await models.user.findOne({
             where: {
-                id:user_id
+                id: user_id
             },
         })
         // console.log(Game);
         // console.log("===")
         // console.log(user);
-        if(!user){
+        if (!user) {
+
             res.status(400).send(err.message);
         }
         user_games_info = {
-            userId:user_id,
+            userId: user_id,
             gameId: Game.getDataValue('id'),
             name: user.getDataValue('username')
         }
@@ -128,10 +133,12 @@ MainGamesRouter.post('/createGame', async (req, res) => {
         // console.log(user_games_info)
         // console.log("===")
         const usr_gm = await models.userGames.create(user_games_info);
-        // console.log(usr_gm)
-        return res.status(200).json({Game, usr_gm});
+        console.log(usr_gm)
+
+        return res.status(200).json({ Game, usr_gm });
     } catch (err) {
-        return res.status(500).send(err.message);
+        console.log(err)
+        return res.status(500).send(err.message).json;
     }
 });
 
@@ -187,14 +194,14 @@ MainGamesRouter.put('/leaveGame', async (req, res) => {
 })
 
 // Update a game posting
-MainGamesRouter.put('/updateGame/:id', async (req, res) => { 
+MainGamesRouter.put('/updateGame/:id', async (req, res) => {
     try {
         const lng = req.body['longitude'];
         const lat = req.body['latitude'];
         const dateString = req.body['dateString'];
         const datetime = new Date(dateString);
-        const point = {type: 'Point', coordinates: [lng,lat]};
-        
+        const point = { type: 'Point', coordinates: [lng, lat] };
+
         gameReq = {}
         if (req.body['sport']) {
             gameReq.sport = req.body['sport'];
@@ -215,10 +222,10 @@ MainGamesRouter.put('/updateGame/:id', async (req, res) => {
             gameReq.comments = req.body['comments'];
         }
         const id = req.params.id;
-        const [rowsUpdated, [Game]] = await game.update(gameReq, {returning: true, where: {id:id}});
-        return res.status(200).json({Game});
+        const [rowsUpdated, [Game]] = await game.update(gameReq, { returning: true, where: { id: id } });
+        return res.status(200).json({ Game });
     } catch (err) {
-        return res.status(500).send(err.message);
+        return res.status(500).send(err.message).json;
     }
 });
 
@@ -227,7 +234,7 @@ MainGamesRouter.post('/deleteGame/:id', async (req, res) => {
     try {
         const id = req.params.id;
         const deleted = await game.destroy({
-            where: {id: id}
+            where: { id: id }
         });
         if (deleted) {
             return res.status(200).send("Game deleted");

@@ -105,6 +105,7 @@ const CreateGame = (props) => {
 
 			<br />
 
+<<<<<<< HEAD
 				<label>
 						Sport: {' '}
 						<select value={sport} onChange={(e) => setSport(e.target.value)} >
@@ -119,6 +120,13 @@ const CreateGame = (props) => {
 						</select>
 					</label>
 
+=======
+			<form onSubmit={(e) => handleSubmit(e)}>
+				<label>
+					Enter Sport:
+			          <input type="text" value={sport} onChange={(e) => setSport(e.target.value)} />
+				</label>
+>>>>>>> origin/dev
 				<br />
 
 				{ /*
@@ -166,6 +174,15 @@ const CreateGame = (props) => {
 			        <br />
 			    	*/ }
 
+<<<<<<< HEAD
+=======
+
+				<label>
+					Starting time:
+			          	<input type="datetime-local" value={startTime} onChange={(e) => setStartTime(e.target.value)} />
+				</label>
+				<br />
+>>>>>>> origin/dev
 
 				<label>
 					Starting time:
@@ -173,7 +190,10 @@ const CreateGame = (props) => {
 				</label>
 				<br />
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> origin/dev
 				{/*   
 			        <label>
 			          	Ending time:
@@ -206,12 +226,82 @@ const CreateGame = (props) => {
 			        </button>
 			        */}
 
+<<<<<<< HEAD
+=======
 
 				<Link href='/homePage/homePage' passHref>
 					<button> <a>Cancel creation of game! </a> </button>
 				</Link>
 
 
+				<Link href='/homePage/homePage' passHref>
+					<button onClick={(e) => {
+						var lat = -76
+						var long = -148
+
+						// Get latitude & longitude from address.
+						Geocode.fromAddress(address).then(
+							(response) => {
+								lat, long = response.results[0].geometry.location;
+								console.log(lat, long);
+
+							},
+							(error) => {
+								console.error(error);
+							}
+						)
+						var currSport = 0
+						switch (sport) {
+							case "Basketball":
+								currSport = 1
+								break;
+							case "Tennis":
+								currSport = 2
+								break
+							case "Soccer":
+								currSport = 3
+								break
+							case "Badminton":
+								currSport = 4
+								break
+
+						}
+						console.log("wtf is going on")
+
+
+
+						const reactData = { "latitude": lat, "longitude": long, "dateString": startTime, "skill_level": minSkillLevel, "max_group_size": numberOfPeopleIncludingYou, "comments": description, "sport": currSport, "user": foundUser }
+
+
+
+						fetch('http://localhost:8000/games/createGame', {
+							//mode: "no-cors",
+							method: "POST",
+							headers: {
+								'Content-type': 'application/json',
+								//"Access-Control-Allow-Origin": '*'
+							},
+							body: JSON.stringify(reactData)
+						})
+							.then(response => response.json())
+							.then(json => {
+								if (json.message === "Signin successful") {
+									console.log("Result Here")
+									console.log(json)
+									Router.push("../homePage/homePage")
+								}
+								else {
+									console.log("here" + json)
+									console.log(json.message)
+								}
+>>>>>>> origin/dev
+
+				<Link href='/homePage/homePage' passHref>
+					<button> <a>Cancel creation of game! </a> </button>
+				</Link>
+
+
+<<<<<<< HEAD
 				<Link href='/homePage/homePage' passHref>
 					<button onClick={(e) => {
 						var lat = 34.0689
@@ -262,6 +352,18 @@ const CreateGame = (props) => {
 
 
 						const reactData = { "latitude": lat, "longitude": long, "dateString": startTime, "skill_level": minSkillLevel, "max_group_size": numberOfPeopleIncludingYou, "comments": description, "sport": currSport, "user": foundUser }
+=======
+							})
+
+					}}> <a>Submit creation of game! </a> </button>
+				</Link>
+			</form>
+
+		</div>
+
+
+	);
+>>>>>>> origin/dev
 
 
 
