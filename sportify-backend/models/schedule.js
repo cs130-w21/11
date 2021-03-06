@@ -34,5 +34,5 @@ module.exports = (sequelize) => {
             allowNull: true,
             type: DataTypes.STRING
         }
-    }, {freezeTableName: true})
+    }, { freezeTableName: true })
 }

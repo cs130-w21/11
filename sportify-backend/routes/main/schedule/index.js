@@ -1,23 +1,27 @@
 const express = require('express');
-const sequelize =  require('../../../utils/sequelize/index');
+const sequelize = require('../../../utils/sequelize/index');
 const Op = sequelize.Sequelize.Op;
+const cors = require('cors');
+
 MainScheduleRouter = express.Router();
+MainScheduleRouter.all('*', cors());
 
 // Get a user's schedule
-MainScheduleRouter.get('/getSchedule', async(req, res) => {
+MainScheduleRouter.get('/getSchedule/:userId', async (req, res) => {
     const schedule = sequelize.models.schedule;
     try {
-        const userId = req.query.id;
-        schedule.findAll({ where: {userId: userId} }).then(schedule => res.json(schedule));
+        const userId = req.params.userId;
+        schedule.findAll({ where: { userId: userId } }).then(schedule => res.json(schedule));
     } catch (err) {
         return res.status(500).send(err.message);
     }
 });
 
 // Create a user's schedule
-MainScheduleRouter.post('/createUpdateSchedule', async(req, res) => {
-    const schedule = sequelize.models.schedule; 
+MainScheduleRouter.post('/createUpdateSchedule', async (req, res) => {
+    const schedule = sequelize.models.schedule;
     try {
+
         const userId = req.body.id;
         const monday = req.body.monday;
         const tuesday = req.body.tuesday;
@@ -27,11 +31,11 @@ MainScheduleRouter.post('/createUpdateSchedule', async(req, res) => {
         const saturday = req.body.saturday;
         const sunday = req.body.sunday;
 
-        const findSched = await schedule.findOne({where: {userId: userId} });
-        if(findSched) {
+        const findSched = await schedule.findOne({ where: { userId: userId } });
+        if (findSched) {
             scheduleUpdate = {}
             if (monday) {
-                if(monday == "null") {
+                if (monday == "null") {
                     scheduleUpdate.monday = null;
                 }
                 else {
@@ -39,7 +43,7 @@ MainScheduleRouter.post('/createUpdateSchedule', async(req, res) => {
                 }
             }
             if (tuesday) {
-                if(tuesday == "null") {
+                if (tuesday == "null") {
                     scheduleUpdate.tuesday = null;
                 }
                 else {
@@ -47,7 +51,7 @@ MainScheduleRouter.post('/createUpdateSchedule', async(req, res) => {
                 }
             }
             if (wednesday) {
-                if(wednesday == "null") {
+                if (wednesday == "null") {
                     scheduleUpdate.wednesday = null;
                 }
                 else {
@@ -55,7 +59,7 @@ MainScheduleRouter.post('/createUpdateSchedule', async(req, res) => {
                 }
             }
             if (thursday) {
-                if(thursday == "null") {
+                if (thursday == "null") {
                     scheduleUpdate.thursday = null;
                 }
                 else {
@@ -63,7 +67,7 @@ MainScheduleRouter.post('/createUpdateSchedule', async(req, res) => {
                 }
             }
             if (friday) {
-                if(friday == "null") {
+                if (friday == "null") {
                     scheduleUpdate.friday = null;
                 }
                 else {
@@ -71,7 +75,7 @@ MainScheduleRouter.post('/createUpdateSchedule', async(req, res) => {
                 }
             }
             if (saturday) {
-                if(saturday == "null") {
+                if (saturday == "null") {
                     scheduleUpdate.saturday = null;
                 }
                 else {
@@ -79,15 +83,15 @@ MainScheduleRouter.post('/createUpdateSchedule', async(req, res) => {
                 }
             }
             if (sunday) {
-                if(sunday == "null") {
+                if (sunday == "null") {
                     scheduleUpdate.sunday = null;
                 }
                 else {
                     scheduleUpdate.sunday = sunday;
                 }
             }
-            const [rowsUpdated, [Schedule]] = await schedule.update(scheduleUpdate, {returning: true, where: {userId: userId}});
-            return res.status(200).json({Schedule});
+            const [rowsUpdated, [Schedule]] = await schedule.update(scheduleUpdate, { returning: true, where: { userId: userId } });
+            return res.status(200).json({ Schedule });
         }
         else {
             const Schedule = await schedule.create({
@@ -100,9 +104,10 @@ MainScheduleRouter.post('/createUpdateSchedule', async(req, res) => {
                 saturday: saturday,
                 sunday: sunday
             });
-            return res.status(200).json({Schedule});
+            return res.status(200).json({ Schedule });
         }
     } catch (err) {
+        console.log(err)
         return res.status(500).send(err.message);
     }
 });
