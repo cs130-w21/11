@@ -7,11 +7,61 @@ import Col from 'react-bootstrap/Col'
 import Geocode from 'react-geocode'
 import Router from 'next/router';
 
+const sportToImage = {
+	'Baseball': '/baseball.jpg',
+	'Soccer': '/soccer.jpg',
+	'Football': '/football.png',
+	'Sprinting': '/sprinting.jpg',
+	'Volleyball': '/volleyball.jpg',
+	'Tennis': '/tennis.jpg',
+	'Badminton': '/badminton.jpg',
+	'American Football': 'football.png'
+};
+
+const genderToImage = {
+	'M': '/maleProfile.png',
+	'F': '/femaleProfile.png',
+	'O': '/other.png'
+};
+
+const sportToNumber={'Basketball': 1, 'Tennis': 2, 'Soccer': 3, 'Badminton': 4, 
+'Baseball': 5, 'Sprinting': 6, 'Volleyball': 7, 'American Football': 8 }
+
+const numberToSport={ 1:'Basketball',  2:'Tennis', 3: 'Soccer', 4: 'Badminton', 
+5: 'Baseball', 6: 'Sprinting', 7: 'Volleyball', 8: 'American Football'}
+
 
 const userGames = (props ) => {
 
-	const [foundUser, setUser] = useState("");
-	const [foundUserName, setUsername2] = useState("");
+	
+
+	async function getAddress(jsonElement)
+		{
+			console.log(jsonElement.location.coordinates[1], jsonElement.location.coordinates[0])
+			let addressDisplayed="Unknown address"
+			if (jsonElement.location)
+			{
+				// Get address from latitude & longitude.
+				await Geocode.fromLatLng(`${jsonElement.location.coordinates[1]}`, `${jsonElement.location.coordinates[0]}`).then(
+				  (response) => {
+				    const address = response.results[0].formatted_address;
+				   console.log(response.results[0])
+				    console.log(address, address.tagName, address.type);
+				    console.log("Good response")
+				    addressDisplayed=address;
+				    console.log("addressDisplayed", addressDisplayed)
+				    //return address;
+				  },
+				  (error) => {
+				    console.error(error);
+				    console.log("Ugh")
+				    //return "Unknown address"
+				  }
+				);
+			}
+			
+			return addressDisplayed;
+		};
 
 	useEffect(()=>{
         Geocode.setApiKey("AIzaSyDqs8TqTIsIx3xTuD1NEY3hXxmSciVrWZE");
@@ -24,11 +74,19 @@ const userGames = (props ) => {
 
 		}
 
+		
+		const loggedInUserName = localStorage.getItem("username");
+		if (loggedInUserName) {
+			const foundUserName = (loggedInUserName);
+			setUsername2(foundUserName);
+
+		}
+
 		if (loggedInUser)
 		{
 
 		   console.log("Get user games")
-           fetch(`http://localhost:8000/games/getGame/${parseInt(homeGameId)}`, {
+           fetch(`http://localhost:8000/user/getUsersGames/${localStorage.getItem("user-id")}`, {
             //mode: "no-cors",
             method: "GET",
             headers: {
@@ -40,28 +98,123 @@ const userGames = (props ) => {
             
         })
             .then(response => response.json())
-            .then(json => {
+            .then(async json => {
                 console.log(json);  
-                setPlayers(json.users);
+                setListOfGames(json);
+                console.log(foundUser, foundUserName)
+                const listOfE=await Promise.all(json.map(async (jsonElement) => (
+											  <li key={jsonElement.id}>
+											    <Container fluid>
+													<Row className="game">
+														<Col>
+															<Box>
+																<img src={jsonElement.sport in numberToSport ? 
+																sportToImage[numberToSport[jsonElement.sport]] : '/questionMark.png' } />
+															</Box>
+														</Col>
+
+
+														<Col >
+															<Box>
+
+																<div> Event Location: {await getAddress(jsonElement)} </div>
+																<br />
+																<div> Event description: {jsonElement.comments} </div>
+																<br />
+
+																<button onClick={(e) => {
+																	const requestOptions = {
+																	        method: 'PUT',
+																	        headers: { 'Content-Type': 'application/json',  "Access-Control-Allow-Origin": '*' },
+																	        body: JSON.stringify({ user_id: localStorage.getItem("user-id"), game_id: jsonElement.id})
+																	    };
+																	if (e.target.innerHTML=="Join the game!")
+																	{
+
+																		fetch('http://localhost:8000/games/joinGame/', requestOptions)
+																        .then(response => response.json())
+																        .then(data => {
+																        	console.log(data);
+																        	e.target.innerHTML="Un-join the game!";
+																        })
+																        .catch ( error => {console.log(error)})
+																	}
+																	else if (e.target.innerHTML=="Un-join the game!")
+																	{
+																		fetch('http://localhost:8000/games/leaveGame/', requestOptions)
+																        .then(response => response.json())
+																        .then(data => {
+																        	console.log(data);
+																        	e.target.innerHTML="Join the game!";
+																        })
+																        .catch ( error => {console.log(error)})
+																	}
+				
+
+																}}>Un-join the game!</button>
+
+																
+																	<div className="gameParticipants">
+																		<button onClick={(e)=>
+																		{
+																			localStorage.setItem('homeGameId', `${jsonElement.id}`)
+																			Router.push("../userGames/gameParticipants")
+																		}}>View game participants! </button>
+																	</div>
+
+
+
+															</Box>
+
+														</Col>
+
+
+														<Col>
+															<Box>
+																<div> Start Time: {(jsonElement.time)}</div>
+																<br />
+																
+																<div> Minimum Skill Level Allowed: {jsonElement.skill_level}</div>
+																<br />
+																<div> Number of people allowed in game: {jsonElement.max_group_size} </div>
+																<br />
+																<div> Number of spots left assuming {localStorage.getItem("username")} stays: {jsonElement.max_group_size-jsonElement.current_group_size} </div>
+																<br />	
+
+															</Box>
+														</Col>
+													</Row>
+
+													
+
+												</Container>
+												<br />
+												<br />
+											  </li> )
+											));
+											setListOfElements(listOfE);
+
+
+
             })
             .catch (errorMessage =>{
             	console.log(errorMessage);
             	console.log("Bye")
             	
             });
-		}
-		const loggedInUserName = localStorage.getItem("username");
-		if (loggedInUserName) {
-			const foundUserName = (loggedInUserName);
-			setUsername2(foundUserName);
-
+            
 		}
     }, []);
+
+    const [foundUser, setUser] = useState("");
+	const [foundUserName, setUsername2] = useState("");
+	const [listOfGames, setListOfGames]=useState([]);
+	const [listOfElements, setListOfElements]=useState([])
 
 	
 	return (
 
-		<div className="gameChallenges">
+		<div className="userGames">
 			
 				<style jsx global>{`
 								       ul {
@@ -160,55 +313,9 @@ const userGames = (props ) => {
 			<br />
 			
 
-			<Container fluid>
-						<Row className="game">
-							<Col>
-							    <Box>
-									<img src="/soccer.jpg" />
-								</Box>
-							</Col>
-
-
-							<Col >
-								<Box>
-									
-									<div> Event Name </div>
-									<br />
-									<div> Event Location </div>
-									<br />
-									<div> Event description </div>
-									<br />
-
-									<button onClick={(e)=>
-										{
-
-											e.target.innerHTML=(e.target.innerHTML=="Join the game!") ? 
-											"Un-join the game!": "Join the game!";
-
-										} }> Join the game! </button>
-
-								</Box>
-
-							</Col>
-
-
-							<Col>
-								<Box>
-									<div> Start Time </div>
-									<br />
-									<div> End Time </div>
-									<br />
-									<div> Number of people allowed </div>
-									<br />
-									<div> Skill Levels allowed </div>
-									<br />
-									<div> Number of spots left! </div>
-									<br />
-
-								</Box>
-							</Col>
-						</Row>
-			</Container>
+			<ul className="listOfResults">
+				{listOfElements}
+			</ul>
 		</div>
 	)
 };

@@ -185,10 +185,10 @@ MainAuthRouter.get('/getProfile/:id', async(req, res) => {
 });
 
 // Get games associated with a specific user
-MainAuthRouter.get('/getUsersGames', async (req, res) => {
+MainAuthRouter.get('/getUsersGames/:id', async (req, res) => {
     // console.log('here')
     const user = sequelize.models.user;
-    const { user_id } = req.body
+    const user_id=req.params.id
     try {
         var options = {where: {id:user_id}, attributes:{exclude:[]}, include:[{
             model: sequelize.models.game, as: 'games', required:false, attibutes: ['id', 'sport', 'comments']}]};
