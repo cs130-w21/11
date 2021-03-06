@@ -306,7 +306,11 @@ const editProfile = (props) => {
 
 
 
+<<<<<<< HEAD
 								fetch('http://localhost:8000/user/updateProfile/' + parseInt(foundUser) + '/', {
+=======
+								fetch('http://localhost:8000/user/updateProfile/' + foundUser, {
+>>>>>>> 3bf545bc816c973f5094edc60adc94e044f2b2d7
 									//mode: "no-cors",
 									method: "PUT",
 									headers: {
