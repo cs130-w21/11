@@ -117,7 +117,7 @@ const editProfile = (props) => {
 					<Nav.Link href="/userGames/userGames">My Games</Nav.Link>
 				</Nav>
 				<Nav inline="true">
-					<Nav.Link href="/frontpage/Login">Logout</Nav.Link>
+					<Nav.Link href="/">Logout</Nav.Link>
 				</Nav>
 			</Navbar>
 			<LazyHero imageSrc="/viewProfileBgImage.jpg" opacity={0.5} color="black" parallaxOffset={50} isCentered={true} minHeight="110vh">

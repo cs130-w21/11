@@ -256,7 +256,7 @@ const HomePage = (props) => {
 					<Nav.Link href="/userGames/userGames">My Games</Nav.Link>
 				</Nav>
 				<Nav inline="true">
-					<Nav.Link href="/frontpage/Login">Logout</Nav.Link>
+					<Nav.Link href="/">Logout</Nav.Link>
 				</Nav>
 			</Navbar>
 			<LazyHero imageSrc="/homePageBgImage.jpg" opacity={0.5} color="black" parallaxOffset={50} isCentered={true} minHeight="85vh">
@@ -466,7 +466,7 @@ const HomePage = (props) => {
 
 												const peopleList = json.map((jsonElement) =>
 													<Container fluid key={jsonElement.id}>
-														<Card bg="dark" key={jsonElement.id}>
+														<Card bg="dark" key={jsonElement.id} style={{boxShadow: "1px 1px 3px black"}}>
 															<Card.Header className="align-items-center">
 																<Card.Title><div className="cardText">User</div></Card.Title>
 															</Card.Header>
@@ -630,7 +630,7 @@ const HomePage = (props) => {
 
 												const gamesList = await Promise.all(furtherFilteredGames.map(async (jsonElement) => (
 													<Container fluid key={jsonElement.id}>
-														<Card bg="dark" key={jsonElement.id}>
+														<Card bg="dark" key={jsonElement.id} style={{boxShadow: "1px 1px 3px black"}}>
 															<Card.Header className="align-items-center">
 																<Card.Title><div className="cardText">Game</div></Card.Title>
 															</Card.Header>
