@@ -47,17 +47,6 @@ export default function Home() {
 
 
 
-          <Link href="/frontpage/Login">
-            <a className={styles.card}>
-              <h3> About Us&rarr;</h3>
-              <p>Learn More about Sportify</p>
-
-
-            </a>
-          </Link>
-
-
-
 
         </div>
       </main>

@@ -19,14 +19,14 @@ import ListGroup from 'react-bootstrap/ListGroup';
 import Table from 'react-bootstrap/Table';
 
 const sportToImage = {
-	'Baseball': '/baseball.jpg',
+	'Baseball': '/baseball.png',
 	'Soccer': '/soccer.jpg',
-	'Football': '/football.png',
 	'Sprinting': '/sprinting.jpg',
 	'Volleyball': '/volleyball.jpg',
 	'Tennis': '/tennis.jpg',
 	'Badminton': '/badminton.jpg',
-	'American Football': 'football.png'
+	'American Football': 'football.png',
+	'Basketball': 'basketball.jpg'
 };
 
 const genderToImage = {
@@ -485,7 +485,7 @@ const HomePage = (props) => {
 																		<ListGroup>
 																			<ListGroup.Item style={{ fontWeight: "bold" }}>@{jsonElement.username}</ListGroup.Item>
 																			<ListGroup.Item>{jsonElement.about_me ? jsonElement.about_me : "No bio"}</ListGroup.Item>
-																			<ListGroup.Item>Plays {jsonElement.sport ? numberToSport[jsonElement.sport] : "all sports"}</ListGroup.Item>
+																			<ListGroup.Item>Plays {jsonElement.sport ? numberToSport[jsonElement.sport] : "potentially all sports?!"}</ListGroup.Item>
 																			<ListGroup.Item>Skill Level: {jsonElement.skill_level ? jsonElement.skill_level : "None specified"}</ListGroup.Item>
 																		</ListGroup>
 																	</Col>
@@ -676,7 +676,7 @@ const HomePage = (props) => {
 																		<ListGroup>
 																			<ListGroup.Item>Minimum Skill Level: {jsonElement.skill_level}</ListGroup.Item>
 																			<ListGroup.Item>Max Group Size: {jsonElement.max_group_size}</ListGroup.Item>
-																			<ListGroup.Item>Spots Left: {jsonElement.max_group_size - jsonElement.current_group_size} </ListGroup.Item>
+																			<ListGroup.Item>Spots Left If I Join This Game: {jsonElement.max_group_size - jsonElement.current_group_size-1} </ListGroup.Item>
 																		</ListGroup>
 																	</Col>
 																</Row>

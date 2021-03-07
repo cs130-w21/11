@@ -16,14 +16,14 @@ import Image from 'react-bootstrap/Image'
 import Router from 'next/router';
 
 const sportToImage = {
-	'Baseball': '/baseball.jpg',
+	'Baseball': '/baseball.png',
 	'Soccer': '/soccer.jpg',
-	'Football': '/football.png',
 	'Sprinting': '/sprinting.jpg',
 	'Volleyball': '/volleyball.jpg',
 	'Tennis': '/tennis.jpg',
 	'Badminton': '/badminton.jpg',
-	'American Football': 'football.png'
+	'American Football': 'football.png',
+	'Basketball': 'basketball.jpg'
 };
 
 const genderToImage = {
@@ -95,7 +95,7 @@ const userGames = (props) => {
 		if (loggedInUser) {
 
 			console.log("Get user games")
-			fetch(`http://localhost:8000/user/getUsersGames/${localStorage.getItem("user-id")}`, {
+			fetch(`http://localhost:8000/user/getUsersGames/${JSON.parse(loggedInUser)}`, {
 				//mode: "no-cors",
 				method: "GET",
 				headers: {
@@ -134,7 +134,7 @@ const userGames = (props) => {
 											<ListGroup>
 												<ListGroup.Item>Minimum Skill Level: {jsonElement.skill_level}</ListGroup.Item>
 												<ListGroup.Item>Max Group Size: {jsonElement.max_group_size}</ListGroup.Item>
-												<ListGroup.Item>Spots Left: {jsonElement.max_group_size - jsonElement.current_group_size} </ListGroup.Item>
+												<ListGroup.Item>Spots Left If I Stay In This Game: {jsonElement.max_group_size - jsonElement.current_group_size} </ListGroup.Item>
 											</ListGroup>
 										</Col>
 									</Row>
@@ -146,7 +146,7 @@ const userGames = (props) => {
 												const requestOptions = {
 													method: 'PUT',
 													headers: { 'Content-Type': 'application/json', "Access-Control-Allow-Origin": '*' },
-													body: JSON.stringify({ user_id: foundUser, game_id: jsonElement.id })
+													body: JSON.stringify({ user_id: JSON.parse(loggedInUser), game_id: jsonElement.id })
 												};
 												if (e.target.innerHTML == "Join Game") {
 

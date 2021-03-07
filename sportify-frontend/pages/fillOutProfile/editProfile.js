@@ -25,8 +25,8 @@ const editProfile = (props) => {
 	const [age, setAge] = useState(1);
 	const [password, setPassword] = useState('');
 
-	let [latitude, setLatitude] = React.useState(0.1)
-	let [longitude, setLongitude] = React.useState(0.1)
+	let [latitude, setLatitude] = React.useState(-118.4452)
+	let [longitude, setLongitude] = React.useState(34.0689)
 	let [address, setAddress] = React.useState('')
 	//const [phoneNumber, setPhoneNumber]=useState("(000) 000-0000");
 	//const [email, setEmail]=useState("blah@blah.com");

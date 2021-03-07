@@ -133,7 +133,7 @@ MainAuthRouter.get('/getUsers', async (req, res) => {
             var lng = userLng;
             var lat = userLat;
             if (!userLng) {
-                lng = 118.4452; // UCLA longitude default
+                lng = -118.4452; // UCLA longitude default
             }
             if (!userLat) {
                 lat = 34.0689; // UCLA latitude default

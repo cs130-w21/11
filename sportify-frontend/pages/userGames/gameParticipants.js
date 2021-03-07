@@ -151,7 +151,7 @@ const gameParticipants = (props) => {
 					<tbody>
 						{players.map(jsonElement =>
 						(
-							<tr>
+							<tr key={jsonElement.id}>
 								<td>{jsonElement.username ? jsonElement.username : "Unknown"}</td>
 								<td>{jsonElement.gender ? jsonElement.gender : "Gender not known"}</td>
 								<td>{jsonElement.age ? jsonElement.age : " Age not known"}</td>
