@@ -455,7 +455,6 @@ const HomePage = (props) => {
 
 						if (typeSelected == "People") {
 
-							
 							let baseUrlPeople = process.env.backend_url + "/user/getUsers?"
 							if (skillsSelected != null) {
 								for (let i = 0; i < skillsSelected.length; i++) {
@@ -656,11 +655,6 @@ const HomePage = (props) => {
 									)}));
 
 									setListOfUsers(peopleList);
-
-
-
-
-
 								})
 								.catch(errorMessage => {
 									console.log(errorMessage);
