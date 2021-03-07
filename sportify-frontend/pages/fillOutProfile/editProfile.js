@@ -137,7 +137,7 @@ const editProfile = (props) => {
 
 				<label>
 					Password: {' '}
-					<input type="textArea" value={password} onChange={(e) => setPassword(e.target.value)} />
+					<input type="password" minlength="8" value={password} onChange={(e) => setPassword(e.target.value)} />
 				</label>
 
 				<br />
@@ -218,7 +218,7 @@ const editProfile = (props) => {
 
 				<label>
 					Skill Level in Best Sport: {' '}
-					<input type="number" min={1} max={10} value={bestSportSkillLevel} onChange={(e) => setBestSportSkillLevel} />
+					<input type="number" min={1} max={10} value={bestSportSkillLevel} onChange={(e) => setBestSportSkillLevel(e.target.value)} />
 				</label>
 
 				<br />
