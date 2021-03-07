@@ -1,7 +1,7 @@
 import React, {component, useState} from 'react'
 import Head from 'next/head';
 import Link from 'next/link';
-import useRouter from "next/router;
+import useRouter from "next/router";
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'

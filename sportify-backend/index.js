@@ -5,6 +5,8 @@ const sequelize = require('./utils/sequelize/index');
 const app = express();
 app.use(express.json())
 const bodyParser = require('body-parser');
+const path = require('path');
+app.use(express.static(path.join(__dirname, '../sportify-frontend/pages')));
 app.use(bodyParser.urlencoded({
     extended:true
 }));
@@ -31,6 +33,10 @@ assertDatabaseConnectionOk()
 
 //set up Routes
 require('./routes')(app);
+
+app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, '../sportify-frontend/pages/index.js'));
+  });
 
 app.listen(port, () => {
     console.log(`Listening on http://localhost:${port}`);
