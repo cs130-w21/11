@@ -10,7 +10,12 @@ import Nav from 'react-bootstrap/Nav';
 import Form from 'react-bootstrap/Form';
 import Navbar from 'react-bootstrap/Navbar';
 import Button from 'react-bootstrap/Button';
-
+import Image from 'react-bootstrap/Image';
+import Card from 'react-bootstrap/Card';
+import ListGroup from 'react-bootstrap/ListGroup';
+import ListGroupItem from 'react-bootstrap/ListGroupItem';
+import Table from 'react-bootstrap/Table';
+import LazyHero from 'react-lazy-hero';
 //API key: AIzaSyDqs8TqTIsIx3xTuD1NEY3hXxmSciVrWZE
 
 
@@ -226,6 +231,15 @@ class viewProfile extends React.Component {
 
     }
     render() {
+        var image = null;
+        if (this.state.gender == "Man")
+            image = <Image src="/maleProfile.png" roundedCircle />;
+        else if (this.state.gender == "Woman")
+            image = <Image src="/femaleProfile.png" roundedCircle />;
+        else if (this.state.gender == "Other")
+            image = <Image src="/other.png" roundedCircle />;
+        else
+            image = <Image src="/questionMark.png" roundedCircle />;
         return (
             <div>
                 <style jsx global>{`
@@ -262,8 +276,7 @@ class viewProfile extends React.Component {
 					
 				`}</style>
 
-<<<<<<< HEAD
-                <Navbar bg="dark" variant="dark">
+                <Navbar bg="dark" variant="dark" sticky="top">
                     <Navbar.Brand href="/homePage/homePage">Sportify</Navbar.Brand>
                     <Nav className="mr-auto">
                         <Nav.Link href="/fillOutProfile/viewProfile" active="true">Profile</Nav.Link>
@@ -271,224 +284,87 @@ class viewProfile extends React.Component {
                     </Nav>
                     <Nav inline="true">
                         <Nav.Link href="/frontpage/Login">Logout</Nav.Link>
-				    </Nav>
-			    </Navbar>
-=======
-                <div className="navBar">
-                <ul>
-                    <li>
-                        <Link href='/userGames/userGames' passHref>
-                            <div className="myGames">
-                                <a>My Games</a>
-                            </div>
-                        </Link>
-
-                    </li>
-
-
-
-                    <li>
-                        <Link href='/fillOutProfile/viewProfile' passHref>
-                            <div className="viewProfile">
-                                <a>View my profile</a>
-                            </div>
-                        </Link>
-                    </li>
-
-                    <li>
-                        <Link href='/homePage/homePage' passHref>
-                            <div className="homeDiv">
-                                <a>Go home!</a>
-                            </div>
-                        </Link>
-                    </li>
-
-                    <li>
-                        <Link href='/' passHref>
-                            <div className="logoutDiv">
-                                <a>Logout!</a>
-                            </div>
-                        </Link>
-                    </li>
-
-                </ul>
-            </div>
-
-            <br />
-            <br />
-
->>>>>>> 09b0905f600e7f326af782981a6d8f7507aa8634
-                <h1> Here's your profile </h1>
-
-                <div>
-
-                    { /*  
-			        <label>
-			          Name: {' '}
-			          <input type="text" value={name} onChange={(e)=>setName(e.target.value)} />
-			        </label>
-
-			    	*/  }
-
-
-
+                    </Nav>
+                </Navbar>
+                <LazyHero imageSrc="/viewProfileBgImage.jpg" opacity={0.5} color="black" parallaxOffset={50} isCentered={true} minHeight="120vh">
                     <br />
+                    <Container>
+                        <Row>
+                            <Col></Col>
+                            <Col>
+                                {image}
+                            </Col>
+                            <Col></Col>
+                        </Row>
+                        <br />
+                        <Row>
+                            <Col></Col>
+                            <Col>
+                                <Button variant="secondary" href="/fillOutProfile/editProfile">Edit Profile</Button>
+                            </Col>
+                            <Col></Col>
+                        </Row>
+                        <br />
+                        <Row>
+                            <Col></Col>
+                            <Col>
+                                <Card style={{ width: '40rem', boxShadow: "1px 1px 3px black" }}>
+                                    <Card.Header>
+                                        <Card.Title>@{this.state.username}</Card.Title>
+                                        <Card.Text>
+                                            {this.state.aboutme}
+                                        </Card.Text>
+                                    </Card.Header>
+                                    <ListGroup className="list-group-flush">
+                                        <ListGroupItem>Age: {this.state.age}</ListGroupItem>
+                                        <ListGroupItem>Best Sport: {this.state.sport}</ListGroupItem>
+                                        <ListGroupItem>{this.state.sport} Skill Level: {this.state.skill_level}</ListGroupItem>
+                                    </ListGroup>
+                                </Card>
+                            </Col>
+                            <Col></Col>
+                        </Row>
+                        <br />
+                        <Row>
+                            <Col></Col>
+                            <Col>
+                                <Card style={{ width: "50em", boxShadow: "1px 1px 3px black" }}>
+                                    <Card.Header>
+                                        <Card.Title>Availability</Card.Title>
+                                    </Card.Header>
+                                    <Card.Body>
+                                        <Table variant="light" striped borderless hover>
+                                            <thead>
+                                                <tr>
+                                                    <th>Monday</th>
+                                                    <th>Tuesday</th>
+                                                    <th>Wednesday</th>
+                                                    <th>Thursday</th>
+                                                    <th>Friday</th>
+                                                    <th>Saturday</th>
+                                                    <th>Sunday</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td>{this.state.monday}</td>
+                                                    <td>{this.state.tuesday}</td>
+                                                    <td>{this.state.wednesday}</td>
+                                                    <td>{this.state.thursday}</td>
+                                                    <td>{this.state.friday}</td>
+                                                    <td>{this.state.saturday}</td>
+                                                    <td>{this.state.sunday}</td>
+                                                </tr>
+                                            </tbody>
+                                        </Table>
+                                    </Card.Body>
+                                </Card>
+                            </Col>
+                            <Col></Col>
+                        </Row>
+                    </Container>
                     <br />
-
-
-                    <label>
-                        Biography: {' '}
-                        <h3>{this.state.aboutme}</h3>
-                    </label>
-
-                    <br />
-                    <br />
-
-
-
-
-
-                    <label>
-                        Age:
-                        <h1>{this.state.age}</h1>
-                    </label>
-
-                    <br />
-                    <br />
-
-
-
-
-
-                    { /*
-			        <label>
-			          Phone Number: {' '}
-			          <input type="tel" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" value={phoneNumber} onChange={(e)=>setPhoneNumber(e.target.value)} />
-			        </label>
-			        
-			        <br />
-			        <br />
-
-			    	*/ }
-
-                    { /*
-			        <label>
-			          Email: {' '}
-			          <input type="email" value={email} onChange={(e)=>setEmail(e.target.value)} />
-			        </label>
-			        
-			        <br />
-			        <br />
-
-			    	*/ }
-
-
-                    <label>
-                        Gender:
-                        <h3>{this.state.gender}</h3>
-                    </label>
-
-                    <br />
-                    <br />
-
-
-                    <label>
-                        Best Sport: {' '}
-                        <h3>{this.state.sport}</h3>
-                    </label>
-                    <br />
-                    <br />
-
-                    <label>
-                        Skill Level in Best Sport:
-                        <h3>{this.state.skill_level}</h3>
-                    </label>
-
-                    <br />
-                    <br />
-
-                    <b>
-                        Times available!
-			        </b>
-
-                    <br />
-                    <br />
-
-
-                    <label>
-                        Monday:
-                        <h4>{this.state.monday}</h4>
-                    </label>
-
-                    <br />
-                    <br />
-
-                    <label>
-                        Tuesday:
-                        <h4>{this.state.tuesday}</h4>
-                    </label>
-
-                    <br />
-                    <br />
-                    <label>
-                        Wednesday:
-                        <h4>{this.state.wednesday}</h4>
-                    </label>
-
-                    <br />
-                    <br />
-
-                    <label>
-                        Thursday:
-                        <h4>{this.state.thursday}</h4>
-                    </label>
-
-                    <br />
-                    <br />
-
-                    <label>
-                        Friday:
-                        <h4>{this.state.friday}</h4>
-                    </label>
-
-                    <br />
-                    <br />
-
-                    <label>
-                        Saturday:
-                        <h4>{this.state.saturday}</h4>
-                    </label>
-
-                    <br />
-                    <br />
-
-                    <label>
-                        Sunday:
-                        <h4>{this.state.sunday}</h4>
-                    </label>
-
-                    <br />
-                    <br />
-
-
-
-
-
-                    <br />
-
-
-
-
-                    <Link href="/fillOutProfile/editProfile">
-                        <button>Edit Profile</button>
-                    </Link>
-
-
-
-
-
-
-                </div>
+                </LazyHero>
             </div>
 
         );

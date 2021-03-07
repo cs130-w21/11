@@ -267,7 +267,6 @@ const userGames = (props ) => {
 
 		      `}</style>
 
-<<<<<<< HEAD
 			<Navbar bg="dark" variant="dark">
 				<Navbar.Brand href="/homePage/homePage">Sportify</Navbar.Brand>
 				<Nav className="mr-auto">
@@ -278,47 +277,6 @@ const userGames = (props ) => {
 					<Nav.Link href="/frontpage/Login">Logout</Nav.Link>
 				</Nav>
 			</Navbar>
-=======
-		      	<div className="navBar">
-					<ul className="navBar">
-						<li className="navBar">
-							<Link href='/userGames/userGames' passHref>
-								<div className="myGames">
-									<a className="navBar">My Games</a>
-								</div>
-							</Link>
-
-						</li>
-
-						<li className="navBar">
-							<Link href='/fillOutProfile/viewProfile' passHref>
-								<div className="viewOrEditProfile">
-									<a className="navBar">View/Edit my profile</a>
-								</div>
-							</Link>
-						</li>
-
-						<li className="navBar">
-					        <Link href='/homePage/homePage' passHref>
-					        	<div className="homeDiv">
-									<a className="navBar">Go home!</a>
-								</div>
-							</Link>
-						</li>
-
-						<li className="navBar">
-					        <Link href='/' passHref>
-					        	<div className="logoutDiv">
-									<a className="navBar">Logout!</a>
-								</div>
-							</Link>
-						</li>
-
-					</ul>
-				</div>
-
-				<br/>
->>>>>>> 09b0905f600e7f326af782981a6d8f7507aa8634
 
 			<br />
 
