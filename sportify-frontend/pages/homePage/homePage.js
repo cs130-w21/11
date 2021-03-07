@@ -376,31 +376,6 @@ const HomePage = (props) => {
 
 
 									if (typeSelected == "People") {
-
-										let userSchedule = [];
-										console.log("Get user schedule")
-										fetch(process.env.backend_url + `/schedule/getSchedule/?id=${foundUser}`, {
-											//mode: "no-cors",
-											method: "GET",
-											headers: {
-												'Content-type': 'application/json',
-												"Access-Control-Allow-Origin": '*'
-											},
-
-										})
-											.then(response => response.json())
-											.then(json => {
-												console.log(json);
-												userSchedule = json;
-
-											})
-											.catch(errorMessage => {
-												console.log(errorMessage);
-												console.log("Bye")
-
-											});
-
-
 										let baseUrlPeople = process.env.backend_url + "/user/getUsers?"
 										if (skillsSelected != null) {
 											for (let i = 0; i < skillsSelected.length; i++) {
@@ -449,7 +424,34 @@ const HomePage = (props) => {
 										baseUrlPeople += (baseUrlPeople, `&currentUser=${foundUserName}`)
 										console.log(baseUrlPeople)
 
+										async function getSchedule(jsonElement)
+										{
+											let schedule;
+											console.log("Get user schedule")
+											let theSchedule=await fetch(process.env.backend_url + `/schedule/getSchedule/${jsonElement.id}`, {
+												//mode: "no-cors",
+												method: "GET",
+												headers: {
+													'Content-type': 'application/json',
+													"Access-Control-Allow-Origin": '*'
+												},
 
+											})
+												.then(response => response.json())
+												.then(json => {
+													console.log(json);
+													schedule = json;
+													return json;
+
+												})
+												.catch(errorMessage => {
+													console.log(errorMessage);
+													console.log("Bye")
+													schedule=[];
+													return [];
+												});
+											return theSchedule;
+										}
 
 										fetch(baseUrlPeople, {
 											//mode: "no-cors",
@@ -461,12 +463,16 @@ const HomePage = (props) => {
 
 										})
 											.then(response => response.json())
-											.then(json => {
+											.then(async json => {
 												console.log(json);
 
-												const peopleList = json.map((jsonElement) =>
+												const peopleList = await Promise.all(json.map(async (jsonElement) => {
+
+													const userSchedule=await getSchedule(jsonElement);
+		   
+													return (
 													<Container fluid key={jsonElement.id}>
-														<Card bg="dark" key={jsonElement.id} style={{boxShadow: "1px 1px 3px black"}}>
+														<Card bg="dark" key={jsonElement.id} style={{boxShadow: "1px 1px 3px black"}} className="text-center">
 															<Card.Header className="align-items-center">
 																<Card.Title><div className="cardText">User</div></Card.Title>
 															</Card.Header>
@@ -478,7 +484,7 @@ const HomePage = (props) => {
 																	<Col md={{ span: 4 }}>
 																		<ListGroup>
 																			<ListGroup.Item style={{ fontWeight: "bold" }}>@{jsonElement.username}</ListGroup.Item>
-																			<ListGroup.Item>{jsonElement.description ? jsonElement.description : "No bio"}</ListGroup.Item>
+																			<ListGroup.Item>{jsonElement.about_me ? jsonElement.about_me : "No bio"}</ListGroup.Item>
 																			<ListGroup.Item>Plays {jsonElement.sport ? numberToSport[jsonElement.sport] : "all sports"}</ListGroup.Item>
 																			<ListGroup.Item>Skill Level: {jsonElement.skill_level ? jsonElement.skill_level : "None specified"}</ListGroup.Item>
 																		</ListGroup>
@@ -527,11 +533,30 @@ const HomePage = (props) => {
 
 																</Row>
 															</Card.Body>
+															<Card.Footer>
+																<Row className="align-items-center">
+																	<Col>
+																		<Button variant="secondary" onClick={(e) => {
+																				console.log(e.target.className);											
+																				let splitClasses = e.target.className.split(" ")
+																				let splitInfo = splitClasses[0].split('-')
+																				console.log(splitInfo);
+																				localStorage.setItem('localOpponentSport', splitInfo[2])
+																				localStorage.setItem('localOpponentName', splitInfo[1])
+																				localStorage.setItem('localOpponentId', splitInfo[0])
+																				console.log(splitInfo)
+																				Router.push("createOneOnOne")
+																		}} className={`${jsonElement.id}-${jsonElement.username}-${jsonElement.sport ? jsonElement.sport : 'Soccer'}`}>
+																			Challenge
+																		</Button>
+																	</Col>
+																</Row>
+															</Card.Footer>
 														</Card>
 														<br />
 														<br />
 													</Container>
-												);
+												)}));
 
 												setListOfUsers(peopleList);
 
