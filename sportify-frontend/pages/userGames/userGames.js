@@ -167,7 +167,7 @@ const userGames = (props) => {
 														})
 														.catch(error => { console.log(error) })
 												}
-											}}>Join Game</Button>
+											}}>Leave Game</Button>
 										</Col>
 										<Col>
 											<Button variant="secondary" onClick={(e) => {
