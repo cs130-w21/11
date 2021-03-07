@@ -165,7 +165,7 @@ MainAuthRouter.get('/getUserLocation/:id', async (req, res) => {
     var options = { where: { id: id }, attributes: ['location'] };
     try {
         user.findAll(options).then(user =>  {
-            if (user[0]) {
+            if (user[0] && user[0].location && user[0].location.coordinates) {
                 res.json([user[0].location.coordinates[1], user[0].location.coordinates[0]]);
             }
             else {
