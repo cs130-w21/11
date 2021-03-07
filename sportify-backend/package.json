@@ -22,7 +22,8 @@
   "scripts": {
     "test": "mocha --timeout 10000 --exit",
     "start": "node index.js",
-    "dev": "nodemon index.js"
+    "dev": "nodemon index.js",
+    "heroku-postbuild": "cd ../sportify-frontend && npm install && npm run build"
   },
   "keywords": [],
   "author": "",

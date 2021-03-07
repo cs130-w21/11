@@ -1,22 +1,15 @@
 language: node_js
 node_js:
 - '10'
+
 script:
 - cd sportify-backend
 - echo 'Installing Dependencies'
 - npm install
 - npm install bcrypt
-
-test:
 - echo 'Testing Backend'
 - echo 'Running test cases'
 - npm run test
-
-before_deploy:
-- cd ../sportify-frontend
-- npm install
-- npm run build 
-- cd ../sportify-backend 
 
 deploy:
   provider: heroku
