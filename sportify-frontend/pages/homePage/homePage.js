@@ -455,30 +455,7 @@ const HomePage = (props) => {
 
 						if (typeSelected == "People") {
 
-							let userSchedule = [];
-							console.log("Get user schedule")
-							fetch(process.env.backend_url + `/schedules/getSchedule/?id=${foundUser}`, {
-								//mode: "no-cors",
-								method: "GET",
-								headers: {
-									'Content-type': 'application/json',
-									"Access-Control-Allow-Origin": '*'
-								},
-
-							})
-								.then(response => response.json())
-								.then(json => {
-									console.log(json);
-									userSchedule = json;
-
-								})
-								.catch(errorMessage => {
-									console.log(errorMessage);
-									console.log("Bye")
-
-								});
-
-
+							
 							let baseUrlPeople = process.env.backend_url + "/user/getUsers?"
 							if (skillsSelected != null) {
 								for (let i = 0; i < skillsSelected.length; i++) {
@@ -527,7 +504,34 @@ const HomePage = (props) => {
 							baseUrlPeople += (baseUrlPeople, `&currentUser=${foundUserName}`)
 							console.log(baseUrlPeople)
 
+							async function getSchedule(jsonElement)
+							{
+								let schedule;
+								console.log("Get user schedule")
+								let theSchedule=await fetch(process.env.backend_url + `/schedule/getSchedule/${jsonElement.id}`, {
+									//mode: "no-cors",
+									method: "GET",
+									headers: {
+										'Content-type': 'application/json',
+										"Access-Control-Allow-Origin": '*'
+									},
 
+								})
+									.then(response => response.json())
+									.then(json => {
+										console.log(json);
+										schedule = json;
+										return json;
+
+									})
+									.catch(errorMessage => {
+										console.log(errorMessage);
+										console.log("Bye")
+										schedule=[];
+										return [];
+									});
+								return theSchedule;
+							}
 
 							fetch(baseUrlPeople, {
 								//mode: "no-cors",
@@ -539,11 +543,14 @@ const HomePage = (props) => {
 
 							})
 								.then(response => response.json())
-								.then(json => {
+								.then(async json => {
 									console.log(json);
 
-									const peopleList = json.map((jsonElement) =>
-										<li key={jsonElement.id}>
+									const peopleList = await Promise.all(json.map(async (jsonElement) => {
+
+										const userSchedule=await getSchedule(jsonElement);
+
+										return ( <li key={jsonElement.id}>
 											<Container fluid key={jsonElement.id}>
 												<Row className="person">
 													<Col>
@@ -627,8 +634,6 @@ const HomePage = (props) => {
 																<Alert variant='secondary' className="sundayTime">Sunday Time: {(userSchedule.length != 0 && userSchedule[0].sunday) ? userSchedule[0].sunday : 'No times listed'}</Alert>
 																<br />
 
-
-
 															</div>
 
 															<br />
@@ -648,7 +653,7 @@ const HomePage = (props) => {
 											<br />
 											<br />
 										</li>
-									);
+									)}));
 
 									setListOfUsers(peopleList);
 
