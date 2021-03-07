@@ -2,13 +2,22 @@ language: node_js
 node_js:
 - '10'
 script:
-- echo 'Testing Backend'
 - cd sportify-backend
 - echo 'Installing Dependencies'
 - npm install
 - npm install bcrypt
+
+test:
+- echo 'Testing Backend'
 - echo 'Running test cases'
 - npm run test
+
+before_deploy:
+- cd ../sportify-frontend
+- npm install
+- npm run build 
+- cd ../sportify-backend 
+
 deploy:
   provider: heroku
   api_key:
@@ -16,5 +25,5 @@ deploy:
   app: sportify-staging
   on:
     repo: cs130-w21/11
-    branch: master
+    branch: testDeploy
   skip_cleanup: 'true'
