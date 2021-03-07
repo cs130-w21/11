@@ -1,48 +1,88 @@
 import React, { useState } from "react";
 import Form from "react-bootstrap/Form";
+import Container from 'react-bootstrap/Container';
 import Button from "react-bootstrap/Button";
+import Router from "next/router"
 import styes from "./Login.module.css";
 
 
 export default function Login() {
 
-    const [email, setEmail] = useState("")
+    const [username, setUsername] = useState("")
     const [password, setPassword] = useState("")
 
 
     function validateForm() {
-        return email.length > 0 && password.length > 0;
+        return username.length > 0 && password.length > 0;
     }
 
     function handleSubmit(event) {
         event.preventDefault();
+        const reactData = { "username": username, "password": password }
+
+
+
+
+        fetch(process.env.backend_url + '/user/signin', {
+            //mode: "no-cors",
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json',
+                "Access-Control-Allow-Origin": '*'
+            },
+            body: JSON.stringify(reactData)
+        })
+            .then(response => response.json())
+            .then(json => {
+                if (json.message === "Signin successful") {
+                    console.log("Result Here")
+                    console.log(json)
+                    localStorage.setItem('user-id', json.id)
+                    localStorage.setItem('username', json.username)
+                    Router.push("../homePage/homePage")
+                }
+
+
+
+            })
     }
+
+
     return (
-        <div style={{
-            backgroundImage: `url("sports.jpg")`
-        }}>
-            <Form onSubmit={handleSubmit}>
-                <Form.Group size="lg" controlId="email">
-                    <Form.Label>Email</Form.Label>
-                    <Form.Control
-                        autoFocus
-                        type="email"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                    />
-                </Form.Group>
-                <Form.Group size="lg" controlId="password">
-                    <Form.Label>Password</Form.Label>
-                    <Form.Control
-                        type="password"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                    />
-                </Form.Group>
-                <Button block size="lg" type="submit" disabled={!validateForm()}>
-                    Login
-        </Button>
-            </Form>
+        <div>
+            <style jsx global>{`
+					body {
+                        backgroundImage: url("sports.jpg");
+						align: auto;
+						text-align: center;
+					}
+					
+				`}</style>
+            <br />
+            <Container>
+                <Form onSubmit={handleSubmit}>
+                    <Form.Group size="lg" controlId="email">
+                        <Form.Label>Username</Form.Label>
+                        <Form.Control
+                            autoFocus
+                            type="username"
+                            value={username}
+                            onChange={(e) => setUsername(e.target.value)}
+                        />
+                    </Form.Group>
+                    <Form.Group size="lg" controlId="password">
+                        <Form.Label>Password</Form.Label>
+                        <Form.Control
+                            type="password"
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                        />
+                    </Form.Group>
+                    <Button block size="lg" type="submit" disabled={!validateForm()}>
+                        Login
+                    </Button>
+                </Form>
+            </Container>
         </div>
     );
 

@@ -1,6 +1,10 @@
 import Head from 'next/head'
 import Link from 'next/link'
 import styles from '../styles/Home.module.css'
+import 'bootstrap/dist/css/bootstrap.min.css';
+
+
+
 
 export default function Home() {
   return (
@@ -32,7 +36,7 @@ export default function Home() {
           </Link>
 
 
-          <Link href="/frontpage/Login">
+          <Link href="/frontpage/SignUp">
             <a className={styles.card}>
               <h3> Sign Up&rarr;</h3>
               <p>Create an account to find matches nearby!</p>
