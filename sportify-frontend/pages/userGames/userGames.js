@@ -217,7 +217,7 @@ const userGames = (props ) => {
 		<div className="userGames">
 			
 				<style jsx global>{`
-								       ul {
+								       ul.navBar {
 						  list-style-type: none;
 						  margin: 0;
 						  padding: 0;
@@ -225,11 +225,11 @@ const userGames = (props ) => {
 						  background-color: #333;
 						}
 
-						li {
+						li.navBar {
 						  float: left;
 						}
 
-						li a {
+						li a.navBar {
 						  display: block;
 						  color: white;
 						  text-align: center;
@@ -238,7 +238,7 @@ const userGames = (props ) => {
 						}
 
 						/* Change the link color to #111 (black) on hover */
-						li a:hover {
+						li a.navBar:hover {
 						  background-color: #111;
 						}
 
@@ -263,36 +263,36 @@ const userGames = (props ) => {
 		      `}</style>
 
 		      	<div className="navBar">
-					<ul>
-						<li>
+					<ul className="navBar">
+						<li className="navBar">
 							<Link href='/userGames/userGames' passHref>
 								<div className="myGames">
-									<a>My Games</a>
+									<a className="navBar">My Games</a>
 								</div>
 							</Link>
 
 						</li>
 
-						<li>
-							<Link href='/fillOutProfile/viewOrEditProfile' passHref>
+						<li className="navBar">
+							<Link href='/fillOutProfile/viewProfile' passHref>
 								<div className="viewOrEditProfile">
-									<a>View/Edit my profile</a>
+									<a className="navBar">View/Edit my profile</a>
 								</div>
 							</Link>
 						</li>
 
-						<li>
+						<li className="navBar">
 					        <Link href='/homePage/homePage' passHref>
 					        	<div className="homeDiv">
-									<a>Go home!</a>
+									<a className="navBar">Go home!</a>
 								</div>
 							</Link>
 						</li>
 
-						<li>
-					        <Link href='/frontpage/Login' passHref>
+						<li className="navBar">
+					        <Link href='/' passHref>
 					        	<div className="logoutDiv">
-									<a>Logout!</a>
+									<a className="navBar">Logout!</a>
 								</div>
 							</Link>
 						</li>

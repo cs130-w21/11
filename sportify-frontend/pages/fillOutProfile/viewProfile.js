@@ -119,6 +119,43 @@ class viewProfile extends React.Component {
                             sport: "Tennis"
                         })
                     }
+
+                    if (json.sport === 3) {
+                        this.setState({
+                            sport: "Soccer"
+                        })
+
+                    }
+                    if (json.sport === 4) {
+                        this.setState({
+                            sport: "Badminton"
+                        })
+                    }
+
+
+                    if (json.sport === 5) {
+                        this.setState({
+                            sport: "Baseball"
+                        })
+
+                    }
+                    if (json.sport === 6) {
+                        this.setState({
+                            sport: "Sprinting"
+                        })
+                    }
+
+                    if (json.sport === 7) {
+                        this.setState({
+                            sport: "Volleyball"
+                        })
+
+                    }
+                    if (json.sport === 8) {
+                        this.setState({
+                            sport: "American Football"
+                        })
+                    }
                 }
 
 
@@ -137,7 +174,7 @@ class viewProfile extends React.Component {
         })
             .then(response => response.json())
             .then(json => {
-
+                console.log(json)
                 console.log(json[0])
                 if (typeof json !== undefined) {
 
@@ -220,6 +257,49 @@ class viewProfile extends React.Component {
 						}
 					
 				`}</style>
+
+                <div className="navBar">
+                <ul>
+                    <li>
+                        <Link href='/userGames/userGames' passHref>
+                            <div className="myGames">
+                                <a>My Games</a>
+                            </div>
+                        </Link>
+
+                    </li>
+
+
+
+                    <li>
+                        <Link href='/fillOutProfile/viewProfile' passHref>
+                            <div className="viewProfile">
+                                <a>View my profile</a>
+                            </div>
+                        </Link>
+                    </li>
+
+                    <li>
+                        <Link href='/homePage/homePage' passHref>
+                            <div className="homeDiv">
+                                <a>Go home!</a>
+                            </div>
+                        </Link>
+                    </li>
+
+                    <li>
+                        <Link href='/' passHref>
+                            <div className="logoutDiv">
+                                <a>Logout!</a>
+                            </div>
+                        </Link>
+                    </li>
+
+                </ul>
+            </div>
+
+            <br />
+            <br />
 
                 <h1> Here's your profile </h1>
 
