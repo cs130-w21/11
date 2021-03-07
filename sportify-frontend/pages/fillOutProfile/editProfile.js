@@ -112,6 +112,7 @@ const editProfile = (props) => {
 					
 				`}</style>
 
+<<<<<<< HEAD
 			<Navbar bg="dark" variant="dark">
 				<Navbar.Brand href="/homePage/homePage">Sportify</Navbar.Brand>
 				<Nav className="mr-auto">
@@ -122,6 +123,51 @@ const editProfile = (props) => {
 					<Nav.Link href="/frontpage/Login">Logout</Nav.Link>
 				</Nav>
 			</Navbar>
+=======
+			<div className="navBar">
+				<ul>
+					<li>
+						<Link href='/userGames/userGames' passHref>
+							<div className="myGames">
+								<a>My Games</a>
+							</div>
+						</Link>
+
+					</li>
+
+
+
+					<li>
+						<Link href='/fillOutProfile/viewProfile' passHref>
+							<div className="viewProfile">
+								<a>View my profile</a>
+							</div>
+						</Link>
+					</li>
+
+					<li>
+						<Link href='/homePage/homePage' passHref>
+							<div className="homeDiv">
+								<a>Go home!</a>
+							</div>
+						</Link>
+					</li>
+
+					<li>
+						<Link href='/' passHref>
+							<div className="logoutDiv">
+								<a>Logout!</a>
+							</div>
+						</Link>
+					</li>
+
+				</ul>
+			</div>
+
+			<br />
+			<br />
+
+>>>>>>> 09b0905f600e7f326af782981a6d8f7507aa8634
 			<h1> Fill out profile! </h1>
 
 			<form>
@@ -151,7 +197,7 @@ const editProfile = (props) => {
 
 				<label>
 					Password: {' '}
-					<input type="textArea" value={password} onChange={(e) => setPassword(e.target.value)} />
+					<input type="password"  value={password} onChange={(e) => setPassword(e.target.value)} />
 				</label>
 
 				<br />
@@ -232,7 +278,7 @@ const editProfile = (props) => {
 
 				<label>
 					Skill Level in Best Sport: {' '}
-					<input type="number" min={1} max={10} value={bestSportSkillLevel} onChange={(e) => setBestSportSkillLevel} />
+					<input type="number" min={1} max={10} value={bestSportSkillLevel} onChange={(e) => setBestSportSkillLevel(e.target.value)} />
 				</label>
 
 				<br />
@@ -316,7 +362,7 @@ const editProfile = (props) => {
 								console.log(lat, lng);
 
 
-								const reactData = { "latitude": lat, "longitude": lng, "skill_level": bestSportSkillLevel, "gender": gender, "about_me": description, "sport": currentSport, "username": foundUserName, "password": password }
+								const reactData = {"age": age, "latitude": lat, "longitude": lng, "skill_level": bestSportSkillLevel, "gender": gender, "about_me": description, "sport": currentSport, "username": foundUserName, "password": password }
 								const reactData2 = { "id": String(foundUser), "monday": dayTimes[0], "tuesday": dayTimes[1], "wednesday": dayTimes[2], "thursday": dayTimes[3], "friday": dayTimes[4], "saturday": dayTimes[5], "sunday": dayTimes[6] }
 
 								console.log("The body is")

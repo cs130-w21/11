@@ -200,7 +200,7 @@ const HomePage = (props) => {
 	return (
 		<div>
 			<style jsx global>{`
-								       ul {
+								      ul.navBar {
 						  list-style-type: none;
 						  margin: 0;
 						  padding: 0;
@@ -208,11 +208,11 @@ const HomePage = (props) => {
 						  background-color: #333;
 						}
 
-						li {
+						li.navBar {
 						  float: left;
 						}
 
-						li a {
+						li a.navBar {
 						  display: block;
 						  color: white;
 						  text-align: center;
@@ -221,7 +221,7 @@ const HomePage = (props) => {
 						}
 
 						/* Change the link color to #111 (black) on hover */
-						li a:hover {
+						li a.navBar:hover {
 						  background-color: #111;
 						}
 
@@ -249,6 +249,7 @@ const HomePage = (props) => {
 						}
 
 		      `}</style>
+<<<<<<< HEAD
 			<Navbar bg="dark" variant="dark">
 				<Navbar.Brand href="/homePage/homePage">Sportify</Navbar.Brand>
 				<Nav className="mr-auto">
@@ -259,13 +260,52 @@ const HomePage = (props) => {
 					<Nav.Link href="/frontpage/Login">Logout</Nav.Link>
 				</Nav>
 			</Navbar>
+=======
+			<div className="navBar">
+					<ul className="navBar">
+						<li className="navBar">
+							<Link href='/userGames/userGames' passHref>
+								<div className="myGames">
+									<a className="navBar">My Games</a>
+								</div>
+							</Link>
+
+						</li>
+
+						<li className="navBar">
+							<Link href='/fillOutProfile/viewProfile' passHref>
+								<div className="viewOrEditProfile">
+									<a className="navBar">View/Edit my profile</a>
+								</div>
+							</Link>
+						</li>
+
+						<li className="navBar">
+					        <Link href='/homePage/homePage' passHref>
+					        	<div className="homeDiv">
+									<a className="navBar">Go home!</a>
+								</div>
+							</Link>
+						</li>
+
+						<li className="navBar">
+					        <Link href='/' passHref>
+					        	<div className="logoutDiv">
+									<a className="navBar">Logout!</a>
+								</div>
+							</Link>
+						</li>
+
+					</ul>
+				</div>
+>>>>>>> 09b0905f600e7f326af782981a6d8f7507aa8634
 
 			<br />
 
 
 			<div className="informationDiv">
 				<h1>Hi {foundUserName}</h1>
-				<h2>First go to profile page to view and edit profile with your details!</h2>
+				<h2>Go profile page if needed to view and edit profile with your details!</h2>
 				<p>
 					Welcome to our app! Note that when searching for people exclusive-or games,
 					you must choose this with respect to your skill level. A 10 refers to an expert
@@ -435,7 +475,7 @@ const HomePage = (props) => {
 
 							let userSchedule = [];
 							console.log("Get user schedule")
-							fetch(process.env.backend_url + `/schedules/getSchedule/?id=${foundUser}`, {
+							fetch(process.env.backend_url + `/schedule/getSchedule/?id=${foundUser}`, {
 								//mode: "no-cors",
 								method: "GET",
 								headers: {
@@ -859,188 +899,14 @@ const HomePage = (props) => {
 			</ul>
 
 
-			{/* 
-
-			<Container fluid>
-				<Row className="game">
-					<Col>
-						<Box>
-							<img src="/soccer.jpg" />
-						</Box>
-					</Col>
-
-
-					<Col >
-						<Box>
-
-							<div> Event Name </div>
-							<br />
-							<div> Event Location </div>
-							<br />
-							<div> Event description </div>
-							<br />
-
-							<button onClick={(e) => {
-
-								e.target.innerHTML = (e.target.innerHTML == "Join the game!") ?
-									"Un-join the game!" : "Join the game!";
-
-							}}>Join the game!</button>
-
-							<Link href='/userGames/gameParticipants' passHref>
-								<div className="gameParticipants">
-									<button> <a>View game participants!</a> </button>
-								</div>
-							</Link>
-
-
-
-						</Box>
-
-					</Col>
-
-
-					<Col>
-						<Box>
-							<div> Start Time </div>
-							<br />
-							<div> End Time </div>
-							<br />
-							<div> Minimum Skill Level Allowed </div>
-							<br />
-							<div> Number of people allowed </div>
-							<br />
-							<div> Number of spots left! </div>
-							<br />
-
-						</Box>
-					</Col>
-				</Row>
-
-				
-
-			</Container>
-		     */}
 
 
 			<br />
 			<br />
 
-			{/*
+			
 
-			<Container fluid>
-				<Row className="person">
-					<Col>
-						<Box>
-							<img src={'/maleProfile.png'} />
-							<br />
-							<div> Person Name </div>
-							<br />
-							<div> Description </div>
-							<br />
-							<div> Best Sport </div>
-							<br />
-							<div> Best Sport Skill Level </div>
-							<br />
-						</Box>
-					</Col>
-
-					<Col >
-						<Box>
-
-							<div>  </div>
-							<br />
-							<br />
-							<div className="gameDiv">
-								<b> Join one on one game with this person! </b>
-								<br />
-
-								<label className="gameDescription">
-									Description:
-							          <input type="text" />
-								</label>
-
-								<label className="gameLocation">
-									Location:
-							          <input type="text" />
-								</label>
-
-								<br />
-
-								<label className="gameGroupSize">
-									Number of people allowed (including creator): {' '}
-									<input type="number" min={2} />
-								</label>
-
-								<br />
-
-								<button onClick={(e) => {
-									console.log(e.target.innerHTML);
-									e.target.innerHTML = (e.target.innerHTML == "Join one on one game with this athlete!") ?
-										"Unjoin one on one game with this athlete!" : "Join one on one game with this athlete!";
-									console.log(e.target.innerHTML);
-
-
-								}}>Join one on one game with this athlete!</button>
-
-							</div>
-
-
-						</Box>
-
-					</Col>
-
-
-					<Col>
-						<Box>
-							<div className="sportInfo">
-
-								<b> Times for this sport </b>
-								<br />
-
-								<Alert variant='secondary' className="mondayTime">Monday Time: 3 pm - 4pm</Alert>
-								<br />
-								<Alert variant='secondary' className="tuesdayTime">Tuesday Time: 3 pm - 4pm</Alert>
-								<br />
-
-								<Alert variant='secondary' className="wednesdayTime">Wednesday Time: 3 pm - 4pm</Alert>
-								<br />
-
-								<Alert variant='secondary' className="thursdayTime">Thursday Time: 3 pm - 4pm</Alert>
-								<br />
-
-
-
-								<Alert variant='secondary' className="fridayTime">Friday Time: 3 pm - 4pm</Alert>
-								<br />
-
-
-								<Alert variant='secondary' className="saturdayTime">Saturday Time: 3 pm - 4pm</Alert>
-								<br />
-
-								<Alert variant='secondary' className="sundayTime">Sunday Time: 3 pm - 4pm</Alert>
-								<br />
-
-
-
-							</div>
-
-							<br />
-
-
-
-
-
-						</Box>
-
-					</Col>
-
-				</Row>
-
-
-			</Container>
-
-			*/}
+			
 
 		</div >
 	);
