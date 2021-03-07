@@ -459,7 +459,7 @@ const HomePage = (props) => {
 
 							let userSchedule = [];
 							console.log("Get user schedule")
-							fetch(process.env.backend_url + `/schedules/getSchedule/?id=${foundUser}`, {
+							fetch(process.env.backend_url + `/schedule/getSchedule/?id=${foundUser}`, {
 								//mode: "no-cors",
 								method: "GET",
 								headers: {
