@@ -1,19 +1,23 @@
 import Head from 'next/head';
 import Link from 'next/link';
-import {useRouter} from 'next/router';
+import { useRouter } from 'next/router';
 import React, { component, useState, useEffect } from 'react'
 
 import Container from 'react-bootstrap/Container';
-import Row from 'react-bootstrap/Row'
-import Col from 'react-bootstrap/Col'
-import Alert from 'react-bootstrap/Alert'
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
+import Alert from 'react-bootstrap/Alert';
+import Table from 'react-bootstrap/Table';
+import Jumbotron from 'react-bootstrap/Jumbotron';
+import Nav from 'react-bootstrap/Nav';
+import Navbar from 'react-bootstrap/Navbar';
 
-const gameParticipants = (props ) => {
+const gameParticipants = (props) => {
 
 	const [foundUser, setUser] = useState("");
 	const [foundUserName, setUsername2] = useState("");
-	const [gameId, setGameId]=useState("")
-	const [players, setPlayers]=useState([])
+	const [gameId, setGameId] = useState("")
+	const [players, setPlayers] = useState([])
 
 	useEffect(() => {
 		const loggedInUser = localStorage.getItem("user-id");
@@ -29,45 +33,44 @@ const gameParticipants = (props ) => {
 
 		}
 
-		const homeGameId=localStorage.getItem('homeGameId');
-		if (homeGameId)
-		{
-			const homeGameIdCopy=(homeGameId);
+		const homeGameId = localStorage.getItem('homeGameId');
+		if (homeGameId) {
+			const homeGameIdCopy = (homeGameId);
 			setGameId(parseInt(homeGameIdCopy))
 
-		   console.log("Get game id", parseInt(homeGameId))
-           fetch(`http://localhost:8000/games/getGame/${parseInt(homeGameId)}`, {
-            //mode: "no-cors",
-            method: "GET",
-            headers: {
-                'Content-type': 'application/json',
-                "Access-Control-Allow-Origin": '*',
+			console.log("Get game id", parseInt(homeGameId))
+			fetch(`http://localhost:8000/games/getGame/${parseInt(homeGameId)}`, {
+				//mode: "no-cors",
+				method: "GET",
+				headers: {
+					'Content-type': 'application/json',
+					"Access-Control-Allow-Origin": '*',
 
-            },
-            //query: JSON.stringify({game_id: parseInt(homeGameId)})
-            
-        })
-            .then(response => response.json())
-            .then(json => {
-                console.log(json);  
-                setPlayers(json.users);
-            })
-            .catch (errorMessage =>{
-            	console.log(errorMessage);
-            	console.log("Bye")
-            	
-            });
+				},
+				//query: JSON.stringify({game_id: parseInt(homeGameId)})
+
+			})
+				.then(response => response.json())
+				.then(json => {
+					console.log(json);
+					setPlayers(json.users);
+				})
+				.catch(errorMessage => {
+					console.log(errorMessage);
+					console.log("Bye")
+
+				});
 		}
 
 	}, []);
 
-	
-	
+
+
 	return (
 
 		<div className="gameParticipants">
-			
-				<style jsx global>{`
+
+			<style jsx global>{`
 						ul.navBar {
 						  list-style-type: none;
 						  margin: 0;
@@ -95,7 +98,7 @@ const gameParticipants = (props ) => {
 
 
 						body {
-							background-color: teal;
+							background-color: #D2D2D2;
 							
 
 						}
@@ -115,87 +118,48 @@ const gameParticipants = (props ) => {
 						
 
 		      `}</style>
+			<Navbar bg="dark" variant="dark">
+				<Navbar.Brand href="/homePage/homePage">Sportify</Navbar.Brand>
+				<Nav className="mr-auto">
+					<Nav.Link href="/fillOutProfile/viewProfile">Profile</Nav.Link>
+					<Nav.Link href="/userGames/userGames">My Games</Nav.Link>
+				</Nav>
+				<Nav inline="true">
+					<Nav.Link href="/">Logout</Nav.Link>
+				</Nav>
+			</Navbar>
+			<br />
 
-		      	<div className="navBar">
-					<ul className="navBar">
-						<li className="navBar">
-							<Link href='/userGames/userGames' passHref>
-								<div className="myGames">
-									<a className="navBar">My Games</a>
-								</div>
-							</Link>
-
-						</li>
-
-						<li className="navBar">
-							<Link href='/fillOutProfile/viewProfile' passHref>
-								<div className="viewOrEditProfile">
-									<a className="navBar">View/Edit my profile</a>
-								</div>
-							</Link>
-						</li>
-
-						<li className="navBar">
-					        <Link href='/homePage/homePage' passHref>
-					        	<div className="homeDiv">
-									<a className="navBar">Go home!</a>
-								</div>
-							</Link>
-						</li>
-
-						<li className="navBar">
-					        <Link href='/' passHref>
-					        	<div className="logoutDiv">
-									<a className="navBar">Logout!</a>
-								</div>
-							</Link>
-						</li>
-
-					</ul>
-				</div>
-
-				<br/>
-
-		      <Alert variant='primary' className="informationDiv">List of People in this Game!</Alert>
-
-		      <br/>
-
-		     
-		     <Container fluid>
-		     	<ul className="ul">
-			     	{players.map(jsonElement=>
-		                (
-		                	<li key={jsonElement.id}>
-			                	<Row className='participant'>
-						     		<Col>
-						     			<Alert variant='secondary' className='text-center'>
-						     			{jsonElement.username ? jsonElement.username : "Username not known"}, {jsonElement.gender ? jsonElement.gender : "Gender not known"}, 
-						     			{jsonElement.age ? jsonElement.age : " Age not known"}</Alert>
-						     		</Col>
-					     		</Row>
-				     		</li>
-
-		                ))}
-		     	</ul>
-
-
-		    
+			<Container className="text-center">
+				<Jumbotron className="h2 jumbo">
+					Game Participants
+				</Jumbotron>
 			</Container>
 
 			<br />
-			<br />
 
-			<Link href='/userGames/userGames' passHref>
-					<div className="backToUserGames">
-						<button> <a>Back to user games! </a> </button>
-					</div>
-			</Link>
+			<Container fluid>
 
-			<Link href='/homePage/homePage' passHref>
-					<div className="backToHome">
-						<button> <a>Back to home! </a> </button>
-					</div>
-			</Link>
+				<Table variant="dark" striped bordered hover className="text-center" style={{boxShadow: "1px 1px 3px black"}}>
+					<thead>
+						<tr>
+							<th>Username</th>
+							<th>Gender</th>
+							<th>Age</th>
+						</tr>
+					</thead>
+					<tbody>
+						{players.map(jsonElement =>
+						(
+							<tr>
+								<td>{jsonElement.username ? jsonElement.username : "Unknown"}</td>
+								<td>{jsonElement.gender ? jsonElement.gender : "Gender not known"}</td>
+								<td>{jsonElement.age ? jsonElement.age : " Age not known"}</td>
+							</tr>
+						))}
+					</tbody>
+				</Table>
+			</Container>
 		</div>
 	)
 };
