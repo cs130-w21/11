@@ -108,6 +108,49 @@ const editProfile = (props) => {
 					
 				`}</style>
 
+			<div className="navBar">
+				<ul>
+					<li>
+						<Link href='/userGames/userGames' passHref>
+							<div className="myGames">
+								<a>My Games</a>
+							</div>
+						</Link>
+
+					</li>
+
+
+
+					<li>
+						<Link href='/fillOutProfile/viewProfile' passHref>
+							<div className="viewProfile">
+								<a>View my profile</a>
+							</div>
+						</Link>
+					</li>
+
+					<li>
+						<Link href='/homePage/homePage' passHref>
+							<div className="homeDiv">
+								<a>Go home!</a>
+							</div>
+						</Link>
+					</li>
+
+					<li>
+						<Link href='/' passHref>
+							<div className="logoutDiv">
+								<a>Logout!</a>
+							</div>
+						</Link>
+					</li>
+
+				</ul>
+			</div>
+
+			<br />
+			<br />
+
 			<h1> Fill out profile! </h1>
 
 			<form>
@@ -137,7 +180,7 @@ const editProfile = (props) => {
 
 				<label>
 					Password: {' '}
-					<input type="password" minlength="8" value={password} onChange={(e) => setPassword(e.target.value)} />
+					<input type="password"  value={password} onChange={(e) => setPassword(e.target.value)} />
 				</label>
 
 				<br />
@@ -302,7 +345,7 @@ const editProfile = (props) => {
 								console.log(lat, lng);
 
 
-								const reactData = { "latitude": lat, "longitude": lng, "skill_level": bestSportSkillLevel, "gender": gender, "about_me": description, "sport": currentSport, "username": foundUserName, "password": password }
+								const reactData = {"age": age, "latitude": lat, "longitude": lng, "skill_level": bestSportSkillLevel, "gender": gender, "about_me": description, "sport": currentSport, "username": foundUserName, "password": password }
 								const reactData2 = { "id": String(foundUser), "monday": dayTimes[0], "tuesday": dayTimes[1], "wednesday": dayTimes[2], "thursday": dayTimes[3], "friday": dayTimes[4], "saturday": dayTimes[5], "sunday": dayTimes[6] }
 
 								console.log("The body is")
