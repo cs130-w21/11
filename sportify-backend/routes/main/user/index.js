@@ -12,6 +12,33 @@ MainAuthRouter.all('*', cors());
 const signingSecret = process.env.JWT_SECRET || 'superSecretString';
 const User = sequelize.models.user
 
+/**
+ * @api {post} /user/signup Sign up as a Sportify User
+ * @apiGroup User
+ *
+ * @apiParam {String} username Username selected by the User.
+ * @apiParam {String} email Email of the User.
+ * @apiParam {String} password Password of the User.
+ * 
+ * @apiSuccess {String} message Success Message.
+ * @apiSuccess {String} username  Username of the User.
+ * @apiSuccess {Number} id Database ID of the User.
+ * @apiSuccess {String} JSON Web Token.
+ *
+ * @apiSuccessExample Success-Response:
+ *     HTTP/1.1 200 OK
+ *     {
+ *          "message": "Signup Successful!",
+ *          "username": "jbruin",
+ *          "id": 1,
+ *          "token": "jwtTokenString"
+ *     }
+ *
+ * @apiError DuplicateUsername "Username taken. Create a different username."
+ * @apiError DuplicateEmail "Email already in use. Use a different one."
+ * @apiError InvalidPassword "Invalid password. Must have at least 8 characters."
+ * @apiError OtherError "SQL Error Message"
+ */
 MainAuthRouter.post("/signup", async (req, res) => {
     const { username, email, password } = req.body
 
@@ -56,6 +83,29 @@ MainAuthRouter.post("/signup", async (req, res) => {
     }
 });
 
+/**
+ * @api {post} /user/signin Sign in to User Account.
+ * @apiGroup User
+ *
+ * @apiParam {String} username Username selected by the User.
+ * @apiParam {String} password Password of the User.
+ * 
+ * @apiSuccess {String} message Success Message.
+ * @apiSuccess {String} username  Username of the User.
+ * @apiSuccess {Number} id Database ID of the User.
+ * @apiSuccess {String} JSON Web Token.
+ *
+ * @apiSuccessExample Success-Response:
+ *     HTTP/1.1 200 OK
+ *     {
+ *          "message": "Signin Successful",
+ *          "username": "jbruin",
+ *          "id": 1,
+ *          "token": "jwtTokenString"
+ *     }
+ *
+ * @apiError InvalidCredentials "Invalid Username or Password"
+ */
 MainAuthRouter.post('/signin', async (req, res) => {
 
     const { username, password } = req.body
@@ -82,8 +132,68 @@ MainAuthRouter.post('/signin', async (req, res) => {
     })
 });
 
+
+/**
+ * @api {get} /user/getUsers Fetch Users and Filter with Parameters.
+ * @apiGroup User
+ * 
+ * @apiParam {String} currentUser Username of logged in User.
+ * @apiParam {String} username Username of target User.
+ * @apiParam {String} email Email of target User.
+ * @apiParam {Number} age Age of target Users.
+ * @apiParam {Number} sport Sport of target Users.
+ * @apiParam {Number} skill_levels Skill Level of target Users.
+ * @apiParam {String} genders Genders of target Users (Either 'M', 'F' or 'O').
+ * @apiParam {Number} radius Radius of search.
+ * @apiParam {Number} UsrLat Latitude of logged in User.
+ * @apiParam {Number} UsrLng Longitude of logged in User
+ * 
+ * @apiSuccess {User[]} users JSON Array of User information.
+ *
+ * @apiSuccessExample Success-Response:
+ *     HTTP/1.1 200 OK
+ *     [{
+ *       "id": 1,
+ *       "username": "jbruin",
+ *       "email": "jbruin@ucla.edu",
+ *       "location": {
+ *           "crs": {
+ *               "type": "name",
+ *               "properties": {
+ *                   "name": "EPSG:4326"
+ *               }
+ *           },
+ *           "type": "Point",
+ *           "coordinates": [
+ *               -118.4424591,
+ *               34.0627111
+ *           ]
+ *       },
+ *       "age": 21,
+ *       "gender": M,
+ *       "sport": 1,
+ *       "skill_level": 10,
+ *       "about_me": Kobe Fan!,
+ *       "createdAt": "2021-03-08T01:27:26.780Z",
+ *       "updatedAt": "2021-03-08T01:27:26.780Z",
+ *       "games": [
+ *           {
+ *               "id": 1,
+ *               "sport": 0,
+ *               "comments": "Hitch courts basketball game one on one",
+ *               "userGames": {
+ *                   "createdAt": "2021-03-08T01:28:40.577Z",
+ *                   "updatedAt": "2021-03-08T01:28:40.577Z",
+ *                   "gameId": 1,
+ *                   "userId": 1
+ *               }
+ *           },
+ *       ]
+ *   }]
+ *
+ * @apiError SQLError "Postgres Error Message"
+ */
 MainAuthRouter.get('/getUsers', async (req, res) => {
-    // console.log('here')
     const user = sequelize.models.user;
     try {
         const currentUser = req.query.currentUser;
@@ -159,6 +269,25 @@ MainAuthRouter.get('/getUsers', async (req, res) => {
     }
 });
 
+
+/**
+ * @api {get} /user/getUserLocation/:id Retrieve a User's Location Information.
+ * @apiGroup User
+ *
+ * @apiParam {Number} id User's ID.
+ * 
+ * @apiSuccess {Number} latitude Latitude of the User.
+ * @apiSuccess {Number} longitude Longitude of the User.
+ *
+ * @apiSuccessExample Success-Response:
+ *     HTTP/1.1 200 OK
+ *     {
+ *        "latitude":158,
+ *        "longitude":-30,  
+ *     }
+ * 
+ * @apiError SQLError "Postgres Error Message"
+ */
 MainAuthRouter.get('/getUserLocation/:id', async (req, res) => {
     const user = sequelize.models.user;
     const id = req.params.id;
@@ -177,7 +306,32 @@ MainAuthRouter.get('/getUserLocation/:id', async (req, res) => {
     }
 });
 
-MainAuthRouter.get('/getProfile/:id', async (req, res) => {
+/**
+ * @api {get} /user/getProile/:id Retrieve a User's Location Information.
+ * @apiGroup User
+ *
+ * @apiParam {Number} id User's ID.
+ * 
+ * @apiSuccess {Number} age Age of User.
+ * @apiSuccess {Number} sport Sport of User.
+ * @apiSuccess {Number} skill_level Skill Level of User.
+ * @apiSuccess {String} gender Genders of User.
+ * @apiSuccess {String} about_me Bio of User.
+ *  
+ *
+ * @apiSuccessExample Success-Response:
+ *     HTTP/1.1 200 OK
+ *     {
+ *       "age": 21,
+ *       "gender": M,
+ *       "sport": 1,
+ *       "skill_level": 10,
+ *       "about_me": Kobe Fan!,
+ *     }
+ * 
+ * @apiError SQLError "Postgres Error Message"
+ */
+MainAuthRouter.get('/getProfile/:id', async(req, res) => {
     const user = sequelize.models.user;
     const id = req.params.id;
     var options = { where: { id: id }, attributes: ['age', 'gender', 'sport', 'skill_level', 'about_me'] };
@@ -188,6 +342,34 @@ MainAuthRouter.get('/getProfile/:id', async (req, res) => {
         return res.status(500).send(err.message);
     }
 });
+
+/**
+ * @api {get} /user/getUsersGames/:id Retrieve a User's Joined Games.
+ * @apiGroup User
+ *
+ * @apiParam {Number} id User's ID.
+ * 
+ * @apiSuccess {Games[]} JSON of Games.
+
+ *
+ * @apiSuccessExample Success-Response:
+ *     HTTP/1.1 200 OK
+ *     [
+ *           {
+ *               "id": 1,
+ *               "sport": 0,
+ *               "comments": "Hitch courts basketball game one on one",
+ *               "userGames": {
+ *                   "createdAt": "2021-03-08T01:28:40.577Z",
+ *                   "updatedAt": "2021-03-08T01:28:40.577Z",
+ *                   "gameId": 1,
+ *                   "userId": 1
+ *               }
+ *           }
+ *      ]
+ * 
+ * @apiError SQLError "Postgres Error Message"
+ */
 
 // Get games associated with a specific user
 MainAuthRouter.get('/getUsersGames/:id', async (req, res) => {
@@ -210,6 +392,54 @@ MainAuthRouter.get('/getUsersGames/:id', async (req, res) => {
     }
 });
 
+/**
+ * @api {put} /user/updateProfile/:id Update a User's Profile Information.
+ * @apiGroup User
+ * 
+ * @apiParam {Number} id ID of logged in User.
+ * @apiParam {String} username New Username of User.
+ * @apiParam {String} email New Email of User.
+ * @apiParam {String} password New Password of User.
+ * @apiParam {Number} age Age of User.
+ * @apiParam {Number} sport Sport of User.
+ * @apiParam {Number} skill_level Skill Level of User.
+ * @apiParam {String} genders Gender of User.
+ * @apiParam {Number} radius Radius of search.
+ * @apiParam {Number} UsrLat Latitude of logged in User.
+ * @apiParam {Number} UsrLng Longitude of logged in User
+ * 
+ * @apiSuccess {User} JSON of updated User Info
+ *
+ * @apiSuccessExample Success-Response:
+ *     HTTP/1.1 200 OK
+ *     [{
+ *       "id": 1,
+ *       "username": "jbruin",
+ *       "email": "jbruin@ucla.edu",
+ *       "location": {
+ *           "crs": {
+ *               "type": "name",
+ *               "properties": {
+ *                   "name": "EPSG:4326"
+ *               }
+ *           },
+ *           "type": "Point",
+ *           "coordinates": [
+ *               -118.4424591,
+ *               34.0627111
+ *           ]
+ *       },
+ *       "age": 21,
+ *       "gender": M,
+ *       "sport": 1,
+ *       "skill_level": 10,
+ *       "about_me": Kobe Fan!,
+ *       "createdAt": "2021-03-08T01:27:26.780Z",
+ *       "updatedAt": "2021-03-08T01:27:26.780Z",
+ *   }]
+ *
+ * @apiError SQLError "Postgres Error Message"
+ */
 MainAuthRouter.put('/updateProfile/:id', async (req, res) => {
     const user = sequelize.models.user;
     try {

@@ -11,6 +11,38 @@ const game = sequelize.models.game;
 const user = sequelize.models.user;
 
 
+/**
+ * @api {get} /games/getGames Retrieve Game Postings on platform.
+ * @apiGroup Games
+ *
+ * @apiParam {Number} sports Sport of the Game Posting.
+ * @apiParam {Number} max_group_size Maximum allowed participants.
+ * @apiParam {Number} skill_levels Skill Level Desired.
+ * @apiParam {Number} weeksAhead Weeks Until Game.
+ * @apiParam {Number} radius Radius of Search.
+ * @apiParam {Number} UsrLng Longitude of logged in User.
+ * @apiParam {Number} UsrLat Latitude of logged in User.
+ * 
+ * @apiSuccess {Games[]} JSON of Games.
+ *
+ * @apiSuccessExample Success-Response:
+ *     HTTP/1.1 200 OK
+ *     [
+ *           {
+ *               "id": 1,
+ *               "sport": 0,
+ *               "comments": "Hitch courts basketball game one on one",
+ *               "userGames": {
+ *                   "createdAt": "2021-03-08T01:28:40.577Z",
+ *                   "updatedAt": "2021-03-08T01:28:40.577Z",
+ *                   "gameId": 1,
+ *                   "userId": 1
+ *               }
+ *           }
+ *      ]
+ * 
+ * @apiError SQLError "Postgres Error Message"
+ */
 // Get filtered games from db
 MainGamesRouter.get('/getGames', async (req, res) => {
     try {
@@ -71,7 +103,27 @@ MainGamesRouter.get('/getGames', async (req, res) => {
     }
 });
 
-// Get a specific game
+/**
+ * @api {get} /games/getGame/:ider Retrieve a Specific Game's Information.
+ * @apiGroup Games
+ *
+ * @apiParam {Number} ider ID of the Game Posting.
+ * 
+ * @apiSuccess {Game} JSON of Game.
+ *
+ * @apiSuccessExample Success-Response:
+ *     HTTP/1.1 200 OK
+ *     {
+ *          "id": 1,
+ *          "sport": 0,
+ *          "comments": "Hitch courts basketball game one on one",
+ *          "userGames": {
+ *          "createdAt": "2021-03-08T01:28:40.577Z",
+ *          "updatedAt": "2021-03-08T01:28:40.577Z",
+ *      }
+ * 
+ * @apiError SQLError "Postgres Error Message"
+ */
 MainGamesRouter.get('/getGame/:ider', async (req, res) => {
     const game = sequelize.models.game;
     // const { game_id } = req.body
@@ -89,7 +141,33 @@ MainGamesRouter.get('/getGame/:ider', async (req, res) => {
     }
 });
 
-// Create a new game posting
+/**
+ * @api {post} /games/createGame Create a new Game Posting.
+ * @apiGroup Games
+ *
+ * @apiParam {Number} user ID of logged in User.
+ * @apiParam {Number} sport Sport of the Game Posting.
+ * @apiParam {Number} max_group_size Maximum allowed participants.
+ * @apiParam {Number} skill_level Skill Level Desired.
+ * @apiParam {Number} longitude Longitude of logged in User.
+ * @apiParam {Number} latitude Latitude of logged in User.
+ * @apiParam {String} dateString Date and Time of Game.
+ * 
+ * @apiSuccess {Game} JSON Game.
+ *
+ * @apiSuccessExample Success-Response:
+ *     HTTP/1.1 200 OK
+ *     {
+ *          "id": 1,
+ *          "sport": 0,
+ *          "comments": "Hitch courts basketball game one on one",
+ *          "userGames": {
+ *          "createdAt": "2021-03-08T01:28:40.577Z",
+ *          "updatedAt": "2021-03-08T01:28:40.577Z",
+ *      }
+ * 
+ * @apiError SQLError "Postgres Error Message"
+ */
 MainGamesRouter.post('/createGame', async (req, res) => {
 
 
@@ -142,7 +220,24 @@ MainGamesRouter.post('/createGame', async (req, res) => {
     }
 });
 
-//Join an existing game posting
+/**
+ * @api {put} /games/joinGame Join an existing Game Posting.
+ * @apiGroup Games
+ *
+ * @apiParam {Number} user_id ID of logged in User.
+ * @apiParam {Number} game_id ID of Game to join.
+ * 
+ * @apiSuccess {String} message Success Message.
+ *
+ * @apiSuccessExample Success-Response:
+ *     HTTP/1.1 200 OK
+ *     {
+ *          "message":"Successfully Joined Game!" 
+ *     }
+ * 
+ * @apiError GameFullError "Game is already full!"
+ * @apiError SQLError "Postgres Error Message"
+ */
 MainGamesRouter.put('/joinGame', async (req, res) => {
     const {user_id, game_id} = req.body
 
@@ -163,7 +258,23 @@ MainGamesRouter.put('/joinGame', async (req, res) => {
     }
 })
 
-//Leave an existing game posting
+/**
+ * @api {put} /games/leaveGame Leave an existing Game Posting.
+ * @apiGroup Games
+ *
+ * @apiParam {Number} user_id ID of logged in User.
+ * @apiParam {Number} game_id ID of Game to join.
+ * 
+ * @apiSuccess {String} message Success Message.
+ *
+ * @apiSuccessExample Success-Response:
+ *     HTTP/1.1 200 OK
+ *     {
+ *          "message":"Successfully Joined Game!" 
+ *     }
+ * 
+ * @apiError SQLError "Postgres Error Message"
+ */
 MainGamesRouter.put('/leaveGame', async (req, res) => {
     const {user_id, game_id} = req.body
 
@@ -193,7 +304,34 @@ MainGamesRouter.put('/leaveGame', async (req, res) => {
     }
 })
 
-// Update a game posting
+
+/**
+ * @api {put} /games/updateGame/:id Update an existing Game Posting.
+ * @apiGroup Games
+ *
+ * @apiParam {Number} id ID of specific Game.
+ * @apiParam {Number} sport Sport of the Game Posting.
+ * @apiParam {Number} max_group_size Maximum allowed participants.
+ * @apiParam {Number} skill_level Skill Level Desired.
+ * @apiParam {Number} longitude Longitude of logged in User.
+ * @apiParam {Number} latitude Latitude of logged in User.
+ * @apiParam {String} dateString Date and Time of Game.
+ * 
+ * @apiSuccess {Game} JSON Game
+ *
+ * @apiSuccessExample Success-Response:
+ *     HTTP/1.1 200 OK
+ *     {
+ *          "id": 1,
+ *          "sport": 0,
+ *          "comments": "Hitch courts basketball game one on one",
+ *          "userGames": {
+ *          "createdAt": "2021-03-08T01:28:40.577Z",
+ *          "updatedAt": "2021-03-08T01:28:40.577Z",
+ *      }
+ * 
+ * @apiError SQLError "Postgres Error Message"
+ */
 MainGamesRouter.put('/updateGame/:id', async (req, res) => {
     try {
         const lng = req.body['longitude'];

@@ -1,0 +1,1249 @@
+[
+  {
+    "type": "get",
+    "url": "/games/getGame/:ider",
+    "title": "Retrieve a Specific Game's Information.",
+    "group": "Games",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "ider",
+            "description": "<p>ID of the Game Posting.</p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "Game",
+            "optional": false,
+            "field": "JSON",
+            "description": "<p>of Game.</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Success-Response:",
+          "content": "HTTP/1.1 200 OK\n{\n     \"id\": 1,\n     \"sport\": 0,\n     \"comments\": \"Hitch courts basketball game one on one\",\n     \"userGames\": {\n     \"createdAt\": \"2021-03-08T01:28:40.577Z\",\n     \"updatedAt\": \"2021-03-08T01:28:40.577Z\",\n }",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "fields": {
+        "Error 4xx": [
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "SQLError",
+            "description": "<p>&quot;Postgres Error Message&quot;</p>"
+          }
+        ]
+      }
+    },
+    "version": "0.0.0",
+    "filename": "sportify-backend/routes/main/games/index.js",
+    "groupTitle": "Games",
+    "name": "GetGamesGetgameIder"
+  },
+  {
+    "type": "get",
+    "url": "/games/getGames",
+    "title": "Retrieve Game Postings on platform.",
+    "group": "Games",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "sports",
+            "description": "<p>Sport of the Game Posting.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "max_group_size",
+            "description": "<p>Maximum allowed participants.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "skill_levels",
+            "description": "<p>Skill Level Desired.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "weeksAhead",
+            "description": "<p>Weeks Until Game.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "radius",
+            "description": "<p>Radius of Search.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "UsrLng",
+            "description": "<p>Longitude of logged in User.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "UsrLat",
+            "description": "<p>Latitude of logged in User.</p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "Games[]",
+            "optional": false,
+            "field": "JSON",
+            "description": "<p>of Games.</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Success-Response:",
+          "content": "HTTP/1.1 200 OK\n[\n      {\n          \"id\": 1,\n          \"sport\": 0,\n          \"comments\": \"Hitch courts basketball game one on one\",\n          \"userGames\": {\n              \"createdAt\": \"2021-03-08T01:28:40.577Z\",\n              \"updatedAt\": \"2021-03-08T01:28:40.577Z\",\n              \"gameId\": 1,\n              \"userId\": 1\n          }\n      }\n ]",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "fields": {
+        "Error 4xx": [
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "SQLError",
+            "description": "<p>&quot;Postgres Error Message&quot;</p>"
+          }
+        ]
+      }
+    },
+    "version": "0.0.0",
+    "filename": "sportify-backend/routes/main/games/index.js",
+    "groupTitle": "Games",
+    "name": "GetGamesGetgames"
+  },
+  {
+    "type": "post",
+    "url": "/games/createGame",
+    "title": "Create a new Game Posting.",
+    "group": "Games",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "user",
+            "description": "<p>ID of logged in User.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "sport",
+            "description": "<p>Sport of the Game Posting.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "max_group_size",
+            "description": "<p>Maximum allowed participants.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "skill_level",
+            "description": "<p>Skill Level Desired.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "longitude",
+            "description": "<p>Longitude of logged in User.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "latitude",
+            "description": "<p>Latitude of logged in User.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "dateString",
+            "description": "<p>Date and Time of Game.</p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "Game",
+            "optional": false,
+            "field": "JSON",
+            "description": "<p>Game.</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Success-Response:",
+          "content": "HTTP/1.1 200 OK\n{\n     \"id\": 1,\n     \"sport\": 0,\n     \"comments\": \"Hitch courts basketball game one on one\",\n     \"userGames\": {\n     \"createdAt\": \"2021-03-08T01:28:40.577Z\",\n     \"updatedAt\": \"2021-03-08T01:28:40.577Z\",\n }",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "fields": {
+        "Error 4xx": [
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "SQLError",
+            "description": "<p>&quot;Postgres Error Message&quot;</p>"
+          }
+        ]
+      }
+    },
+    "version": "0.0.0",
+    "filename": "sportify-backend/routes/main/games/index.js",
+    "groupTitle": "Games",
+    "name": "PostGamesCreategame"
+  },
+  {
+    "type": "put",
+    "url": "/games/joinGame",
+    "title": "Join an existing Game Posting.",
+    "group": "Games",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "user_id",
+            "description": "<p>ID of logged in User.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "game_id",
+            "description": "<p>ID of Game to join.</p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "message",
+            "description": "<p>Success Message.</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Success-Response:",
+          "content": "HTTP/1.1 200 OK\n{\n     \"message\":\"Successfully Joined Game!\" \n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "fields": {
+        "Error 4xx": [
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "GameFullError",
+            "description": "<p>&quot;Game is already full!&quot;</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "SQLError",
+            "description": "<p>&quot;Postgres Error Message&quot;</p>"
+          }
+        ]
+      }
+    },
+    "version": "0.0.0",
+    "filename": "sportify-backend/routes/main/games/index.js",
+    "groupTitle": "Games",
+    "name": "PutGamesJoingame"
+  },
+  {
+    "type": "put",
+    "url": "/games/leaveGame",
+    "title": "Leave an existing Game Posting.",
+    "group": "Games",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "user_id",
+            "description": "<p>ID of logged in User.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "game_id",
+            "description": "<p>ID of Game to join.</p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "message",
+            "description": "<p>Success Message.</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Success-Response:",
+          "content": "HTTP/1.1 200 OK\n{\n     \"message\":\"Successfully Joined Game!\" \n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "fields": {
+        "Error 4xx": [
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "SQLError",
+            "description": "<p>&quot;Postgres Error Message&quot;</p>"
+          }
+        ]
+      }
+    },
+    "version": "0.0.0",
+    "filename": "sportify-backend/routes/main/games/index.js",
+    "groupTitle": "Games",
+    "name": "PutGamesLeavegame"
+  },
+  {
+    "type": "put",
+    "url": "/games/updateGame/:id",
+    "title": "Update an existing Game Posting.",
+    "group": "Games",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "id",
+            "description": "<p>ID of specific Game.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "sport",
+            "description": "<p>Sport of the Game Posting.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "max_group_size",
+            "description": "<p>Maximum allowed participants.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "skill_level",
+            "description": "<p>Skill Level Desired.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "longitude",
+            "description": "<p>Longitude of logged in User.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "latitude",
+            "description": "<p>Latitude of logged in User.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "dateString",
+            "description": "<p>Date and Time of Game.</p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "Game",
+            "optional": false,
+            "field": "JSON",
+            "description": "<p>Game</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Success-Response:",
+          "content": "HTTP/1.1 200 OK\n{\n     \"id\": 1,\n     \"sport\": 0,\n     \"comments\": \"Hitch courts basketball game one on one\",\n     \"userGames\": {\n     \"createdAt\": \"2021-03-08T01:28:40.577Z\",\n     \"updatedAt\": \"2021-03-08T01:28:40.577Z\",\n }",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "fields": {
+        "Error 4xx": [
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "SQLError",
+            "description": "<p>&quot;Postgres Error Message&quot;</p>"
+          }
+        ]
+      }
+    },
+    "version": "0.0.0",
+    "filename": "sportify-backend/routes/main/games/index.js",
+    "groupTitle": "Games",
+    "name": "PutGamesUpdategameId"
+  },
+  {
+    "type": "get",
+    "url": "/schedule/getSchedule/:userId",
+    "title": "Retrieve a User's Schedule.",
+    "group": "Schedule",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "userId",
+            "description": "<p>User's ID.</p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "examples": [
+        {
+          "title": "Success-Response:",
+          "content": "HTTP/1.1 200 OK\n{\n     \"monday\": \"9-5\",\n     \"tuesday\": \"9-5\",\n     \"wednesday\": \"9-5\",\n     \"thursday\": \"9-5\",\n     \"friday\": \"9-5\",\n     \"saturday\": \"9-5\",\n     \"sunday\": \"9-5\",\n},",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "fields": {
+        "Error 4xx": [
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "SQLError",
+            "description": "<p>&quot;Postgres Error Message&quot;</p>"
+          }
+        ]
+      }
+    },
+    "version": "0.0.0",
+    "filename": "sportify-backend/routes/main/schedule/index.js",
+    "groupTitle": "Schedule",
+    "name": "GetScheduleGetscheduleUserid"
+  },
+  {
+    "type": "post",
+    "url": "/schedule/createUpdateSchedule",
+    "title": "Retrieve a User's Schedule.",
+    "group": "Schedule",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "userId",
+            "description": "<p>User's ID.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "monday",
+            "description": "<p>Availability on Monday</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "tuesday",
+            "description": "<p>Availability on Tuesday</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "wednesday",
+            "description": "<p>Availability on Wednesday</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "thursday",
+            "description": "<p>Availability on Thursday</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "friday",
+            "description": "<p>Availability on Friday</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "saturday",
+            "description": "<p>Availability on Saturday</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "sunday",
+            "description": "<p>Availability on Sunday</p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "examples": [
+        {
+          "title": "Success-Response:",
+          "content": "HTTP/1.1 200 OK\n{\n     \"monday\": \"9-5\",\n     \"tuesday\": \"9-5\",\n     \"wednesday\": \"9-5\",\n     \"thursday\": \"9-5\",\n     \"friday\": \"9-5\",\n     \"saturday\": \"9-5\",\n     \"sunday\": \"9-5\",\n},",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "fields": {
+        "Error 4xx": [
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "SQLError",
+            "description": "<p>&quot;Postgres Error Message&quot;</p>"
+          }
+        ]
+      }
+    },
+    "version": "0.0.0",
+    "filename": "sportify-backend/routes/main/schedule/index.js",
+    "groupTitle": "Schedule",
+    "name": "PostScheduleCreateupdateschedule"
+  },
+  {
+    "type": "get",
+    "url": "/user/getProile/:id",
+    "title": "Retrieve a User's Location Information.",
+    "group": "User",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "id",
+            "description": "<p>User's ID.</p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "Number",
+            "optional": false,
+            "field": "age",
+            "description": "<p>Age of User.</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Number",
+            "optional": false,
+            "field": "sport",
+            "description": "<p>Sport of User.</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Number",
+            "optional": false,
+            "field": "skill_level",
+            "description": "<p>Skill Level of User.</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "gender",
+            "description": "<p>Genders of User.</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "about_me",
+            "description": "<p>Bio of User.</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Success-Response:",
+          "content": "HTTP/1.1 200 OK\n{\n  \"age\": 21,\n  \"gender\": M,\n  \"sport\": 1,\n  \"skill_level\": 10,\n  \"about_me\": Kobe Fan!,\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "fields": {
+        "Error 4xx": [
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "SQLError",
+            "description": "<p>&quot;Postgres Error Message&quot;</p>"
+          }
+        ]
+      }
+    },
+    "version": "0.0.0",
+    "filename": "sportify-backend/routes/main/user/index.js",
+    "groupTitle": "User",
+    "name": "GetUserGetproileId"
+  },
+  {
+    "type": "get",
+    "url": "/user/getUserLocation/:id",
+    "title": "Retrieve a User's Location Information.",
+    "group": "User",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "id",
+            "description": "<p>User's ID.</p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "Number",
+            "optional": false,
+            "field": "latitude",
+            "description": "<p>Latitude of the User.</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Number",
+            "optional": false,
+            "field": "longitude",
+            "description": "<p>Longitude of the User.</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Success-Response:",
+          "content": "HTTP/1.1 200 OK\n{\n   \"latitude\":158,\n   \"longitude\":-30,  \n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "fields": {
+        "Error 4xx": [
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "SQLError",
+            "description": "<p>&quot;Postgres Error Message&quot;</p>"
+          }
+        ]
+      }
+    },
+    "version": "0.0.0",
+    "filename": "sportify-backend/routes/main/user/index.js",
+    "groupTitle": "User",
+    "name": "GetUserGetuserlocationId"
+  },
+  {
+    "type": "get",
+    "url": "/user/getUsers",
+    "title": "Fetch Users and Filter with Parameters.",
+    "group": "User",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "currentUser",
+            "description": "<p>Username of logged in User.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "username",
+            "description": "<p>Username of target User.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "email",
+            "description": "<p>Email of target User.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "age",
+            "description": "<p>Age of target Users.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "sport",
+            "description": "<p>Sport of target Users.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "skill_levels",
+            "description": "<p>Skill Level of target Users.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "genders",
+            "description": "<p>Genders of target Users (Either 'M', 'F' or 'O').</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "radius",
+            "description": "<p>Radius of search.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "UsrLat",
+            "description": "<p>Latitude of logged in User.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "UsrLng",
+            "description": "<p>Longitude of logged in User</p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "User[]",
+            "optional": false,
+            "field": "users",
+            "description": "<p>JSON Array of User information.</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Success-Response:",
+          "content": "  HTTP/1.1 200 OK\n  [{\n    \"id\": 1,\n    \"username\": \"jbruin\",\n    \"email\": \"jbruin@ucla.edu\",\n    \"location\": {\n        \"crs\": {\n            \"type\": \"name\",\n            \"properties\": {\n                \"name\": \"EPSG:4326\"\n            }\n        },\n        \"type\": \"Point\",\n        \"coordinates\": [\n            -118.4424591,\n            34.0627111\n        ]\n    },\n    \"age\": 21,\n    \"gender\": M,\n    \"sport\": 1,\n    \"skill_level\": 10,\n    \"about_me\": Kobe Fan!,\n    \"createdAt\": \"2021-03-08T01:27:26.780Z\",\n    \"updatedAt\": \"2021-03-08T01:27:26.780Z\",\n    \"games\": [\n        {\n            \"id\": 1,\n            \"sport\": 0,\n            \"comments\": \"Hitch courts basketball game one on one\",\n            \"userGames\": {\n                \"createdAt\": \"2021-03-08T01:28:40.577Z\",\n                \"updatedAt\": \"2021-03-08T01:28:40.577Z\",\n                \"gameId\": 1,\n                \"userId\": 1\n            }\n        },\n    ]\n}]",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "fields": {
+        "Error 4xx": [
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "SQLError",
+            "description": "<p>&quot;Postgres Error Message&quot;</p>"
+          }
+        ]
+      }
+    },
+    "version": "0.0.0",
+    "filename": "sportify-backend/routes/main/user/index.js",
+    "groupTitle": "User",
+    "name": "GetUserGetusers"
+  },
+  {
+    "type": "get",
+    "url": "/user/getUsersGames/:id",
+    "title": "Retrieve a User's Joined Games.",
+    "group": "User",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "id",
+            "description": "<p>User's ID.</p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "Games[]",
+            "optional": false,
+            "field": "JSON",
+            "description": "<p>of Games.</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Success-Response:",
+          "content": "HTTP/1.1 200 OK\n[\n      {\n          \"id\": 1,\n          \"sport\": 0,\n          \"comments\": \"Hitch courts basketball game one on one\",\n          \"userGames\": {\n              \"createdAt\": \"2021-03-08T01:28:40.577Z\",\n              \"updatedAt\": \"2021-03-08T01:28:40.577Z\",\n              \"gameId\": 1,\n              \"userId\": 1\n          }\n      }\n ]",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "fields": {
+        "Error 4xx": [
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "SQLError",
+            "description": "<p>&quot;Postgres Error Message&quot;</p>"
+          }
+        ]
+      }
+    },
+    "version": "0.0.0",
+    "filename": "sportify-backend/routes/main/user/index.js",
+    "groupTitle": "User",
+    "name": "GetUserGetusersgamesId"
+  },
+  {
+    "type": "post",
+    "url": "/user/signin",
+    "title": "Sign in to User Account.",
+    "group": "User",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "username",
+            "description": "<p>Username selected by the User.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "password",
+            "description": "<p>Password of the User.</p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "message",
+            "description": "<p>Success Message.</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "username",
+            "description": "<p>Username of the User.</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Number",
+            "optional": false,
+            "field": "id",
+            "description": "<p>Database ID of the User.</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "JSON",
+            "description": "<p>Web Token.</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Success-Response:",
+          "content": "HTTP/1.1 200 OK\n{\n     \"message\": \"Signin Successful\",\n     \"username\": \"jbruin\",\n     \"id\": 1,\n     \"token\": \"jwtTokenString\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "fields": {
+        "Error 4xx": [
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "InvalidCredentials",
+            "description": "<p>&quot;Invalid Username or Password&quot;</p>"
+          }
+        ]
+      }
+    },
+    "version": "0.0.0",
+    "filename": "sportify-backend/routes/main/user/index.js",
+    "groupTitle": "User",
+    "name": "PostUserSignin"
+  },
+  {
+    "type": "post",
+    "url": "/user/signup",
+    "title": "Sign up as a Sportify User",
+    "group": "User",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "username",
+            "description": "<p>Username selected by the User.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "email",
+            "description": "<p>Email of the User.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "password",
+            "description": "<p>Password of the User.</p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "message",
+            "description": "<p>Success Message.</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "username",
+            "description": "<p>Username of the User.</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Number",
+            "optional": false,
+            "field": "id",
+            "description": "<p>Database ID of the User.</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "JSON",
+            "description": "<p>Web Token.</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Success-Response:",
+          "content": "HTTP/1.1 200 OK\n{\n     \"message\": \"Signup Successful!\",\n     \"username\": \"jbruin\",\n     \"id\": 1,\n     \"token\": \"jwtTokenString\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "fields": {
+        "Error 4xx": [
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "DuplicateUsername",
+            "description": "<p>&quot;Username taken. Create a different username.&quot;</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "DuplicateEmail",
+            "description": "<p>&quot;Email already in use. Use a different one.&quot;</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "InvalidPassword",
+            "description": "<p>&quot;Invalid password. Must have at least 8 characters.&quot;</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "OtherError",
+            "description": "<p>&quot;SQL Error Message&quot;</p>"
+          }
+        ]
+      }
+    },
+    "version": "0.0.0",
+    "filename": "sportify-backend/routes/main/user/index.js",
+    "groupTitle": "User",
+    "name": "PostUserSignup"
+  },
+  {
+    "type": "put",
+    "url": "/user/updateProfile/:id",
+    "title": "Update a User's Profile Information.",
+    "group": "User",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "id",
+            "description": "<p>ID of logged in User.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "username",
+            "description": "<p>New Username of User.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "email",
+            "description": "<p>New Email of User.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "password",
+            "description": "<p>New Password of User.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "age",
+            "description": "<p>Age of User.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "sport",
+            "description": "<p>Sport of User.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "skill_level",
+            "description": "<p>Skill Level of User.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "genders",
+            "description": "<p>Gender of User.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "radius",
+            "description": "<p>Radius of search.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "UsrLat",
+            "description": "<p>Latitude of logged in User.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "UsrLng",
+            "description": "<p>Longitude of logged in User</p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "User",
+            "optional": false,
+            "field": "JSON",
+            "description": "<p>of updated User Info</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Success-Response:",
+          "content": "  HTTP/1.1 200 OK\n  [{\n    \"id\": 1,\n    \"username\": \"jbruin\",\n    \"email\": \"jbruin@ucla.edu\",\n    \"location\": {\n        \"crs\": {\n            \"type\": \"name\",\n            \"properties\": {\n                \"name\": \"EPSG:4326\"\n            }\n        },\n        \"type\": \"Point\",\n        \"coordinates\": [\n            -118.4424591,\n            34.0627111\n        ]\n    },\n    \"age\": 21,\n    \"gender\": M,\n    \"sport\": 1,\n    \"skill_level\": 10,\n    \"about_me\": Kobe Fan!,\n    \"createdAt\": \"2021-03-08T01:27:26.780Z\",\n    \"updatedAt\": \"2021-03-08T01:27:26.780Z\",\n}]",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "fields": {
+        "Error 4xx": [
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "SQLError",
+            "description": "<p>&quot;Postgres Error Message&quot;</p>"
+          }
+        ]
+      }
+    },
+    "version": "0.0.0",
+    "filename": "sportify-backend/routes/main/user/index.js",
+    "groupTitle": "User",
+    "name": "PutUserUpdateprofileId"
+  }
+]
