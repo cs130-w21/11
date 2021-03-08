@@ -224,17 +224,17 @@ MainAuthRouter.get('/getUsers', async (req, res) => {
             options.where.email = email;
         }
 
-      
-        if(age) {
-            options.where.age = {[Sequelize.Op.gte]: age};
+
+        if (age) {
+            options.where.age = { [Sequelize.Op.gte]: age };
         }
         if (sport) {
             options.where.sport = sport;
         }
 
-        if(skill_levels) {
+        if (skill_levels) {
             const minSkillLevel = Math.min(...skill_levels);
-            options.where.skill_level = {[Sequelize.Op.gte]: minSkillLevel};
+            options.where.skill_level = { [Sequelize.Op.gte]: minSkillLevel };
         }
         if (genders) {
             options.where.gender = genders;
@@ -243,7 +243,7 @@ MainAuthRouter.get('/getUsers', async (req, res) => {
             var lng = userLng;
             var lat = userLat;
             if (!userLng) {
-                lng = 118.4452; // UCLA longitude default
+                lng = -118.4452; // UCLA longitude default
             }
             if (!userLat) {
                 lat = 34.0689; // UCLA latitude default
@@ -293,8 +293,8 @@ MainAuthRouter.get('/getUserLocation/:id', async (req, res) => {
     const id = req.params.id;
     var options = { where: { id: id }, attributes: ['location'] };
     try {
-        user.findAll(options).then(user =>  {
-            if (user[0]) {
+        user.findAll(options).then(user => {
+            if (user[0] && user[0].location && user[0].location.coordinates) {
                 res.json([user[0].location.coordinates[1], user[0].location.coordinates[0]]);
             }
             else {
@@ -334,9 +334,9 @@ MainAuthRouter.get('/getUserLocation/:id', async (req, res) => {
 MainAuthRouter.get('/getProfile/:id', async(req, res) => {
     const user = sequelize.models.user;
     const id = req.params.id;
-    var options = {where: {id:id}, attributes: ['age', 'gender', 'sport', 'skill_level', 'about_me']};
+    var options = { where: { id: id }, attributes: ['age', 'gender', 'sport', 'skill_level', 'about_me'] };
     try {
-        let currUser =await user.findOne(options)
+        let currUser = await user.findOne(options)
         return res.status(200).json(currUser)
     } catch (err) {
         return res.status(500).send(err.message);
@@ -375,10 +375,13 @@ MainAuthRouter.get('/getProfile/:id', async(req, res) => {
 MainAuthRouter.get('/getUsersGames/:id', async (req, res) => {
     // console.log('here')
     const user = sequelize.models.user;
-    const user_id=req.params.id
+    const user_id = req.params.id
     try {
-        var options = {where: {id:user_id}, attributes:{exclude:[]}, include:[{
-            model: sequelize.models.game, as: 'games', required:false, attibutes: ['id', 'sport', 'comments']}]};
+        var options = {
+            where: { id: user_id }, attributes: { exclude: [] }, include: [{
+                model: sequelize.models.game, as: 'games', required: false, attibutes: ['id', 'sport', 'comments']
+            }]
+        };
         options.attributes.exclude = ['password'];
         const currUser = await user.findOne(options);
         // console.log(currUser.getDataValue('games'));

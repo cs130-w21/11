@@ -4,9 +4,16 @@ import Router from "next/router"
 import Head from 'next/head';
 import Link from 'next/link';
 import Container from 'react-bootstrap/Container';
-import Row from 'react-bootstrap/Row'
-import Col from 'react-bootstrap/Col'
-import Geocode from 'react-geocode'
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
+import Geocode from 'react-geocode';
+import Navbar from 'react-bootstrap/Navbar';
+import Nav from 'react-bootstrap/Nav';
+import LazyHero from 'react-lazy-hero';
+import Card from 'react-bootstrap/Card';
+import Form from 'react-bootstrap/Form';
+import FormControl from 'react-bootstrap/FormControl';
+import Button from 'react-bootstrap/Button';
 
 const sportToNumber = {
 	'Basketball': 1, 'Tennis': 2, 'Soccer': 3, 'Badminton': 4,
@@ -76,7 +83,7 @@ const CreateOneOnOne = (props) => {
 
 	let [address, setAddress] = React.useState('')
 
-
+	console.log(opponentSport);
 
 
 	return (
@@ -84,7 +91,7 @@ const CreateOneOnOne = (props) => {
 
 			<style jsx global>{`
 					body {
-						background-color: pink;
+						background-color: #D2D2D2;
 						align: auto;
 						text-align: center;
 					}
@@ -116,150 +123,128 @@ const CreateOneOnOne = (props) => {
 					
 				`}</style>
 
-			<div className="navBar">
-				<ul>
-					<li>
-						<Link href='/userGames/userGames' passHref>
-							<div className="myGames">
-								<a>My Games</a>
-							</div>
-						</Link>
+			<Navbar bg="dark" variant="dark" sticky="top">
+				<Navbar.Brand href="/homePage/homePage">Sportify</Navbar.Brand>
+				<Nav className="mr-auto">
+					<Nav.Link href="/fillOutProfile/viewProfile">Profile</Nav.Link>
+					<Nav.Link href="/userGames/userGames">My Games</Nav.Link>
+				</Nav>
+				<Nav inline="true">
+					<Nav.Link href="/">Logout</Nav.Link>
+				</Nav>
+			</Navbar>
 
-					</li>
+			<LazyHero imageSrc="/createGameBgImage.jpg" opacity={0.5} color="black" parallaxOffset={50} isCentered={true} minHeight="100vh">
+				<Container>
+					<Card style={{ width: "50em" }}>
+						<Card.Header>
+							<Card.Title>
+								Set Up Your Challenge
+							</Card.Title>
+						</Card.Header>
+						<Card.Body>
+							<Form onSubmit={(e) => handleSubmit(e)}>
+								<Form.Group controlId="formGridAddress">
+									<Form.Label>Address</Form.Label>
+									<Form.Control placeholder="330 De Neve Drive, Los Angeles, CA" type="textArea" value={address}
+										onChange={(e) => setAddress(e.target.value)} />
+								</Form.Group>
+								<Form.Row>
+									<Form.Group as={Col} controlId="formGridDescription">
+										<Form.Label>Description</Form.Label>
+										<Form.Control placeholder="Let's play soccer on the IM field!" type="textArea" value={description} onChange={(e) => setDescription(e.target.value)} />
+									</Form.Group>
+								</Form.Row>
 
-					<li>
-						<Link href='/fillOutProfile/viewProfile' passHref>
-							<div className="viewOrEditProfile">
-								<a>View/Edit my profile</a>
-							</div>
-						</Link>
-					</li>
+								<Form.Row>
+									<Form.Group as={Col} controlId="formGridMaxGroupSize">
+										<Form.Label>Start Time</Form.Label>
+										<Form.Control type="datetime-local" value={startTime} onChange={(e) => setStartTime(e.target.value)} />
+									</Form.Group>
+								</Form.Row>
+								<Form.Row>
+									<Col>
+										<Button href='/homePage/homePage' variant="secondary" type="submit">
+											Cancel
+							</Button>
+									</Col>
+									<Col>
+										<Link href='/homePage/homePage' passhref="true">
 
-					<li>
-						<Link href='/homePage/homePage' passHref>
-							<div className="homeDiv">
-								<a>Go home!</a>
-							</div>
-						</Link>
-					</li>
+											<Button variant="secondary" type="submit" onClick={(e) => {
 
-					<li>
-						<Link href='/' passHref>
-							<div className="logoutDiv">
-								<a>Logout!</a>
-							</div>
-						</Link>
-					</li>
+												let long = -118.4452; // UCLA 
+												let lat = 34.0689; // UCLA
 
-				</ul>
-			</div>
+												// Get latitude & longitude from address.
+												Geocode.fromAddress(address).then(
+													(response) => {
+														lat, long = response.results[0].geometry.location;
+														console.log(lat, long);
 
-			<br />
+													},
+													(error) => {
+														console.error(error);
+													}
+												)
 
+												const sportNumber = Number(opponentSport);
+												console.log(sportNumber);
+												const reactData = { "latitude": lat, "longitude": long, "dateString": startTime, "skill_level": 1, "max_group_size": 2, "comments": description, "sport": sportNumber, "user": foundUser }
 
-			<h2> Enter the details of one on one game (minimum skill level is automatically 1)! </h2>
+												console.log(reactData);
+												console.log(foundUser, opponentId)
 
-
-
-			<label>
-				Enter address/location: {' '}
-				<input type="textArea" value={address}
-					onChange={(e) => setAddress(e.target.value)} />
-			</label>
-			<br />
-
-
-			<label>
-				Enter description: {' '}
-				<input type="textArea" value={description} onChange={(e) => setDescription(e.target.value)} />
-			</label>
-			<br />
-
-
-			<label>
-				Starting time: {' '}
-				<input type="datetime-local" value={startTime} onChange={(e) => setStartTime(e.target.value)} />
-			</label>
-			<br />
-
-
-
-
-
-			<Link href='/homePage/homePage' passHref>
-				<button> <a>Cancel creation of one on one game! </a> </button>
-			</Link>
-
-
-			{/* <Link href='/homePage/homePage' passHref> */}
-			<button onClick={(e) => {
-
-				let long = -118.4452; // UCLA 
-				let lat = 34.0689; // UCLA
-
-				// Get latitude & longitude from address.
-				Geocode.fromAddress(address).then(
-					(response) => {
-						lat, long = response.results[0].geometry.location;
-						console.log(lat, long);
-
-					},
-					(error) => {
-						console.error(error);
-					}
-				)
-
-				const sportNumber = sportToNumber[opponentSport]
-				const reactData = { "latitude": lat, "longitude": long, "dateString": startTime, "skill_level": 1, "max_group_size": 2, "comments": description, "sport": sportNumber, "user": foundUser }
-
-				console.log(reactData);
-				console.log(foundUser, opponentId)
-
-				fetch(process.env.backend_url + '/games/createGame', {
-					//mode: "no-cors",
-					method: "POST",
-					headers: {
-						'Content-type': 'application/json',
-						"Access-Control-Allow-Origin": '*'
-					},
-					body: JSON.stringify(reactData)
-				})
-					.then(response => response.json())
-					.then(json => {
-						console.log("Here checking")
-						console.log(json)
-						let gameId = json.usr_gm.gameId;
+												fetch(process.env.backend_url + '/games/createGame', {
+													//mode: "no-cors",
+													method: "POST",
+													headers: {
+														'Content-type': 'application/json',
+														"Access-Control-Allow-Origin": '*'
+													},
+													body: JSON.stringify(reactData)
+												})
+													.then(response => response.json())
+													.then(json => {
+														console.log("Here checking")
+														console.log(json)
+														let gameId = json.usr_gm.gameId;
 
 
-						console.log(gameId, opponentId)
-						return gameId;
+														console.log(gameId, opponentId)
+														return gameId;
 
-					})
-					.then((gameId) => {
-						console.log(gameId, opponentId);
-						const requestOptions = {
-							method: 'PUT',
-							headers: { 'Content-Type': 'application/json', "Access-Control-Allow-Origin": '*' },
-							body: JSON.stringify({ user_id: parseInt(opponentId), game_id: gameId })
-						};
-						console.log(requestOptions);
-						fetch(process.env.backend_url + '/games/joinGame/', requestOptions)
-							.then(response => response.json())
-							.then(data => {
-								console.log(data);
+													})
+													.then((gameId) => {
+														console.log(gameId, opponentId);
+														const requestOptions = {
+															method: 'PUT',
+															headers: { 'Content-Type': 'application/json', "Access-Control-Allow-Origin": '*' },
+															body: JSON.stringify({ user_id: parseInt(opponentId), game_id: gameId })
+														};
+														console.log(requestOptions);
+														fetch(process.env.backend_url + '/games/joinGame/', requestOptions)
+															.then(response => response.json())
+															.then(data => {
+																console.log(data);
 
 
-							})
+															})
 
-					})
-					.catch(error => { console.log(error) })
+													})
+													.catch(error => { console.log(error) })
 
 
 
-			}}> <a>Submit creation of one on one game! </a> </button>
-			{/* </Link> */}
-
-
+											}}> Submit </Button>
+										</Link>
+									</Col>
+								</Form.Row>
+							</Form>
+						</Card.Body>
+					</Card>
+				</Container>
+			</LazyHero>
 		</div>
 
 

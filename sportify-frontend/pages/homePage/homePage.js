@@ -5,19 +5,28 @@ import Alert from 'react-bootstrap/Alert'
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
+import Nav from 'react-bootstrap/Nav';
+import Form from 'react-bootstrap/Form';
+import Navbar from 'react-bootstrap/Navbar';
+import Button from 'react-bootstrap/Button';
+import FormControl from 'react-bootstrap/FormControl';
 import Geocode from 'react-geocode'
 import Router from 'next/router';
-
+import LazyHero from 'react-lazy-hero';
+import Image from 'react-bootstrap/Image';
+import Card from 'react-bootstrap/Card';
+import ListGroup from 'react-bootstrap/ListGroup';
+import Table from 'react-bootstrap/Table';
 
 const sportToImage = {
-	'Baseball': '/baseball.jpg',
+	'Baseball': '/baseball.png',
 	'Soccer': '/soccer.jpg',
-	'Football': '/football.png',
 	'Sprinting': '/sprinting.jpg',
 	'Volleyball': '/volleyball.jpg',
 	'Tennis': '/tennis.jpg',
 	'Badminton': '/badminton.jpg',
-	'American Football': 'football.png'
+	'American Football': '/football.png',
+	'Basketball': '/basketball.jpg'
 };
 
 const genderToImage = {
@@ -90,10 +99,9 @@ const HomePage = (props) => {
 	};
 
 	let optionalMinimumSkillLevelForGame = (typeSelected == "Games") ? (
-		<label>
-			Minimum Skill Level in the Game: {' '}
-			<select onChange={(e) => setMinSkillLevel(e.target.value)} value={minSkillLevel}>
-				<option value="No selection">No selection</option>
+		<Form>
+			<Form.Label>Minimum Skill Level</Form.Label>
+			<FormControl as="select" value={minSkillLevel} onChange={(e) => setMinSkillLevel(e.target.value)}>
 				<option value="1">1</option>
 				<option value="2">2</option>
 				<option value="3">3</option>
@@ -104,16 +112,15 @@ const HomePage = (props) => {
 				<option value="8">8</option>
 				<option value="9">9</option>
 				<option value="10">10</option>
-			</select>
-			{'    '}
-		</label>
+			</FormControl>
+		</Form>
 	) : '';
 
 
 	let userSkillLevels = (typeSelected == "People") ? (
-		<label>
-			Skill Levels allowed: {' '}
-			<select multiple onChange={skillsFunction} value={skillsSelected}>
+		<Form>
+			<Form.Label>Minimum Skill Level</Form.Label>
+			<FormControl as="select" multiple value={skillsSelected} onChange={skillsFunction}>
 				<option value="1">1</option>
 				<option value="2">2</option>
 				<option value="3">3</option>
@@ -124,49 +131,43 @@ const HomePage = (props) => {
 				<option value="8">8</option>
 				<option value="9">9</option>
 				<option value="10">10</option>
-			</select>
-			{'    '}
-		</label>
+			</FormControl>
+		</Form>
 	) : '';
 
 
 	let optionalGenderSelection = typeSelected == "People" ? (
-
-		<label>
-			Genders: {' '}
-			<select multiple onChange={gendersFunction} value={gendersSelected} >
+		<Form>
+			<Form.Label>Gender</Form.Label>
+			<FormControl as="select" multiple value={gendersSelected} onChange={gendersFunction}>
 				<option value="Men">Men</option>
 				<option value="Women">Women</option>
 				<option value="Other">Other</option>
-			</select>
-			{'    '}
-		</label>
+			</FormControl>
+		</Form>
 	) : '';
 
 	let optionalUserSelection = typeSelected == "People" ? (
-		<label>
-			Username: {' '}
-			<input type="text" value={username} onChange={(e) => setUsername(e.target.value)} />
-			{'    '}
-		</label>
+		<Form>
+			<Form.Label>Username</Form.Label>
+			<FormControl type="text" value={username} onChange={(e) => setUsername(e.target.value)} />
+		</Form>
 	) : '';
 
 	let optionalEmailSelection = typeSelected == "People" ? (
-		<label>
-			Email: {' '}
-			<input type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
-			{'    '}
-		</label>
+		<Form>
+			<Form.Label>Email</Form.Label>
+			<FormControl type="email" min={1} value={email} onChange={(e) => setEmail(e.target.value)} />
+		</Form>
 	) : '';
 
 
 
 	let optionalDateSelection = typeSelected == "Games" ? (
-		<label>
-			Select Within How Many Weeks Ahead the Games Should Be: {' '}
-			<input type="number" min={1} value={weeksAhead} onChange={(e) => setWeeksAhead(e.target.value)} />
-			{'    '}
-		</label>
+		<Form>
+			<Form.Label>Within how many weeks</Form.Label>
+			<FormControl type="number" min={1} value={weeksAhead} onChange={(e) => setWeeksAhead(e.target.value)} />
+		</Form>
 	) : '';
 
 
@@ -175,19 +176,17 @@ const HomePage = (props) => {
 
 
 	let optionalMinAge = typeSelected == "People" ? (
-		<label>
-			Minimum Age of Participants: {' '}
-			<input type="number" min={1} value={minAge} onChange={(e) => setMinAge(e.target.value)} />
-			{'   \t'}
-		</label>
+		<Form>
+			<Form.Label>Minimum Age</Form.Label>
+			<FormControl type="number" min={1} value={minAge} onChange={(e) => setMinAge(e.target.value)} />
+		</Form>
 	) : '';
 
 	let optionalMaxGroupSize = typeSelected == "Games" ? (
-		<label>
-			Max Number of people in group game (including creator): {' '}
-			<input type="number" min={2} value={groupNumber} onChange={(e) => setGroupNumber(e.target.value)} />
-			{'   '}
-		</label>
+		<Form>
+			<Form.Label>Max Group Size</Form.Label>
+			<FormControl type="number" min={2} value={groupNumber} onChange={(e) => setGroupNumber(e.target.value)} />
+		</Form>
 	) : '';
 
 
@@ -221,11 +220,12 @@ const HomePage = (props) => {
 						}
 
 						body {
-							background-color: yellow;
-							
-
+							background-color: #D2D2D2;
 						}
 
+						.cardText {
+							color: white;
+						}
 						.informationDiv, .searchDiv, .createGame, .searchHeading {
 							margin: auto;
 							text-align: center;
@@ -243,101 +243,54 @@ const HomePage = (props) => {
 							color: black;
 						}
 
+						.hero {
+							color: white;
+							text-shadow: 1px 1px 5px black;
+						}
+
 		      `}</style>
-			<div className="navBar">
-					<ul className="navBar">
-						<li className="navBar">
-							<Link href='/userGames/userGames' passHref>
-								<div className="myGames">
-									<a className="navBar">My Games</a>
-								</div>
-							</Link>
-
-						</li>
-
-						<li className="navBar">
-							<Link href='/fillOutProfile/viewProfile' passHref>
-								<div className="viewOrEditProfile">
-									<a className="navBar">View/Edit my profile</a>
-								</div>
-							</Link>
-						</li>
-
-						<li className="navBar">
-					        <Link href='/homePage/homePage' passHref>
-					        	<div className="homeDiv">
-									<a className="navBar">Go home!</a>
-								</div>
-							</Link>
-						</li>
-
-						<li className="navBar">
-					        <Link href='/' passHref>
-					        	<div className="logoutDiv">
-									<a className="navBar">Logout!</a>
-								</div>
-							</Link>
-						</li>
-
-					</ul>
+			<Navbar bg="dark" variant="dark" sticky="top">
+				<Navbar.Brand href="/homePage/homePage">Sportify</Navbar.Brand>
+				<Nav className="mr-auto">
+					<Nav.Link href="/fillOutProfile/viewProfile">Profile</Nav.Link>
+					<Nav.Link href="/userGames/userGames">My Games</Nav.Link>
+				</Nav>
+				<Nav inline="true">
+					<Nav.Link href="/">Logout</Nav.Link>
+				</Nav>
+			</Navbar>
+			<LazyHero imageSrc="/homePageBgImage.jpg" opacity={0.5} color="black" parallaxOffset={50} isCentered={true} minHeight="85vh">
+				<div className="hero">
+					<h1>Sportify</h1>
+					<p >Play sports the way you want to</p>
+					<Button href='/homePage/createGame' variant="secondary">
+						Create game
+					</Button>
 				</div>
+			</LazyHero>
 
 			<br />
 
 
 			<div className="informationDiv">
-				<h1>Hi {foundUserName}</h1>
-				<h2>Go profile page if needed to view and edit profile with your details!</h2>
-				<p>
-					Welcome to our app! Note that when searching for people exclusive-or games,
-					you must choose this with respect to your skill level. A 10 refers to an expert
-					within the game, while a 1 refers to a complete beginner. A 5 is around the skill level
-					of a club or tournament player who has competed before.
-					</p>
+				<h1>Discover your next challenge</h1>
 			</div>
-
-			<br />
-
-
-
-			<Link href='/homePage/createGame' passHref>
-				<div className="createGame">
-					<button> <a>Create game now! </a> </button>
-				</div>
-			</Link>
-
-			<br />
-			<br />
 
 
 			<div className="searchDiv">
-
-				<h1> Search Filters </h1>
-
-
 				<Container fluid>
-
-					<Row>
-
-						<Col>
-
-							<label>
-								People or Games: {' '}
-								<select value={typeSelected} onChange={(e) => setTypeSelected(e.target.value)}>
+					<Form onSubmit={(e) => handleSubmit(e)}>
+						<Form.Row>
+							<Form.Group as={Col} controlId="formGridPeopleOrGames">
+								<Form.Label>Type</Form.Label>
+								<Form.Control as="select" value={typeSelected} onChange={(e) => setTypeSelected(e.target.value)}>
 									<option value="People"> People </option>
 									<option value="Games"> Games </option>
-								</select>
-							</label>
-
-							{'    '}
-
-						</Col>
-
-						<Col>
-
-							<label>
-								Sport: {' '}
-								<select value={searchSport} onChange={(e) => setSearchSport(e.target.value)} >
+								</Form.Control>
+							</Form.Group>
+							<Form.Group as={Col} controlId="formGridSport">
+								<Form.Label>Sport</Form.Label>
+								<Form.Control as="select" value={searchSport} onChange={(e) => setSearchSport(e.target.value)}>
 									<option value="No selection">No Selection</option>
 									<option value="Basketball">Basketball</option>
 									<option value="Tennis">Tennis</option>
@@ -347,549 +300,464 @@ const HomePage = (props) => {
 									<option value="Sprinting">Sprinting</option>
 									<option value="Volleyball">Volleyball</option>
 									<option value="American Football">American Football</option>
-								</select>
-							</label>
+								</Form.Control>
+							</Form.Group>
+							<Form.Group as={Col} controlId="formGridSport">
+								<Form.Label>Radius (in miles)</Form.Label>
+								<Form.Control type="number" min={0} value={radius} onChange={(e) => setRadius(e.target.value)} />
+							</Form.Group>
+						</Form.Row>
+						<Form.Row>
+							<Form.Group as={Col} controlId="formGridGameSkillLevelOrUsername">
+								{(typeSelected == "Games") ? optionalMinimumSkillLevelForGame : optionalUserSelection}
+							</Form.Group>
+							<Form.Group as={Col} controlId="formGridGroupSizeOrEmail">
+								{(typeSelected == "Games") ? optionalMaxGroupSize : optionalEmailSelection}
+							</Form.Group>
+							<Form.Group as={Col} controlId="formGridDateOrAge">
+								{(typeSelected == "Games") ? optionalDateSelection : optionalMinAge}
+							</Form.Group>
+						</Form.Row>
+						<Form.Row>
+							<Form.Group as={Col} controlId="formGridGender">
+								{(typeSelected == "People") ? optionalGenderSelection : null}
+							</Form.Group>
+							<Form.Group as={Col} controlId="formGridUserSkillLevel">
+								{(typeSelected == "People") ? userSkillLevels : null}
+							</Form.Group>
+						</Form.Row>
+						<Form.Row>
+							<Form.Group as={Col} controlId="formGridSubmit">
+								<Button variant="secondary" className="submitSearchFilters" onClick={(e) => {
+									e.preventDefault();
+									// let lati=34.0689;
+									// let long=-118.4452;
 
-							{'    '}
-
-						</Col>
-
-						<Col>
-							<label>
-								Radius (in miles): {' '}
-
-								<input type="number" min={0} value={radius} onChange={(e) => setRadius(e.target.value)} />
-
-							</label>
-
-
-
-							{'    '}
-
-						</Col>
-
-					</Row>
-
-					<br />
-					<br />
-
-
-					<Row>
-
-						<Col xs={2}>
-							{(typeSelected == "Games") ? optionalMinimumSkillLevelForGame : userSkillLevels}
-						</Col>
-
-						<Col xs={2}>
-							{(typeSelected == "Games") ? optionalMaxGroupSize : optionalGenderSelection}
-						</Col>
-
-
-
-
-						<Col xs={2}>
-							{(typeSelected == "Games") ? optionalDateSelection : optionalUserSelection}
-						</Col>
-
-						<Col xs={2}>
-							{typeSelected == "People" ? optionalEmailSelection : <h1>Have fun!</h1>}
-						</Col>
-
-						<Col xs={2}>
-							{typeSelected == "People" ? optionalMinAge : <h1>Stay Safe!</h1>}
-						</Col>
-
-
-					</Row>
-
-
-
-					<br />
-
-					<button className="submitSearchFilters" onClick={(e) => {
-						e.preventDefault();
-						// let lati=34.0689;
-						// let long=-118.4452;
-
-						let lati;
-						let long;
-						console.log("In submit filters handler function!");
-						let monday, tuesday, wednesday, thursday, friday, saturday, sunday;
+									let lati;
+									let long;
+									console.log("In submit filters handler function!");
+									let monday, tuesday, wednesday, thursday, friday, saturday, sunday;
 
 
 
 
 
 
-						console.log("GEt user location")
-						fetch(process.env.backend_url + `/user/getUserLocation/${foundUser}`, {
-							//mode: "no-cors",
-							method: "GET",
-							headers: {
-								'Content-type': 'application/json',
-								"Access-Control-Allow-Origin": '*'
-							},
+									console.log("Get user location")
+									fetch(process.env.backend_url + `/user/getUserLocation/${foundUser}`, {
+										//mode: "no-cors",
+										method: "GET",
+										headers: {
+											'Content-type': 'application/json',
+											"Access-Control-Allow-Origin": '*'
+										},
 
-						})
-							.then(response => response.json())
-							.then(json => {
-								console.log(json);
-								console.log("Hi")
-								if (json) {
-									lati = json[0]
-									long = json[1]
-								}
-
-
-							})
-							.catch(errorMessage => {
-								console.log(errorMessage);
-								console.log("Bye")
-
-							});
-
-						//console.log(lati, long);
-
-						///games/getGames?sports[]=4&sports[]=3&username=person&
+									})
+										.then(response => response.json())
+										.then(json => {
+											console.log(json);
+											console.log("Hi")
+											if (json) {
+												lati = json[0]
+												long = json[1]
+											}
 
 
-						if (typeSelected == "People") {
+										})
+										.catch(errorMessage => {
+											console.log(errorMessage);
+											console.log("Bye")
 
-							let userSchedule = [];
-							console.log("Get user schedule")
-							fetch(process.env.backend_url + `/schedules/getSchedule/?id=${foundUser}`, {
-								//mode: "no-cors",
-								method: "GET",
-								headers: {
-									'Content-type': 'application/json',
-									"Access-Control-Allow-Origin": '*'
-								},
+										});
 
-							})
-								.then(response => response.json())
-								.then(json => {
-									console.log(json);
-									userSchedule = json;
+									//console.log(lati, long);
 
-								})
-								.catch(errorMessage => {
-									console.log(errorMessage);
-									console.log("Bye")
-
-								});
+									///games/getGames?sports[]=4&sports[]=3&username=person&
 
 
-							let baseUrlPeople = process.env.backend_url + "/user/getUsers?"
-							if (skillsSelected != null) {
-								for (let i = 0; i < skillsSelected.length; i++) {
-									if (i == 0) {
-										baseUrlPeople += (`skill_levels[]=${skillsSelected[i]}`)
+									if (typeSelected == "People") {
+										let baseUrlPeople = process.env.backend_url + "/user/getUsers?"
+										if (skillsSelected != null) {
+											for (let i = 0; i < skillsSelected.length; i++) {
+												if (i == 0) {
+													baseUrlPeople += (`skill_levels[]=${skillsSelected[i]}`)
+												}
+												else {
+													baseUrlPeople += (`&skill_levels[]=${skillsSelected[i]}`)
+												}
+											}
+										}
+										if (gendersSelected != null) {
+											for (let i = 0; i < gendersSelected.length; i++) {
+												let genderVariable = gendersSelected[i];
+												let genderChar;
+												if (genderVariable == "Men")
+													genderChar = 'M';
+												else if (genderVariable == "Women")
+													genderChar = 'F'
+												else if (genderVariable == "Other")
+													genderChar = 'O'
+
+												baseUrlPeople += (`&genders[]=${genderChar}`)
+											}
+										}
+										if (username != '')
+											baseUrlPeople += (`&username=${username}`);
+										if (email != '')
+											baseUrlPeople += (`&email=${email}`);
+										if (minAge != '')
+											baseUrlPeople += (`&age=${minAge}`);
+
+										if (searchSport != 'No selection') {
+											let sportNumber = sportToNumber[searchSport]
+											baseUrlPeople += (`&sport=${sportNumber}`)
+										}
+										if (radius != '')
+											baseUrlPeople += (`&radius=${radius}`);
+
+										if (long != null)
+											baseUrlPeople += (baseUrlPeople, `&userLng=${long}`)
+
+										if (lati != null)
+											baseUrlPeople += (baseUrlPeople, `&userLat=${lati}`)
+
+										baseUrlPeople += (baseUrlPeople, `&currentUser=${foundUserName}`)
+										console.log(baseUrlPeople)
+
+										async function getSchedule(jsonElement) {
+											let schedule;
+											console.log("Get user schedule")
+											let theSchedule = await fetch(process.env.backend_url + `/schedule/getSchedule/${jsonElement.id}`, {
+												//mode: "no-cors",
+												method: "GET",
+												headers: {
+													'Content-type': 'application/json',
+													"Access-Control-Allow-Origin": '*'
+												},
+
+											})
+												.then(response => response.json())
+												.then(json => {
+													console.log(json);
+													schedule = json;
+													return json;
+
+												})
+												.catch(errorMessage => {
+													console.log(errorMessage);
+													console.log("Bye")
+													schedule = [];
+													return [];
+												});
+											return theSchedule;
+										}
+
+										fetch(baseUrlPeople, {
+											//mode: "no-cors",
+											method: "GET",
+											headers: {
+												'Content-type': 'application/json',
+												"Access-Control-Allow-Origin": '*'
+											},
+
+										})
+											.then(response => response.json())
+											.then(async json => {
+												console.log(json);
+
+												const peopleList = await Promise.all(json.map(async (jsonElement) => {
+
+													const userSchedule = await getSchedule(jsonElement);
+
+													return (
+														<Container fluid key={jsonElement.id}>
+															<Card bg="dark" key={jsonElement.id} style={{ boxShadow: "1px 1px 3px black" }} className="text-center">
+																<Card.Header className="align-items-center">
+																	<Card.Title><div className="cardText">User</div></Card.Title>
+																</Card.Header>
+																<Card.Body>
+																	<Row className="align-items-center">
+																		<Col md={{ span: 3 }}>
+																			<Image src={(jsonElement.gender ? genderToImage[jsonElement.gender] : '/questionMark.png')} roundedCircle />
+																		</Col>
+																		<Col md={{ span: 4 }}>
+																			<ListGroup>
+																				<ListGroup.Item style={{ fontWeight: "bold" }}>@{jsonElement.username}</ListGroup.Item>
+																				<ListGroup.Item>{jsonElement.about_me ? jsonElement.about_me : "No bio"}</ListGroup.Item>
+																				<ListGroup.Item>Plays {jsonElement.sport ? numberToSport[jsonElement.sport] : "potentially all sports?!"}</ListGroup.Item>
+																				<ListGroup.Item>Skill Level: {jsonElement.skill_level ? jsonElement.skill_level : "None specified"}</ListGroup.Item>
+																			</ListGroup>
+																		</Col>
+																		<Col md={{ span: 1 }}></Col>
+																		<Col md={{ span: 4 }}>
+																			<Table variant="light" striped borderless hover>
+																				<thead>
+																					<tr>
+																						<th>Day</th>
+																						<th>Availability</th>
+																					</tr>
+																				</thead>
+																				<tbody>
+																					<tr>
+																						<td>Monday</td>
+																						<td>{(userSchedule.length != 0 && userSchedule[0].monday) ? userSchedule[0].monday : 'No times listed'}</td>
+																					</tr>
+																					<tr>
+																						<td>Tuesday</td>
+																						<td>{(userSchedule.length != 0 && userSchedule[0].tuesday) ? userSchedule[0].tuesday : 'No times listed'}</td>
+																					</tr>
+																					<tr>
+																						<td>Wednesday</td>
+																						<td>{(userSchedule.length != 0 && userSchedule[0].wednesday) ? userSchedule[0].wednesday : 'No times listed'}</td>
+																					</tr>
+																					<tr>
+																						<td>Thursday</td>
+																						<td>{(userSchedule.length != 0 && userSchedule[0].thursday) ? userSchedule[0].thursday : 'No times listed'}</td>
+																					</tr>
+																					<tr>
+																						<td>Friday</td>
+																						<td>{(userSchedule.length != 0 && userSchedule[0].friday) ? userSchedule[0].friday : 'No times listed'}</td>
+																					</tr>
+																					<tr>
+																						<td>Saturday</td>
+																						<td>{(userSchedule.length != 0 && userSchedule[0].saturday) ? userSchedule[0].saturday : 'No times listed'}</td>
+																					</tr>
+																					<tr>
+																						<td>Sunday</td>
+																						<td>{(userSchedule.length != 0 && userSchedule[0].sunday) ? userSchedule[0].sunday : 'No times listed'}</td>
+																					</tr>
+																				</tbody>
+																			</Table>
+																		</Col>
+
+																	</Row>
+																</Card.Body>
+																<Card.Footer>
+																	<Row className="align-items-center">
+																		<Col>
+																			<Button variant="secondary" onClick={(e) => {
+																				console.log(e.target.className);
+																				let splitClasses = e.target.className.split(" ")
+																				let splitInfo = splitClasses[0].split('-')
+																				console.log(splitInfo);
+																				localStorage.setItem('localOpponentSport', splitInfo[2])
+																				localStorage.setItem('localOpponentName', splitInfo[1])
+																				localStorage.setItem('localOpponentId', splitInfo[0])
+																				console.log(splitInfo)
+																				Router.push("createOneOnOne")
+																			}} className={`${jsonElement.id}-${jsonElement.username}-${jsonElement.sport ? jsonElement.sport : 'Soccer'}`}>
+																				Challenge
+																		</Button>
+																		</Col>
+																	</Row>
+																</Card.Footer>
+															</Card>
+															<br />
+															<br />
+														</Container>
+													)
+												}));
+
+												setListOfUsers(peopleList);
+
+
+
+
+
+											})
+											.catch(errorMessage => {
+												console.log(errorMessage);
+
+											});
+
+
 									}
 									else {
-										baseUrlPeople += (`&skill_levels[]=${skillsSelected[i]}`)
-									}
-								}
-							}
-							if (gendersSelected != null) {
-								for (let i = 0; i < gendersSelected.length; i++) {
-									let genderVariable = gendersSelected[i];
-									let genderChar;
-									if (genderVariable == "Men")
-										genderChar = 'M';
-									else if (genderVariable == "Women")
-										genderChar = 'F'
-									else if (genderVariable == "Other")
-										genderChar = 'O'
+										let baseUrlGames = process.env.backend_url + "/games/getGames?"
 
-									baseUrlPeople += (`&genders[]=${genderChar}`)
-								}
-							}
-							if (username != '')
-								baseUrlPeople += (`&username=${username}`);
-							if (email != '')
-								baseUrlPeople += (`&email=${email}`);
-							if (minAge != '')
-								baseUrlPeople += (`&age=${minAge}`);
+										if (groupNumber != '')
+											baseUrlGames += (`max_group_size=${groupNumber}`)
 
-							if (searchSport != 'No selection') {
-								let sportNumber = sportToNumber[searchSport]
-								baseUrlPeople += (`&sport=${sportNumber}`)
-							}
-							if (radius != '')
-								baseUrlPeople += (`&radius=${radius}`);
+										// console.log(minSkillLevel);
+										// console.log(groupNumber)
 
-							if (long != null)
-								baseUrlPeople += (baseUrlPeople, `&userLng=${long}`)
 
-							if (lati != null)
-								baseUrlPeople += (baseUrlPeople, `&userLat=${lati}`)
 
-							baseUrlPeople += (baseUrlPeople, `&currentUser=${foundUserName}`)
-							console.log(baseUrlPeople)
+										if (minSkillLevel != 'No selection')
+											baseUrlGames += (`&skill_levels=${minSkillLevel}`)
 
-
-
-							fetch(baseUrlPeople, {
-								//mode: "no-cors",
-								method: "GET",
-								headers: {
-									'Content-type': 'application/json',
-									"Access-Control-Allow-Origin": '*'
-								},
-
-							})
-								.then(response => response.json())
-								.then(json => {
-									console.log(json);
-
-									const peopleList = json.map((jsonElement) =>
-										<li key={jsonElement.id}>
-											<Container fluid key={jsonElement.id}>
-												<Row className="person">
-													<Col>
-														<Box>
-															<img src={(jsonElement.gender ? genderToImage[jsonElement.gender] : '/questionMark.png')} />
-															<br />
-															<div> <b>Person Username:</b> {jsonElement.username} </div>
-															<br />
-															<div> <b>Bio:</b> {jsonElement.description ? jsonElement.description : "No bio"} </div>
-															<br />
-															<div> <b>Best Sport:</b> {jsonElement.sport ? numberToSport[jsonElement.sport] : "No sport specified (Soccer default will used for 1 v 1's)"} </div>
-															<br />
-															<div> <b>Best Sport Skill Level:</b> {jsonElement.skill_level ? jsonElement.skill_level : "No skill level specified"} </div>
-															<br />
-														</Box>
-													</Col>
-
-													<Col >
-														<Box>
-
-															<br />
-															<br />
-															<div className="gameDiv">
-																<b> Join one on one game with this person! </b>
-																<br />
-
-
-																<br />
-
-																{ /*<Link href='/homePage/createOneOnOne' passHref> */}
-																<div className="joinOneVOne">
-																	<button onClick={(e) => {
-																		console.log(e.target.className);
-																		let splitClasses = e.target.className.split(" ")
-																		let splitInfo = splitClasses[1].split('-')
-																		localStorage.setItem('localOpponentSport', splitInfo[2])
-																		localStorage.setItem('localOpponentName', splitInfo[1])
-																		localStorage.setItem('localOpponentId', splitInfo[0])
-																		console.log(splitInfo)
-																		Router.push("createOneOnOne")
-
-																	}} className={`${jsonElement.id}-${jsonElement.username}-${jsonElement.sport ? jsonElement.sport : 'Soccer'}`}>Join one on one game with this athlete!</button>
-																</div>
-																{/* </Link> */}
-
-															</div>
-
-
-														</Box>
-
-													</Col>
-
-
-													<Col>
-														<Box>
-															<div className="sportInfo">
-
-																<b> Times for this sport </b>
-																<br />
-
-																<Alert variant='secondary' className="mondayTime">Monday Time: {(userSchedule.length != 0 && userSchedule[0].monday) ? userSchedule[0].monday : 'No times listed'}</Alert>
-																<br />
-																<Alert variant='secondary' className="tuesdayTime">Tuesday Time: {(userSchedule.length != 0 && userSchedule[0].tuesday) ? userSchedule[0].tuesday : 'No times listed'}</Alert>
-																<br />
-
-																<Alert variant='secondary' className="wednesdayTime">Wednesday Time: {(userSchedule.length != 0 && userSchedule[0].wednesday) ? userSchedule[0].wednesday : 'No times listed'}</Alert>
-																<br />
-
-																<Alert variant='secondary' className="thursdayTime">Thursday Time: {(userSchedule.length != 0 && userSchedule[0].thursday) ? userSchedule[0].thursday : 'No times listed'}</Alert>
-																<br />
-
-
-
-																<Alert variant='secondary' className="fridayTime">Friday Time: {(userSchedule.length != 0 && userSchedule[0].friday) ? userSchedule[0].friday : 'No times listed'}</Alert>
-																<br />
-
-
-																<Alert variant='secondary' className="saturdayTime">Saturday Time: {(userSchedule.length != 0 && userSchedule[0].saturday) ? userSchedule[0].saturday : 'No times listed'}</Alert>
-																<br />
-
-																<Alert variant='secondary' className="sundayTime">Sunday Time: {(userSchedule.length != 0 && userSchedule[0].sunday) ? userSchedule[0].sunday : 'No times listed'}</Alert>
-																<br />
-
-
-
-															</div>
-
-															<br />
-
-
-
-
-
-														</Box>
-
-													</Col>
-
-												</Row>
-
-
-											</Container>
-											<br />
-											<br />
-										</li>
-									);
-
-									setListOfUsers(peopleList);
-
-
-
-
-
-								})
-								.catch(errorMessage => {
-									console.log(errorMessage);
-
-								});
-
-
-						}
-						else {
-							let baseUrlGames = process.env.backend_url + "/games/getGames?"
-
-							if (groupNumber != '')
-								baseUrlGames += (`max_group_size=${groupNumber}`)
-
-							// console.log(minSkillLevel);
-							// console.log(groupNumber)
-
-
-
-							if (minSkillLevel != 'No selection')
-								baseUrlGames += (`&skill_levels=${minSkillLevel}`)
-
-							if (searchSport != 'No selection') {
-								let sportNumber = sportToNumber[searchSport]
-								baseUrlGames += (`&sports=${sportNumber}`)
-							}
-
-							if (radius != '')
-								baseUrlGames += (`&radius=${radius}`);
-
-							if (weeksAhead != '')
-								baseUrlGames += (`&weeksAhead=${weeksAhead}`);
-
-							if (long != null)
-								baseUrlGames += (baseUrlGames, `&userLng=${long}`)
-
-							if (lati != null)
-								baseUrlGames += (baseUrlGames, `&userLat=${lati}`)
-
-							console.log(baseUrlGames)
-
-							async function getAddress(jsonElement) {
-								console.log(jsonElement.location.coordinates[1], jsonElement.location.coordinates[0])
-								let addressDisplayed = "Unknown address"
-								if (jsonElement.location) {
-									// Get address from latitude & longitude.
-									await Geocode.fromLatLng(`${jsonElement.location.coordinates[1]}`, `${jsonElement.location.coordinates[0]}`).then(
-										(response) => {
-											const address = response.results[0].formatted_address;
-											console.log(response.results[0])
-											console.log(address, address.tagName, address.type);
-											console.log("Good response")
-											addressDisplayed = address;
-											console.log("addressDisplayed", addressDisplayed)
-											//return address;
-										},
-										(error) => {
-											console.error(error);
-											console.log("Ugh")
-											//return "Unknown address"
+										if (searchSport != 'No selection') {
+											let sportNumber = sportToNumber[searchSport]
+											baseUrlGames += (`&sports=${sportNumber}`)
 										}
-									);
-								}
 
-								return addressDisplayed;
-							};
+										if (radius != '')
+											baseUrlGames += (`&radius=${radius}`);
 
-							fetch(baseUrlGames, {
-								//mode: "no-cors",
-								method: "GET",
-								headers: {
-									'Content-type': 'application/json',
-									"Access-Control-Allow-Origin": '*'
-								},
+										if (weeksAhead != '')
+											baseUrlGames += (`&weeksAhead=${weeksAhead}`);
 
-							})
-								.then(response => response.json())
-								.then(async json => {
-									console.log(json);
-									const filteredGames = json.filter((jsonElement) =>
-										(jsonElement.is_full == false)
-									);
-									console.log(filteredGames);
-									const furtherFilteredGames = filteredGames.filter((jsonElement) =>
+										if (long != null)
+											baseUrlGames += (baseUrlGames, `&userLng=${long}`)
 
-										(!(jsonElement.users.some(user => user.id == foundUser)))
-									)
-									console.log(furtherFilteredGames)
+										if (lati != null)
+											baseUrlGames += (baseUrlGames, `&userLat=${lati}`)
 
-									const gamesList = await Promise.all(furtherFilteredGames.map(async (jsonElement) => (
-										<li key={jsonElement.id}>
-											<Container fluid>
-												<Row className="game">
-													<Col>
-														<Box>
-															<img src={jsonElement.sport in numberToSport ?
-																sportToImage[numberToSport[jsonElement.sport]] : '/questionMark.png'} />
-														</Box>
-													</Col>
+										console.log(baseUrlGames)
 
+										async function getAddress(jsonElement) {
+											console.log(jsonElement.location.coordinates[1], jsonElement.location.coordinates[0])
+											let addressDisplayed = "Unknown address"
+											if (jsonElement.location) {
+												// Get address from latitude & longitude.
+												await Geocode.fromLatLng(`${jsonElement.location.coordinates[1]}`, `${jsonElement.location.coordinates[0]}`).then(
+													(response) => {
+														const address = response.results[0].formatted_address;
+														console.log(response.results[0])
+														console.log(address, address.tagName, address.type);
+														console.log("Good response")
+														addressDisplayed = address;
+														console.log("addressDisplayed", addressDisplayed)
+														//return address;
+													},
+													(error) => {
+														console.error(error);
+														console.log("Ugh")
+														//return "Unknown address"
+													}
+												);
+											}
 
-													<Col >
-														<Box>
+											return addressDisplayed;
+										};
 
-															<div> Event Location: {await getAddress(jsonElement)} </div>
-															<br />
-															<div> Event description: {jsonElement.comments} </div>
-															<br />
+										fetch(baseUrlGames, {
+											//mode: "no-cors",
+											method: "GET",
+											headers: {
+												'Content-type': 'application/json',
+												"Access-Control-Allow-Origin": '*'
+											},
 
-															<button onClick={(e) => {
-																const requestOptions = {
-																	method: 'PUT',
-																	headers: { 'Content-Type': 'application/json', "Access-Control-Allow-Origin": '*' },
-																	body: JSON.stringify({ user_id: foundUser, game_id: jsonElement.id })
-																};
-																if (e.target.innerHTML == "Join the game!") {
+										})
+											.then(response => response.json())
+											.then(async json => {
+												console.log(json);
+												const filteredGames = json.filter((jsonElement) =>
+													(jsonElement.is_full == false)
+												);
+												console.log(filteredGames);
+												const furtherFilteredGames = filteredGames.filter((jsonElement) =>
 
-																	fetch(process.env.backend_url + '/games/joinGame/', requestOptions)
-																		.then(response => response.json())
-																		.then(data => {
-																			console.log(data);
-																			e.target.innerHTML = "Un-join the game!";
-																		})
-																		.catch(error => { console.log(error) })
-																}
-																else if (e.target.innerHTML == "Un-join the game!") {
-																	fetch(process.env.backend_url + '/games/leaveGame/', requestOptions)
-																		.then(response => response.json())
-																		.then(data => {
-																			console.log(data);
-																			e.target.innerHTML = "Join the game!";
-																		})
-																		.catch(error => { console.log(error) })
-																}
+													(!(jsonElement.users.some(user => user.id == foundUser)))
+												)
+												console.log("Further filtered games: " + furtherFilteredGames)
 
+												const gamesList = await Promise.all(furtherFilteredGames.map(async (jsonElement) => (
+													<Container fluid key={jsonElement.id}>
+														<Card bg="dark" key={jsonElement.id} style={{ boxShadow: "1px 1px 3px black" }}>
+															<Card.Header className="align-items-center">
+																<Card.Title><div className="cardText">Game</div></Card.Title>
+															</Card.Header>
+															<Card.Body>
+																<Row className="align-items-center">
+																	<Col md={{ span: 3 }}>
+																		<Image src={jsonElement.sport in numberToSport ?
+																			sportToImage[numberToSport[jsonElement.sport]] : '/questionMark.png'} roundedCircle />
+																	</Col>
+																	<Col md={{ span: 5 }}>
+																		<ListGroup>
+																			<ListGroup.Item>Location: {await getAddress(jsonElement)}</ListGroup.Item>
+																			<ListGroup.Item>Description: {jsonElement.comments}</ListGroup.Item>
+																			<ListGroup.Item>Start Time: {(jsonElement.time)}</ListGroup.Item>
+																		</ListGroup>
+																	</Col>
+																	<Col md={{ span: 4 }}>
+																		<ListGroup>
+																			<ListGroup.Item>Minimum Skill Level: {jsonElement.skill_level}</ListGroup.Item>
+																			<ListGroup.Item>Max Group Size: {jsonElement.max_group_size}</ListGroup.Item>
+																			<ListGroup.Item>Spots Left If I Join This Game: {jsonElement.max_group_size - jsonElement.current_group_size - 1} </ListGroup.Item>
+																		</ListGroup>
+																	</Col>
+																</Row>
+															</Card.Body>
+															<Card.Footer>
+																<Row className="align-items-center">
+																	<Col>
+																		<Button variant="secondary" onClick={(e) => {
+																			const requestOptions = {
+																				method: 'PUT',
+																				headers: { 'Content-Type': 'application/json', "Access-Control-Allow-Origin": '*' },
+																				body: JSON.stringify({ user_id: foundUser, game_id: jsonElement.id })
+																			};
+																			if (e.target.innerHTML == "Join Game") {
 
-															}}>Join the game!</button>
+																				fetch(process.env.backend_url + '/games/joinGame/', requestOptions)
+																					.then(response => response.json())
+																					.then(data => {
+																						console.log(data);
+																						e.target.innerHTML = "Leave Game";
+																					})
+																					.catch(error => { console.log(error) })
+																			}
+																			else if (e.target.innerHTML == "Leave Game") {
+																				fetch(process.env.backend_url + '/games/leaveGame/', requestOptions)
+																					.then(response => response.json())
+																					.then(data => {
+																						console.log(data);
+																						e.target.innerHTML = "Join Game";
+																					})
+																					.catch(error => { console.log(error) })
+																			}
+																		}}>Join Game</Button>
+																	</Col>
+																	<Col>
+																		<Button variant="secondary" onClick={(e) => {
+																			localStorage.setItem('homeGameId', `${jsonElement.id}`)
+																			Router.push("../userGames/gameParticipants")
+																		}}>View Participants </Button>
+																	</Col>
+																</Row>
+															</Card.Footer>
+														</Card>
+														<br />
+														<br />
+													</Container>
+												)
+												));
 
-
-															<div className="gameParticipants">
-																<button onClick={(e) => {
-																	localStorage.setItem('homeGameId', `${jsonElement.id}`)
-																	Router.push("../userGames/gameParticipants")
-																}}>View game participants! </button>
-															</div>
-
-
-
-														</Box>
-
-													</Col>
-
-
-													<Col>
-														<Box>
-															<div> Start Time: {(jsonElement.time)}</div>
-															<br />
-
-															<div> Minimum Skill Level Allowed: {jsonElement.skill_level}</div>
-															<br />
-															<div> Number of people allowed in game: {jsonElement.max_group_size} </div>
-															<br />
-															<div> Number of spots left assuming {foundUserName} joins: {jsonElement.max_group_size - jsonElement.current_group_size - 1} </div>
-															<br />
-
-														</Box>
-													</Col>
-												</Row>
-
-
-
-											</Container>
-											<br />
-											<br />
-										</li>)
-									));
-
-									setListOfGames(gamesList);
-
-
-
-
-
-								})
-								.catch(errorMessage => {
-									console.log(errorMessage);
-
-								});
-
-
-
-
-						}
-
-
-
-
-					}}>Submit search filters!</button>
-
-					<br />
+												setListOfGames(gamesList);
 
 
 
-					<br />
-					<br />
 
+
+											})
+											.catch(errorMessage => {
+												console.log(errorMessage);
+
+											});
+
+
+
+
+									}
+
+
+
+
+								}}>Search</Button>
+							</Form.Group>
+						</Form.Row>
+					</Form>
+
+					<Container fluid>
+						<Row>
+							{typeSelected == "Games" ? listOfGames : listOfUsers}
+						</Row>
+					</Container>
 				</Container>
-
-
 			</div>
-
-			<br />
-
-
-
-			<Alert variant='primary' className="searchHeading">Search Results!</Alert>
-
-			<br />
-
-			<ul className="listOfResults">
-
-				{typeSelected == "Games" ? listOfGames : listOfUsers}
-			</ul>
-
-
-
-
-			<br />
-			<br />
-
-			
-
-			
-
 		</div >
 	);
 };
