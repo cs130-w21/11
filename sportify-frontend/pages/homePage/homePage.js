@@ -25,8 +25,8 @@ const sportToImage = {
 	'Volleyball': '/volleyball.jpg',
 	'Tennis': '/tennis.jpg',
 	'Badminton': '/badminton.jpg',
-	'American Football': 'football.png',
-	'Basketball': 'basketball.jpg'
+	'American Football': '/football.png',
+	'Basketball': '/basketball.jpg'
 };
 
 const genderToImage = {
