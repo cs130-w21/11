@@ -29,7 +29,7 @@ assertDatabaseConnectionOk()
 //set up Routes
 require('./routes')(app);
 
-//Serve Application
+//Serve Application on desired port
 app.listen(port, () => {
     console.log(`Listening on http://localhost:${port}`);
 });
