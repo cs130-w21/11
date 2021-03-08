@@ -6,6 +6,26 @@ const cors = require('cors');
 MainScheduleRouter = express.Router();
 MainScheduleRouter.all('*', cors());
 
+/**
+ * @api {get} /schedule/getSchedule/:userId Retrieve a User's Schedule.
+ * @apiGroup Schedule
+ *
+ * @apiParam {Number} userId User's ID.
+ *
+ * @apiSuccessExample Success-Response:
+ *     HTTP/1.1 200 OK
+ *     {
+ *          "monday": "9-5",
+ *          "tuesday": "9-5",
+ *          "wednesday": "9-5",
+ *          "thursday": "9-5",
+ *          "friday": "9-5",
+ *          "saturday": "9-5",
+ *          "sunday": "9-5",
+ *     },
+ * 
+ * @apiError SQLError "Postgres Error Message"
+ */
 // Get a user's schedule
 MainScheduleRouter.get('/getSchedule/:userId', async (req, res) => {
     const schedule = sequelize.models.schedule;
@@ -17,6 +37,33 @@ MainScheduleRouter.get('/getSchedule/:userId', async (req, res) => {
     }
 });
 
+/**
+ * @api {post} /schedule/createUpdateSchedule Retrieve a User's Schedule.
+ * @apiGroup Schedule
+ *
+ * @apiParam {Number} userId User's ID.
+ * @apiParam {String} monday Availability on Monday
+ * @apiParam {String} tuesday Availability on Tuesday
+ * @apiParam {String} wednesday Availability on Wednesday
+ * @apiParam {String} thursday Availability on Thursday
+ * @apiParam {String} friday Availability on Friday
+ * @apiParam {String} saturday Availability on Saturday
+ * @apiParam {String} sunday Availability on Sunday
+ *
+ * @apiSuccessExample Success-Response:
+ *     HTTP/1.1 200 OK
+ *     {
+ *          "monday": "9-5",
+ *          "tuesday": "9-5",
+ *          "wednesday": "9-5",
+ *          "thursday": "9-5",
+ *          "friday": "9-5",
+ *          "saturday": "9-5",
+ *          "sunday": "9-5",
+ *     },
+ * 
+ * @apiError SQLError "Postgres Error Message"
+ */
 // Create a user's schedule
 MainScheduleRouter.post('/createUpdateSchedule', async (req, res) => {
     const schedule = sequelize.models.schedule;

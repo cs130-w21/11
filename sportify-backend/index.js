@@ -1,6 +1,5 @@
 const express = require('express');
 const sequelize = require('./utils/sequelize/index');
-// const authRoutes = require('./routes/main/auth/index');
 
 const app = express();
 app.use(express.json())
@@ -27,11 +26,10 @@ async function assertDatabaseConnectionOk() {
 }
 assertDatabaseConnectionOk()
 
-//Creates Tables in DB if they don't exist
-
 //set up Routes
 require('./routes')(app);
 
+//Serve Application
 app.listen(port, () => {
     console.log(`Listening on http://localhost:${port}`);
 });
