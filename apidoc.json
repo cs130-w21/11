@@ -1,0 +1,7 @@
+{
+  "name": "Sportify API",
+  "version": "1.0.0",
+  "description": "The Backend API at the core of the project",
+  "title": "Sportify API Docs",
+  "url" : "http://localhost:8000/routes"
+}
