@@ -173,8 +173,13 @@ const CreateGame = (props) => {
 										<Link href='/homePage/homePage' passhref="true">
 
 											<Button variant="secondary" type="submit" onClick={(e) => {
+<<<<<<< HEAD
 												var lat = -76
 												var long = -148
+=======
+												var lat = 34.0689
+												var long = -118.4452
+>>>>>>> dev
 
 												// Get latitude & longitude from address.
 												Geocode.fromAddress(address).then(
@@ -215,7 +220,11 @@ const CreateGame = (props) => {
 														break
 
 												}
+<<<<<<< HEAD
 												console.log("wtf is going on")
+=======
+												console.log("nice")
+>>>>>>> dev
 
 
 
@@ -233,6 +242,7 @@ const CreateGame = (props) => {
 												})
 													.then(response => response.json())
 													.then(json => {
+<<<<<<< HEAD
 														if (json.message === "Signin successful") {
 															console.log("Result Here")
 															console.log(json)
@@ -245,6 +255,9 @@ const CreateGame = (props) => {
 
 
 
+=======
+														console.log(json);
+>>>>>>> dev
 													})
 
 											}}> Submit </Button>

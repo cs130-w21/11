@@ -19,14 +19,14 @@ import ListGroup from 'react-bootstrap/ListGroup';
 import Table from 'react-bootstrap/Table';
 
 const sportToImage = {
-	'Baseball': '/baseball.jpg',
+	'Baseball': '/baseball.png',
 	'Soccer': '/soccer.jpg',
-	'Football': '/football.png',
 	'Sprinting': '/sprinting.jpg',
 	'Volleyball': '/volleyball.jpg',
 	'Tennis': '/tennis.jpg',
 	'Badminton': '/badminton.jpg',
-	'American Football': 'football.png'
+	'American Football': '/football.png',
+	'Basketball': '/basketball.jpg'
 };
 
 const genderToImage = {
@@ -424,11 +424,10 @@ const HomePage = (props) => {
 										baseUrlPeople += (baseUrlPeople, `&currentUser=${foundUserName}`)
 										console.log(baseUrlPeople)
 
-										async function getSchedule(jsonElement)
-										{
+										async function getSchedule(jsonElement) {
 											let schedule;
 											console.log("Get user schedule")
-											let theSchedule=await fetch(process.env.backend_url + `/schedule/getSchedule/${jsonElement.id}`, {
+											let theSchedule = await fetch(process.env.backend_url + `/schedule/getSchedule/${jsonElement.id}`, {
 												//mode: "no-cors",
 												method: "GET",
 												headers: {
@@ -447,7 +446,7 @@ const HomePage = (props) => {
 												.catch(errorMessage => {
 													console.log(errorMessage);
 													console.log("Bye")
-													schedule=[];
+													schedule = [];
 													return [];
 												});
 											return theSchedule;
@@ -468,76 +467,76 @@ const HomePage = (props) => {
 
 												const peopleList = await Promise.all(json.map(async (jsonElement) => {
 
-													const userSchedule=await getSchedule(jsonElement);
-		   
-													return (
-													<Container fluid key={jsonElement.id}>
-														<Card bg="dark" key={jsonElement.id} style={{boxShadow: "1px 1px 3px black"}} className="text-center">
-															<Card.Header className="align-items-center">
-																<Card.Title><div className="cardText">User</div></Card.Title>
-															</Card.Header>
-															<Card.Body>
-																<Row className="align-items-center">
-																	<Col md={{ span: 3 }}>
-																		<Image src={(jsonElement.gender ? genderToImage[jsonElement.gender] : '/questionMark.png')} roundedCircle />
-																	</Col>
-																	<Col md={{ span: 4 }}>
-																		<ListGroup>
-																			<ListGroup.Item style={{ fontWeight: "bold" }}>@{jsonElement.username}</ListGroup.Item>
-																			<ListGroup.Item>{jsonElement.about_me ? jsonElement.about_me : "No bio"}</ListGroup.Item>
-																			<ListGroup.Item>Plays {jsonElement.sport ? numberToSport[jsonElement.sport] : "all sports"}</ListGroup.Item>
-																			<ListGroup.Item>Skill Level: {jsonElement.skill_level ? jsonElement.skill_level : "None specified"}</ListGroup.Item>
-																		</ListGroup>
-																	</Col>
-																	<Col md={{ span: 1 }}></Col>
-																	<Col md={{ span: 4 }}>
-																		<Table variant="light" striped borderless hover>
-																			<thead>
-																				<tr>
-																					<th>Day</th>
-																					<th>Availability</th>
-																				</tr>
-																			</thead>
-																			<tbody>
-																				<tr>
-																					<td>Monday</td>
-																					<td>{(userSchedule.length != 0 && userSchedule[0].monday) ? userSchedule[0].monday : 'No times listed'}</td>
-																				</tr>
-																				<tr>
-																					<td>Tuesday</td>
-																					<td>{(userSchedule.length != 0 && userSchedule[0].tuesday) ? userSchedule[0].tuesday : 'No times listed'}</td>
-																				</tr>
-																				<tr>
-																					<td>Wednesday</td>
-																					<td>{(userSchedule.length != 0 && userSchedule[0].wednesday) ? userSchedule[0].wednesday : 'No times listed'}</td>
-																				</tr>
-																				<tr>
-																					<td>Thursday</td>
-																					<td>{(userSchedule.length != 0 && userSchedule[0].thursday) ? userSchedule[0].thursday : 'No times listed'}</td>
-																				</tr>
-																				<tr>
-																					<td>Friday</td>
-																					<td>{(userSchedule.length != 0 && userSchedule[0].friday) ? userSchedule[0].friday : 'No times listed'}</td>
-																				</tr>
-																				<tr>
-																					<td>Saturday</td>
-																					<td>{(userSchedule.length != 0 && userSchedule[0].saturday) ? userSchedule[0].saturday : 'No times listed'}</td>
-																				</tr>
-																				<tr>
-																					<td>Sunday</td>
-																					<td>{(userSchedule.length != 0 && userSchedule[0].sunday) ? userSchedule[0].sunday : 'No times listed'}</td>
-																				</tr>
-																			</tbody>
-																		</Table>
-																	</Col>
+													const userSchedule = await getSchedule(jsonElement);
 
-																</Row>
-															</Card.Body>
-															<Card.Footer>
-																<Row className="align-items-center">
-																	<Col>
-																		<Button variant="secondary" onClick={(e) => {
-																				console.log(e.target.className);											
+													return (
+														<Container fluid key={jsonElement.id}>
+															<Card bg="dark" key={jsonElement.id} style={{ boxShadow: "1px 1px 3px black" }} className="text-center">
+																<Card.Header className="align-items-center">
+																	<Card.Title><div className="cardText">User</div></Card.Title>
+																</Card.Header>
+																<Card.Body>
+																	<Row className="align-items-center">
+																		<Col md={{ span: 3 }}>
+																			<Image src={(jsonElement.gender ? genderToImage[jsonElement.gender] : '/questionMark.png')} roundedCircle />
+																		</Col>
+																		<Col md={{ span: 4 }}>
+																			<ListGroup>
+																				<ListGroup.Item style={{ fontWeight: "bold" }}>@{jsonElement.username}</ListGroup.Item>
+																				<ListGroup.Item>{jsonElement.about_me ? jsonElement.about_me : "No bio"}</ListGroup.Item>
+																				<ListGroup.Item>Plays {jsonElement.sport ? numberToSport[jsonElement.sport] : "potentially all sports?!"}</ListGroup.Item>
+																				<ListGroup.Item>Skill Level: {jsonElement.skill_level ? jsonElement.skill_level : "None specified"}</ListGroup.Item>
+																			</ListGroup>
+																		</Col>
+																		<Col md={{ span: 1 }}></Col>
+																		<Col md={{ span: 4 }}>
+																			<Table variant="light" striped borderless hover>
+																				<thead>
+																					<tr>
+																						<th>Day</th>
+																						<th>Availability</th>
+																					</tr>
+																				</thead>
+																				<tbody>
+																					<tr>
+																						<td>Monday</td>
+																						<td>{(userSchedule.length != 0 && userSchedule[0].monday) ? userSchedule[0].monday : 'No times listed'}</td>
+																					</tr>
+																					<tr>
+																						<td>Tuesday</td>
+																						<td>{(userSchedule.length != 0 && userSchedule[0].tuesday) ? userSchedule[0].tuesday : 'No times listed'}</td>
+																					</tr>
+																					<tr>
+																						<td>Wednesday</td>
+																						<td>{(userSchedule.length != 0 && userSchedule[0].wednesday) ? userSchedule[0].wednesday : 'No times listed'}</td>
+																					</tr>
+																					<tr>
+																						<td>Thursday</td>
+																						<td>{(userSchedule.length != 0 && userSchedule[0].thursday) ? userSchedule[0].thursday : 'No times listed'}</td>
+																					</tr>
+																					<tr>
+																						<td>Friday</td>
+																						<td>{(userSchedule.length != 0 && userSchedule[0].friday) ? userSchedule[0].friday : 'No times listed'}</td>
+																					</tr>
+																					<tr>
+																						<td>Saturday</td>
+																						<td>{(userSchedule.length != 0 && userSchedule[0].saturday) ? userSchedule[0].saturday : 'No times listed'}</td>
+																					</tr>
+																					<tr>
+																						<td>Sunday</td>
+																						<td>{(userSchedule.length != 0 && userSchedule[0].sunday) ? userSchedule[0].sunday : 'No times listed'}</td>
+																					</tr>
+																				</tbody>
+																			</Table>
+																		</Col>
+
+																	</Row>
+																</Card.Body>
+																<Card.Footer>
+																	<Row className="align-items-center">
+																		<Col>
+																			<Button variant="secondary" onClick={(e) => {
+																				console.log(e.target.className);
 																				let splitClasses = e.target.className.split(" ")
 																				let splitInfo = splitClasses[0].split('-')
 																				console.log(splitInfo);
@@ -546,17 +545,18 @@ const HomePage = (props) => {
 																				localStorage.setItem('localOpponentId', splitInfo[0])
 																				console.log(splitInfo)
 																				Router.push("createOneOnOne")
-																		}} className={`${jsonElement.id}-${jsonElement.username}-${jsonElement.sport ? jsonElement.sport : 'Soccer'}`}>
-																			Challenge
+																			}} className={`${jsonElement.id}-${jsonElement.username}-${jsonElement.sport ? jsonElement.sport : 'Soccer'}`}>
+																				Challenge
 																		</Button>
-																	</Col>
-																</Row>
-															</Card.Footer>
-														</Card>
-														<br />
-														<br />
-													</Container>
-												)}));
+																		</Col>
+																	</Row>
+																</Card.Footer>
+															</Card>
+															<br />
+															<br />
+														</Container>
+													)
+												}));
 
 												setListOfUsers(peopleList);
 
@@ -655,7 +655,7 @@ const HomePage = (props) => {
 
 												const gamesList = await Promise.all(furtherFilteredGames.map(async (jsonElement) => (
 													<Container fluid key={jsonElement.id}>
-														<Card bg="dark" key={jsonElement.id} style={{boxShadow: "1px 1px 3px black"}}>
+														<Card bg="dark" key={jsonElement.id} style={{ boxShadow: "1px 1px 3px black" }}>
 															<Card.Header className="align-items-center">
 																<Card.Title><div className="cardText">Game</div></Card.Title>
 															</Card.Header>
@@ -676,7 +676,7 @@ const HomePage = (props) => {
 																		<ListGroup>
 																			<ListGroup.Item>Minimum Skill Level: {jsonElement.skill_level}</ListGroup.Item>
 																			<ListGroup.Item>Max Group Size: {jsonElement.max_group_size}</ListGroup.Item>
-																			<ListGroup.Item>Spots Left: {jsonElement.max_group_size - jsonElement.current_group_size} </ListGroup.Item>
+																			<ListGroup.Item>Spots Left If I Join This Game: {jsonElement.max_group_size - jsonElement.current_group_size - 1} </ListGroup.Item>
 																		</ListGroup>
 																	</Col>
 																</Row>
