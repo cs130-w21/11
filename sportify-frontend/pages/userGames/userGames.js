@@ -16,24 +16,14 @@ import Image from 'react-bootstrap/Image'
 import Router from 'next/router';
 
 const sportToImage = {
-<<<<<<< HEAD
-	'Baseball': '/baseball.jpg',
-	'Soccer': '/soccer.jpg',
-	'Football': '/football.png',
-=======
 	'Baseball': '/baseball.png',
 	'Soccer': '/soccer.jpg',
->>>>>>> dev
 	'Sprinting': '/sprinting.jpg',
 	'Volleyball': '/volleyball.jpg',
 	'Tennis': '/tennis.jpg',
 	'Badminton': '/badminton.jpg',
-<<<<<<< HEAD
-	'American Football': 'football.png'
-=======
 	'American Football': '/football.png',
 	'Basketball': '/basketball.jpg'
->>>>>>> dev
 };
 
 const genderToImage = {
@@ -105,11 +95,7 @@ const userGames = (props) => {
 		if (loggedInUser) {
 
 			console.log("Get user games")
-<<<<<<< HEAD
-			fetch(`http://localhost:8000/user/getUsersGames/${localStorage.getItem("user-id")}`, {
-=======
 			fetch(`http://localhost:8000/user/getUsersGames/${JSON.parse(loggedInUser)}`, {
->>>>>>> dev
 				//mode: "no-cors",
 				method: "GET",
 				headers: {
@@ -127,9 +113,9 @@ const userGames = (props) => {
 					console.log(foundUser, foundUserName)
 					const listOfE = await Promise.all(json.map(async (jsonElement) => (
 						<Container fluid key={jsonElement.id}>
-							<Card bg="dark" key={jsonElement.id} className="text-center" style={{boxShadow: "1px 1px 3px black"}}>
+							<Card bg="dark" key={jsonElement.id} className="text-center" style={{ boxShadow: "1px 1px 3px black" }}>
 								<Card.Header>
-											<Card.Title><div className="cardText">Game</div></Card.Title>
+									<Card.Title><div className="cardText">Game</div></Card.Title>
 								</Card.Header>
 								<Card.Body>
 									<Row className="align-items-center">
@@ -148,11 +134,7 @@ const userGames = (props) => {
 											<ListGroup>
 												<ListGroup.Item>Minimum Skill Level: {jsonElement.skill_level}</ListGroup.Item>
 												<ListGroup.Item>Max Group Size: {jsonElement.max_group_size}</ListGroup.Item>
-<<<<<<< HEAD
-												<ListGroup.Item>Spots Left: {jsonElement.max_group_size - jsonElement.current_group_size} </ListGroup.Item>
-=======
 												<ListGroup.Item>Spots Left If I Stay In This Game: {jsonElement.max_group_size - jsonElement.current_group_size} </ListGroup.Item>
->>>>>>> dev
 											</ListGroup>
 										</Col>
 									</Row>
@@ -164,11 +146,7 @@ const userGames = (props) => {
 												const requestOptions = {
 													method: 'PUT',
 													headers: { 'Content-Type': 'application/json', "Access-Control-Allow-Origin": '*' },
-<<<<<<< HEAD
-													body: JSON.stringify({ user_id: foundUser, game_id: jsonElement.id })
-=======
 													body: JSON.stringify({ user_id: JSON.parse(loggedInUser), game_id: jsonElement.id })
->>>>>>> dev
 												};
 												if (e.target.innerHTML == "Join Game") {
 

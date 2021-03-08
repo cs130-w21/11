@@ -140,7 +140,7 @@ const gameParticipants = (props) => {
 
 			<Container fluid>
 
-				<Table variant="dark" striped bordered hover className="text-center" style={{boxShadow: "1px 1px 3px black"}}>
+				<Table variant="dark" striped bordered hover className="text-center" style={{ boxShadow: "1px 1px 3px black" }}>
 					<thead>
 						<tr>
 							<th>Username</th>
@@ -151,11 +151,7 @@ const gameParticipants = (props) => {
 					<tbody>
 						{players.map(jsonElement =>
 						(
-<<<<<<< HEAD
-							<tr>
-=======
 							<tr key={jsonElement.id}>
->>>>>>> dev
 								<td>{jsonElement.username ? jsonElement.username : "Unknown"}</td>
 								<td>{jsonElement.gender ? jsonElement.gender : "Gender not known"}</td>
 								<td>{jsonElement.age ? jsonElement.age : " Age not known"}</td>

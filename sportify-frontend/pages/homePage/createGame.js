@@ -111,7 +111,7 @@ const CreateGame = (props) => {
 			</Navbar>
 			<LazyHero imageSrc="/createGameBgImage.jpg" opacity={0.5} color="black" parallaxOffset={50} isCentered={true} minHeight="100vh">
 				<Container>
-					<Card style={{width: "50em"}}>
+					<Card style={{ width: "50em" }}>
 						<Card.Header>
 							<Card.Title>
 								Create Game
@@ -173,13 +173,8 @@ const CreateGame = (props) => {
 										<Link href='/homePage/homePage' passhref="true">
 
 											<Button variant="secondary" type="submit" onClick={(e) => {
-<<<<<<< HEAD
-												var lat = -76
-												var long = -148
-=======
 												var lat = 34.0689
 												var long = -118.4452
->>>>>>> dev
 
 												// Get latitude & longitude from address.
 												Geocode.fromAddress(address).then(
@@ -220,11 +215,7 @@ const CreateGame = (props) => {
 														break
 
 												}
-<<<<<<< HEAD
-												console.log("wtf is going on")
-=======
 												console.log("nice")
->>>>>>> dev
 
 
 
@@ -242,22 +233,7 @@ const CreateGame = (props) => {
 												})
 													.then(response => response.json())
 													.then(json => {
-<<<<<<< HEAD
-														if (json.message === "Signin successful") {
-															console.log("Result Here")
-															console.log(json)
-															Router.push("../homePage/homePage")
-														}
-														else {
-															console.log("here" + json)
-															console.log(json.message)
-														}
-
-
-
-=======
 														console.log(json);
->>>>>>> dev
 													})
 
 											}}> Submit </Button>
